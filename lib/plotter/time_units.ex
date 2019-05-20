@@ -53,7 +53,9 @@ defmodule Plotter.TimeUnits do
         delta >= dt_val
       end)
 
-    {basis_name, basis_val} = @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
+    {basis_name, basis_val} =
+      @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
+
     {diff_seconds, basis_name, basis_val}
   end
 
@@ -77,13 +79,15 @@ defmodule Plotter.TimeUnits do
     dt_start = clone(dt_a, unit_name)
 
     basis_count = diff_seconds / unit_val
-    stride = if opts[:ticks] do
-                round(basis_count / opts[:ticks])
-              else
-                round(basis_count / 10)
-              end
-    Logger.warn("time_stride: #{inspect(stride)}")
 
+    stride =
+      if opts[:ticks] do
+        round(basis_count / opts[:ticks])
+      else
+        round(basis_count / 10)
+      end
+
+    Logger.warn("time_stride: #{inspect(stride)}")
 
     0..1_000_000_000
     |> Stream.map(fn i ->

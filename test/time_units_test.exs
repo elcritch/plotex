@@ -28,8 +28,8 @@ defmodule Plotter.TimeUnitsTest do
     for i <- scale! do
       Logger.warn("#{inspect(i)}")
     end
-    assert length(scale!) == 12
 
+    assert length(scale!) == 12
   end
 
   test "time scale with 4 ticks " do
@@ -42,7 +42,7 @@ defmodule Plotter.TimeUnitsTest do
     for i <- scale! do
       Logger.warn("#{inspect(i)}")
     end
-    assert length(scale!) == 4
 
+    assert length(scale!) == 4
   end
 end
