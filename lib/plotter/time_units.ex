@@ -31,7 +31,6 @@ defmodule Plotter.TimeUnits do
   """
   @spec units_for( DateTime.t(), DateTime.t(), keyword() ) :: { atom(), integer() }
   def units_for(dt_a, dt_b, opts \\ []) do
-    Logger.info("optimize_time: #{inspect {dt_a, dt_b}}")
     DateTime.diff(dt_a, dt_b)
     |> abs()
     |> optimize_units(opts)
@@ -53,8 +52,6 @@ defmodule Plotter.TimeUnits do
   end
 
   def optimize_units(diff_seconds, opts \\ []) do
-
-    Logger.info("diff_seconds: #{inspect diff_seconds}")
     count = Keyword.get(opts, :ticks, 10)
     delta = diff_seconds / count
 
