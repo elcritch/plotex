@@ -2,19 +2,22 @@ defmodule Plotter.TimeUnits do
   require Logger
 
   @time_basis [
-    full_day: 86400,
-    half_day: 43200,
-    quarter_day: 21600,
-    eigth_day: 10800,
-    full_hour: 3600,
-    half_hour: 1800,
-    quarter_hour: 900,
-    minute: 60,
-    half_minute: 30,
-    quarter_minute: 15,
-    second: 1,
-    millisecond: 1.0e-3,
-    microsecond: 1.0e-6
+    full_year:  31_536_000,
+    full_month:  2_592_000,
+    full_week:     604_800,
+    full_day:       86_400,
+    half_day:       43_200,
+    quarter_day:    21_600,
+    eigth_day:      10_800,
+    full_hour:       3_600,
+    half_hour:       1_800,
+    quarter_hour:      900,
+    minute:             60,
+    half_minute:        30,
+    quarter_minute:     15,
+    second:              1,
+    millisecond:    1.0e-3,
+    microsecond:    1.0e-6,
   ]
 
   @doc """
@@ -63,8 +66,10 @@ defmodule Plotter.TimeUnits do
 
   def time_scale(data, opts \\ []) do
     {dt_a, dt_b} = date_range_from(data)
+    time_scale(dt_a, dt_b, opts)
+  end
+  def time_scale(dt_a, dt_b, opts) do
     {unit_name, unit_val} = units_for(dt_a, dt_b, opts)
-
     dt_start = clone(dt_a, unit_name)
 
     0..1_000_000_000
@@ -113,6 +118,16 @@ defmodule Plotter.TimeUnits do
           | {:microsecond, 5}
   def basis_unit(unit_name) do
     case unit_name do
+
+      n when n in [:full_day, :decade] ->
+        {:day, 1}
+
+      n when n in [:full_day, :year] ->
+        {:day, 1}
+
+      n when n in [:full_day, :month] ->
+        {:day, 1}
+
       n when n in [:full_day, :day] ->
         {:day, 1}
 
