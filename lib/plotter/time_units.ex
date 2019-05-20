@@ -66,9 +66,9 @@ defmodule Plotter.TimeUnits do
 
   def time_scale(data, opts \\ []) do
     {dt_a, dt_b} = date_range_from(data)
-    unit = units_for(dt_a, dt_b, opts)
+    {unit_name, _unit_val} = units_for(dt_a, dt_b, opts)
 
-    clone(dt_a, unit)
+    clone(dt_a, unit_name)
     |> Stream.map(fn dt ->
       dt
     end)
@@ -77,14 +77,12 @@ defmodule Plotter.TimeUnits do
     end)
   end
 
-  @spec gets(map(), {atom(), integer(), integer()}, atom()) :: integer()
-  defp gets(dt, {_base_unit, base_number, base_value}, field) do
-    {_field_unit, field_val, _field_num} = basis_unit({field, 0})
+  @spec gets(map(), {atom(), integer()}, atom()) :: integer()
+  defp gets(dt, {_base_unit, base_number}, field) do
+    {_field_unit, field_val} = basis_unit(field)
     cond do
       base_number < field_val ->
         dt[field]
-      base_number < field_val ->
-        base_value
       true ->
         0
     end
@@ -111,23 +109,23 @@ defmodule Plotter.TimeUnits do
     }
   end
 
-  @spec basis_unit({atom(), integer()}) :: {:day, 1, integer()} |
-                              {:hour, 2, integer()} |
-                              {:minute, 3, integer()} |
-                              {:second, 4, integer()} |
-                              {:microsecond, 5, integer()}
-  def basis_unit({unit_name, unit_value}) do
+  @spec basis_unit(atom()) :: {:day, 1} |
+                              {:hour, 2} |
+                              {:minute, 3} |
+                              {:second, 4} |
+                              {:microsecond, 5}
+  def basis_unit(unit_name) do
     case unit_name do
       n when n in [:full_day, :day] ->
-        {:day, 1, unit_value}
+        {:day, 1}
       n when n in [:half_day, :quarter_day, :eigth_day, :full_hour, :hour] ->
-        {:hour, 2, unit_value}
+        {:hour, 2}
       n when n in [:half_hour, :quarter_hour, :minute] ->
-        {:minute, 3, unit_value}
+        {:minute, 3}
       n when n in [:half_minute, :quarter_minute, :second] ->
-        {:second, 4, unit_value}
+        {:second, 4}
       n when n in [:millisecond, :microsecond] ->
-        {:microsecond, 5, unit_value}
+        {:microsecond, 5}
     end
   end
 end
