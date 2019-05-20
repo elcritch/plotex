@@ -37,7 +37,6 @@ defmodule Plotter.TimeUnitsTest do
     dt_b = DateTime.from_iso8601("2019-05-20T05:15:00.836Z") |> elem(1)
 
     scale = Plotter.TimeUnits.time_scale(dt_a, dt_b, ticks: 4)
-
     scale! = scale |> Enum.take(30)
 
     for i <- scale! do
