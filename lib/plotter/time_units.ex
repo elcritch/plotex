@@ -6,40 +6,37 @@ defmodule Plotter.TimeUnits do
     half_day: 43200,
     quarter_day: 21600,
     eigth_day: 10800,
-
     full_hour: 3600,
     half_hour: 1800,
     quarter_hour: 900,
-
     minute: 60,
     half_minute: 30,
     quarter_minute: 15,
-
     second: 1,
     millisecond: 1.0e-3,
-    microsecond: 1.0e-6,
+    microsecond: 1.0e-6
   ]
 
   @doc """
   Get units for a given date range, using the number of ticks.
 
   """
-  @spec units_for( DateTime.t(), DateTime.t(), keyword() ) :: { atom(), integer() }
+  @spec units_for(DateTime.t(), DateTime.t(), keyword()) :: {atom(), integer()}
   def units_for(dt_a, dt_b, opts \\ []) do
     DateTime.diff(dt_a, dt_b)
     |> abs()
     |> optimize_units(opts)
   end
 
-  @spec date_range_from( Enumerable.t() ) :: { DateTime.t(), DateTime.t() }
+  @spec date_range_from(Enumerable.t()) :: {DateTime.t(), DateTime.t()}
   def date_range_from(data) do
     a = Enum.at(data, 0)
     b = Enum.at(data, -1)
 
-    unless DateTime.compare(a,b) == :lt do
-      {a,b}
+    unless DateTime.compare(a, b) == :lt do
+      {a, b}
     else
-      {b,a}
+      {b, a}
     end
   end
 
@@ -53,7 +50,7 @@ defmodule Plotter.TimeUnits do
         delta >= dt_val
       end)
 
-    @time_basis |> Enum.at( (idx) |> max(0) |> min(Enum.count(@time_basis)-1) )
+    @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
   end
 
   def time_units() do
@@ -80,9 +77,11 @@ defmodule Plotter.TimeUnits do
   @spec gets(map(), {atom(), integer()}, atom()) :: integer()
   defp gets(dt, {_base_unit, base_number}, field) do
     {_field_unit, field_val} = basis_unit(field)
+
     cond do
       base_number < field_val ->
         dt[field]
+
       true ->
         0
     end
@@ -99,31 +98,35 @@ defmodule Plotter.TimeUnits do
       month: gets(dt, bu, :month),
       second: gets(dt, bu, :second),
       microsecond: {gets(dt, bu, :microsecond), 6},
-
       calendar: dt.calendar,
       std_offset: dt.std_offset,
       time_zone: dt.time_zone,
       utc_offset: dt.utc_offset,
       year: dt.year,
-      zone_abbr: dt.zone_abbr,
+      zone_abbr: dt.zone_abbr
     }
   end
 
-  @spec basis_unit(atom()) :: {:day, 1} |
-                              {:hour, 2} |
-                              {:minute, 3} |
-                              {:second, 4} |
-                              {:microsecond, 5}
+  @spec basis_unit(atom()) ::
+          {:day, 1}
+          | {:hour, 2}
+          | {:minute, 3}
+          | {:second, 4}
+          | {:microsecond, 5}
   def basis_unit(unit_name) do
     case unit_name do
       n when n in [:full_day, :day] ->
         {:day, 1}
+
       n when n in [:half_day, :quarter_day, :eigth_day, :full_hour, :hour] ->
         {:hour, 2}
+
       n when n in [:half_hour, :quarter_hour, :minute] ->
         {:minute, 3}
+
       n when n in [:half_minute, :quarter_minute, :second] ->
         {:second, 4}
+
       n when n in [:millisecond, :microsecond] ->
         {:microsecond, 5}
     end

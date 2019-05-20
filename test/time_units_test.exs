@@ -22,6 +22,4 @@ defmodule Plotter.TimeUnitsTest do
 
     assert Plotter.TimeUnits.units_for(dt_a, dt_b, ticks: 10) == {:minute, 60}
   end
-
-
 end

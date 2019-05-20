@@ -3,6 +3,6 @@ defmodule PlotterTest do
   doctest Plotter
 
   # test "greets the world" do
-    # assert Plotter.hello() == :world
+  # assert Plotter.hello() == :world
   # end
 end
