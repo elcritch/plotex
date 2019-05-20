@@ -2,29 +2,29 @@ defmodule Plotter.TimeUnits do
   require Logger
 
   @time_basis [
-    full_year:  31_536_000,
-    full_month:  2_592_000,
-    full_week:     604_800,
-    full_day:       86_400,
-    half_day:       43_200,
-    quarter_day:    21_600,
-    eigth_day:      10_800,
-    full_hour:       3_600,
-    half_hour:       1_800,
-    quarter_hour:      900,
-    minute:             60,
-    half_minute:        30,
-    quarter_minute:     15,
-    second:              1,
-    millisecond:    1.0e-3,
-    microsecond:    1.0e-6,
+    full_year: 31_536_000,
+    full_month: 2_592_000,
+    full_week: 604_800,
+    full_day: 86_400,
+    half_day: 43_200,
+    quarter_day: 21_600,
+    eigth_day: 10_800,
+    full_hour: 3_600,
+    half_hour: 1_800,
+    quarter_hour: 900,
+    minute: 60,
+    half_minute: 30,
+    quarter_minute: 15,
+    second: 1,
+    millisecond: 1.0e-3,
+    microsecond: 1.0e-6
   ]
 
   @doc """
   Get units for a given date range, using the number of ticks.
 
   """
-  @spec units_for(DateTime.t(), DateTime.t(), keyword()) :: {atom(), integer()}
+  @spec units_for(DateTime.t(), DateTime.t(), keyword()) :: {integer(), atom(), integer()}
   def units_for(dt_a, dt_b, opts \\ []) do
     DateTime.diff(dt_a, dt_b)
     |> abs()
@@ -53,7 +53,8 @@ defmodule Plotter.TimeUnits do
         delta >= dt_val
       end)
 
-    @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
+    {basis_name, basis_val} = @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
+    {diff_seconds, basis_name, basis_val}
   end
 
   def time_units() do
@@ -61,19 +62,36 @@ defmodule Plotter.TimeUnits do
   end
 
   def next_smaller_unit({_name, amount}) do
-    optimize_units(amount - 1.0)
+    optimize_units(amount - 1.0) |> elem(1)
   end
 
   def time_scale(data, opts \\ []) do
     {dt_a, dt_b} = date_range_from(data)
     time_scale(dt_a, dt_b, opts)
   end
+
   def time_scale(dt_a, dt_b, opts) do
-    {unit_name, unit_val} = units_for(dt_a, dt_b, opts)
+    {diff_seconds, unit_name, unit_val} = units_for(dt_a, dt_b, opts)
+    Logger.warn("time_name: #{inspect(unit_name)}")
+    Logger.warn("time_val: #{inspect(unit_val)}")
     dt_start = clone(dt_a, unit_name)
 
+    basis_count = diff_seconds / unit_val
+    stride = if opts[:ticks] do
+                round(basis_count / opts[:ticks])
+              else
+                round(basis_count / 10)
+              end
+    Logger.warn("time_stride: #{inspect(stride)}")
+
+
     0..1_000_000_000
-    |> Stream.map(fn i -> dt_start |> DateTime.add(i * unit_val) end)
+    |> Stream.map(fn i ->
+      # Logger.warn("#{inspect(dt_start)}")
+      # Logger.warn("#{inspect({i, unit_val, i * unit_val})}")
+      DateTime.add(dt_start, i * unit_val, :second)
+    end)
+    |> Stream.take_every(stride)
     |> Stream.take_while(fn dt -> DateTime.compare(dt, dt_b) == :lt end)
   end
 
@@ -82,7 +100,7 @@ defmodule Plotter.TimeUnits do
     {_field_unit, field_val} = basis_unit(field)
 
     cond do
-      base_number < field_val ->
+      base_number >= field_val ->
         dt[field]
 
       true ->
@@ -118,30 +136,38 @@ defmodule Plotter.TimeUnits do
           | {:microsecond, 5}
   def basis_unit(unit_name) do
     case unit_name do
+      n when n in [:full_year, :year] ->
+        {:year, 1}
+
+      n when n in [:full_month, :month] ->
+        {:month, 2}
+
+      n when n in [:full_week, :week] ->
+        {:week, 3}
 
       n when n in [:full_day, :decade] ->
-        {:day, 1}
+        {:day, 4}
 
       n when n in [:full_day, :year] ->
-        {:day, 1}
+        {:day, 5}
 
       n when n in [:full_day, :month] ->
-        {:day, 1}
+        {:day, 6}
 
       n when n in [:full_day, :day] ->
-        {:day, 1}
+        {:day, 7}
 
       n when n in [:half_day, :quarter_day, :eigth_day, :full_hour, :hour] ->
-        {:hour, 2}
+        {:hour, 8}
 
       n when n in [:half_hour, :quarter_hour, :minute] ->
-        {:minute, 3}
+        {:minute, 9}
 
       n when n in [:half_minute, :quarter_minute, :second] ->
-        {:second, 4}
+        {:second, 10}
 
       n when n in [:millisecond, :microsecond] ->
-        {:microsecond, 5}
+        {:microsecond, 11}
     end
   end
 end
