@@ -21,12 +21,7 @@ defmodule Plotter.TimeUnits do
   ]
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Plotter.hello()
-      :world
+  Get units for a given date range, using the number of ticks.
 
   """
   @spec units_for( DateTime.t(), DateTime.t(), keyword() ) :: { atom(), integer() }
@@ -36,18 +31,15 @@ defmodule Plotter.TimeUnits do
     |> optimize_units(opts)
   end
 
-  @spec units_from( Enumerable.t(), keyword() ) :: { atom(), integer() }
-  def units_from(data, opts \\ []) do
-    if length(data) == 0 do
-      opts[:default] || @time_basis[5]
+  @spec date_range_from( Enumerable.t() ) :: { DateTime.t(), DateTime.t() }
+  def date_range_from(data) do
+    a = Enum.at(data, 0)
+    b = Enum.at(data, -1)
+
+    unless DateTime.compare(a,b) == :lt do
+      {a,b}
     else
-      a = Enum.at(data, 0)
-      b = Enum.at(data, -1)
-      unless DateTime.compare(a,b) == :lt do
-        units_for(a, b, opts)
-      else
-        units_for(b, a, opts)
-      end
+      {b,a}
     end
   end
 
@@ -72,7 +64,70 @@ defmodule Plotter.TimeUnits do
     optimize_units(amount - 1.0)
   end
 
-  #  a = DateTime.from_iso8601 "2019-05-20 01:55:41.541044Z"
-  #  b = DateTime.from_iso8601 "2019-05-20 01:54:02.540529Z"
+  def time_scale(data, opts \\ []) do
+    {dt_a, dt_b} = date_range_from(data)
+    unit = units_for(dt_a, dt_b, opts)
 
+    clone(dt_a, unit)
+    |> Stream.map(fn dt ->
+      dt
+    end)
+    |> Stream.filter(fn dt ->
+      DateTime.compare(dt, dt_b) == :lt
+    end)
+  end
+
+  @spec gets(map(), {atom(), integer(), integer()}, atom()) :: integer()
+  defp gets(dt, {_base_unit, base_number, base_value}, field) do
+    {_field_unit, field_val, _field_num} = basis_unit({field, 0})
+    cond do
+      base_number < field_val ->
+        dt[field]
+      base_number < field_val ->
+        base_value
+      true ->
+        0
+    end
+  end
+
+  def clone(%DateTime{} = dt, unit) do
+    bu = basis_unit(unit)
+    dt = dt |> Map.from_struct()
+
+    %DateTime{
+      day: gets(dt, bu, :day),
+      hour: gets(dt, bu, :hour),
+      minute: gets(dt, bu, :minute),
+      month: gets(dt, bu, :month),
+      second: gets(dt, bu, :second),
+      microsecond: {gets(dt, bu, :microsecond), 6},
+
+      calendar: dt.calendar,
+      std_offset: dt.std_offset,
+      time_zone: dt.time_zone,
+      utc_offset: dt.utc_offset,
+      year: dt.year,
+      zone_abbr: dt.zone_abbr,
+    }
+  end
+
+  @spec basis_unit({atom(), integer()}) :: {:day, 1, integer()} |
+                              {:hour, 2, integer()} |
+                              {:minute, 3, integer()} |
+                              {:second, 4, integer()} |
+                              {:microsecond, 5, integer()}
+  def basis_unit({unit_name, unit_value}) do
+    case unit_name do
+      n when n in [:full_day, :day] ->
+        {:day, 1, unit_value}
+      n when n in [:half_day, :quarter_day, :eigth_day, :full_hour, :hour] ->
+        {:hour, 2, unit_value}
+      n when n in [:half_hour, :quarter_hour, :minute] ->
+        {:minute, 3, unit_value}
+      n when n in [:half_minute, :quarter_minute, :second] ->
+        {:second, 4, unit_value}
+      n when n in [:millisecond, :microsecond] ->
+        {:microsecond, 5, unit_value}
+    end
+  end
 end
