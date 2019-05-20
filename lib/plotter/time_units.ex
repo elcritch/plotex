@@ -63,15 +63,13 @@ defmodule Plotter.TimeUnits do
 
   def time_scale(data, opts \\ []) do
     {dt_a, dt_b} = date_range_from(data)
-    {unit_name, _unit_val} = units_for(dt_a, dt_b, opts)
+    {unit_name, unit_val} = units_for(dt_a, dt_b, opts)
 
-    clone(dt_a, unit_name)
-    |> Stream.map(fn dt ->
-      dt
-    end)
-    |> Stream.filter(fn dt ->
-      DateTime.compare(dt, dt_b) == :lt
-    end)
+    dt_start = clone(dt_a, unit_name)
+
+    0..1_000_000_000
+    |> Stream.map(fn i -> dt_start |> DateTime.add(i * unit_val) end)
+    |> Stream.take_while(fn dt -> DateTime.compare(dt, dt_b) == :lt end)
   end
 
   @spec gets(map(), {atom(), integer()}, atom()) :: integer()
