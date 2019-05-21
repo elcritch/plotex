@@ -37,9 +37,9 @@ defmodule Plotter.NumberUnits do
     count = Keyword.get(opts, :ticks, 10)
 
     r = rank(xdiff, count)
-    Logger.warn("rank: #{inspect r}")
+    # Logger.warn("rank: #{inspect r}")
     b = find_basis(xdiff, r, count)
-    Logger.warn("basis: #{inspect b}")
+    # Logger.warn("basis: #{inspect b}")
     %{val: xdiff, rank: r, basis: :math.pow(10, r) * b}
   end
 

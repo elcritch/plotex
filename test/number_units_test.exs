@@ -39,8 +39,8 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 1.123
     x_b = 530.45
 
-    units = Plotter.NumberUnits.units_for(x_a, x_b)
-    Logger.warn("units: #{inspect units}")
+    # units = Plotter.NumberUnits.units_for(x_a, x_b)
+    # Logger.warn("units: #{inspect units}")
 
     %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 50.0
@@ -50,11 +50,22 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 1.123
     x_b = 930.45
 
-    units = Plotter.NumberUnits.units_for(x_a, x_b)
-    Logger.warn("units: #{inspect units}")
+    # units = Plotter.NumberUnits.units_for(x_a, x_b)
+    # Logger.warn("units: #{inspect units}")
 
     %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 100.0
+  end
+
+  test "decade 200 " do
+    x_a = 1.123
+    x_b = 1930.45
+
+    # units = Plotter.NumberUnits.units_for(x_a, x_b)
+    # Logger.warn("units: #{inspect units}")
+
+    %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
+    assert xbasis == 200.0
   end
 
 end
