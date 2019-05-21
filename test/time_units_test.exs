@@ -31,9 +31,7 @@ defmodule Plotter.TimeUnitsTest do
 
     scale! = scale |> Enum.take(30)
 
-    for i <- scale! do
-      Logger.warn("#{inspect(i)}")
-    end
+    # for i <- scale! do Logger.warn("#{inspect(i)}") end
 
     assert length(scale!) == 12
   end
@@ -45,10 +43,23 @@ defmodule Plotter.TimeUnitsTest do
     scale = Plotter.TimeUnits.time_scale(dt_a, dt_b, ticks: 4)
     scale! = scale |> Enum.take(30)
 
+    # for i <- scale! do Logger.warn("#{inspect(i)}") end
+
+    assert length(scale!) == 4
+  end
+
+  test "hour time scale" do
+    dt_a = DateTime.from_iso8601("2019-05-20T05:04:10.836Z") |> elem(1)
+    dt_b = DateTime.from_iso8601("2019-05-20T08:15:00.836Z") |> elem(1)
+
+    scale = Plotter.TimeUnits.time_scale(dt_a, dt_b, [])
+
+    scale! = scale |> Enum.take(30)
+
     for i <- scale! do
       Logger.warn("#{inspect(i)}")
     end
 
-    assert length(scale!) == 4
+    assert length(scale!) == 14
   end
 end

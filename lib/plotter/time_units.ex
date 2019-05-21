@@ -18,8 +18,8 @@ defmodule Plotter.TimeUnits do
     eigth_day: {10_800, 6},
     hour: {3_600, 6},
     # Minutes
-    half_hour: {1_800, 7},
-    quarter_hour: {900, 7},
+    half_hour: {1_800, 6},
+    quarter_hour: {900, 6},
     minute: {60, 7},
     # Seconds
     half_minute: {30, 8},
@@ -87,7 +87,7 @@ defmodule Plotter.TimeUnits do
   def time_scale(dt_a, dt_b, opts) do
     {diff_seconds, unit} = units_for(dt_a, dt_b, opts)
     {_unit_name, unit_val, _unit_number} = unit
-    Logger.warn("unit name: #{inspect(unit)}")
+    # Logger.warn("unit name: #{inspect(unit)}")
     dt_start = clone(dt_a, unit)
 
     basis_count = diff_seconds / unit_val
@@ -99,7 +99,7 @@ defmodule Plotter.TimeUnits do
         round(basis_count / 10)
       end
 
-    Logger.warn("time_stride: #{inspect(stride)}")
+    # Logger.warn("time_stride: #{inspect(stride)}")
 
     0..1_000_000_000
     |> Stream.map(fn i ->
