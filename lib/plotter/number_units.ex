@@ -29,8 +29,8 @@ defmodule Plotter.NumberUnits do
     x_stop = x_b + basis
 
     0..1_000_000_000
-    |> Stream.map(fn i -> x_start + i*basis end)
-    |> Stream.take_while(fn x -> x <  x_stop end)
+    |> Stream.map(fn i -> x_start + i * basis end)
+    |> Stream.take_while(fn x -> x < x_stop end)
   end
 
   def optimize_units(xdiff, opts \\ []) do
@@ -45,13 +45,13 @@ defmodule Plotter.NumberUnits do
 
   def find_basis(x, rank, count) do
     @number_basis
-    |> Enum.map(& {&1, x / ( &1 * :math.pow(count, 1 * rank))} )
-    |> Enum.min_by(fn {_base, val} -> abs(count-val) end) |> elem(0)
+    |> Enum.map(&{&1, x / (&1 * :math.pow(count, 1 * rank))})
+    |> Enum.min_by(fn {_base, val} -> abs(count - val) end)
+    |> elem(0)
   end
 
   @doc """
   Calculate the base-10 rank of a number.
   """
-  def rank(x, b), do: trunc( :math.log10( x / b  ) - 1 )
-
+  def rank(x, b), do: trunc(:math.log10(x / b) - 1)
 end

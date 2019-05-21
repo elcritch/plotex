@@ -5,8 +5,8 @@ defmodule Plotter.NumberUnitsTest do
 
   test "base-10 rank for numbers" do
     ranks =
-      [ 1000, 120.2, 53.9, 13.1, 8.9, 0.98, 0.0396]
-      |> Enum.map(& Plotter.NumberUnits.rank(&1, 10) )
+      [1000, 120.2, 53.9, 13.1, 8.9, 0.98, 0.0396]
+      |> Enum.map(&Plotter.NumberUnits.rank(&1, 10))
 
     assert ranks == [1, 0, 0, 0, -1, -2, -3]
   end
@@ -67,5 +67,4 @@ defmodule Plotter.NumberUnitsTest do
     %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 200.0
   end
-
 end

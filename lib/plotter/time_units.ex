@@ -28,14 +28,15 @@ defmodule Plotter.TimeUnits do
     # Milliseconds
     millisecond: {1.0e-3, 9},
     # Microseconds
-    microsecond: {1.0e-6, 10},
+    microsecond: {1.0e-6, 10}
   ]
 
   @doc """
   Get units for a given date range, using the number of ticks.
 
   """
-  @spec units_for(DateTime.t(), DateTime.t(), keyword()) :: {number(), {atom(), integer(), integer()}}
+  @spec units_for(DateTime.t(), DateTime.t(), keyword()) ::
+          {number(), {atom(), integer(), integer()}}
   def units_for(dt_a, dt_b, opts \\ []) do
     DateTime.diff(dt_a, dt_b)
     |> abs()
@@ -107,7 +108,7 @@ defmodule Plotter.TimeUnits do
 
   @spec gets(map(), {atom(), integer(), integer()}, atom()) :: integer()
   defp gets(dt, {_base_unit, _base_number, base_order}, field) do
-    {_fn, {_fval, field_order}} = Enum.find(@time_basis, fn xf -> field == elem(xf,0) end)
+    {_fn, {_fval, field_order}} = Enum.find(@time_basis, fn xf -> field == elem(xf, 0) end)
 
     cond do
       base_order >= field_order ->
@@ -128,7 +129,6 @@ defmodule Plotter.TimeUnits do
       month: gets(dt, unit, :month),
       second: gets(dt, unit, :second),
       microsecond: {gets(dt, unit, :microsecond), 6},
-
       calendar: dt.calendar,
       std_offset: dt.std_offset,
       time_zone: dt.time_zone,
