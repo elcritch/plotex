@@ -56,9 +56,9 @@ defmodule Plotter.TimeUnitsTest do
 
     scale! = scale |> Enum.take(30)
 
-    for i <- scale! do
-      Logger.warn("#{inspect(i)}")
-    end
+    # for i <- scale! do
+      # Logger.warn("#{inspect(i)}")
+    # end
 
     assert length(scale!) == 14
   end

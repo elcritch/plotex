@@ -91,13 +91,7 @@ defmodule Plotter.TimeUnits do
     dt_start = clone(dt_a, unit)
 
     basis_count = diff_seconds / unit_val
-
-    stride =
-      if opts[:ticks] do
-        round(basis_count / opts[:ticks])
-      else
-        round(basis_count / 10)
-      end
+    stride = round(basis_count / Keyword.get(opts, :ticks, 10))
 
     # Logger.warn("time_stride: #{inspect(stride)}")
 
