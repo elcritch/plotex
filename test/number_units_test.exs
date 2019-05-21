@@ -67,4 +67,35 @@ defmodule Plotter.NumberUnitsTest do
     %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 200.0
   end
+
+  test "range 200 " do
+    x_a = 40.123
+    x_b = 1930.45
+
+    # units = Plotter.NumberUnits.units_for(x_a, x_b)
+    # Logger.warn("units: #{inspect units}")
+
+    xrange =
+      Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
+      |> Enum.take(50)
+
+    # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
+    scale = [0.0, 200.0, 400.0, 600.0, 800.0, 1.0e3, 1.2e3, 1.4e3, 1.6e3, 1.8e3, 2.0e3]
+
+    assert scale == xrange
+  end
+
+  test "range 200 negative offset " do
+    x_a = -110.123
+    x_b = 1930.45
+
+    xrange =
+      Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
+      |> Enum.take(50)
+
+    # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
+    scale = [-200.0, 0.0, 200.0, 400.0, 600.0, 800.0, 1.0e3, 1.2e3, 1.4e3, 1.6e3, 1.8e3, 2.0e3]
+
+    assert scale == xrange
+  end
 end

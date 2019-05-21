@@ -21,18 +21,32 @@ defmodule Plotter.NumberUnits do
   end
 
   def number_scale(x_a, x_b, opts) do
-    %{basis: basis} = units_for(x_a, x_b, opts)
+    %{basis: basis} = _units = units_for(x_a, x_b, opts)
+    # Logger.warn("x_basis: #{inspect units}")
 
     # stride = round(basis_count / Keyword.get(opts, :ticks, 10))
     # Logger.warn("x_stride: #{inspect(stride)}")
-    x_start = x_a - :math.fmod(x_a, basis)
+    # Logger.warn("x_a: #{x_a}")
+    # Logger.warn("x_fmod: #{inspect :math.fmod(x_a, basis)}")
+
+    x_start =
+      unless x_a < 0.0 do
+        trunc( x_a / basis ) * basis
+      else
+        trunc( x_a / basis ) * basis - basis
+      end
+
+    # x_start = x_a - :math.fmod(x_a, basis)
     x_stop = x_b + basis
+
+    # Logger.warn("x_start: #{inspect x_start}")
 
     0..1_000_000_000
     |> Stream.map(fn i -> x_start + i * basis end)
     |> Stream.take_while(fn x -> x < x_stop end)
   end
 
+  @spec optimize_units(number(), keyword()) :: %{basis: float(), rank: integer(), val: number()}
   def optimize_units(xdiff, opts \\ []) do
     count = Keyword.get(opts, :ticks, 10)
 
