@@ -98,4 +98,33 @@ defmodule Plotter.NumberUnitsTest do
 
     assert scale == xrange
   end
+
+  test "range 2 offset " do
+    x_a = 11.34
+    x_b = 28.47
+
+    xrange =
+      Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
+      |> Enum.take(50)
+
+    # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
+    scale = [10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0]
+
+    assert scale == xrange
+  end
+
+  test "range 2 negative offset " do
+    x_a = -28.47
+    x_b = -11.34
+
+    xrange =
+      Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
+      |> Enum.take(50)
+
+    # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
+    scale = [-30.0, -28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -16.0, -14.0, -12.0, -10.0]
+
+    assert scale == xrange
+  end
+
 end
