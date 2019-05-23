@@ -40,7 +40,6 @@ defmodule Plotter.NumberUnits do
     x_stop = x_b + basis
 
     # Logger.warn("x_start: #{inspect x_start}")
-
     0..1_000_000_000
     |> Stream.map(fn i -> x_start + i * basis end)
     |> Stream.take_while(fn x -> x < x_stop end)
