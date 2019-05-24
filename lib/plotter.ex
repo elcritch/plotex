@@ -14,7 +14,10 @@ defmodule Plotter do
     b = axis.limits.stop
     n = axis.ticks
 
-    Plotter.NumberUnits.number_scale(a, b, ticks: n)
+    data = Plotter.NumberUnits.number_scale(a, b, ticks: n)
+    xrng = scale_data(data, axis)
+
+    Stream.zip(data, xrng)
   end
 
   def scale_data(data, %Axis{} = axis ) do
@@ -73,18 +76,19 @@ defmodule Plotter do
     Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
 
     datasets! =
-      for data <- datasets, into: [] do
+      for {x,y} = data <- datasets, into: [] do
         {xd, yd} = Plotter.plot_data(data, plt.xaxis, plt.yaxis)
-        Logger.warn("xdata: #{inspect xd |> Enum.to_list()}")
-        Logger.warn("ydata: #{inspect yd |> Enum.to_list()}")
+        Logger.warn("xdata #{inspect x |> Enum.to_list()}")
+        Logger.warn("xdata! #{inspect xd |> Enum.to_list()}")
+        Logger.warn("ydata #{inspect y |> Enum.to_list()}")
+        Logger.warn("ydata! #{inspect yd |> Enum.to_list()}")
         {xd, yd}
       end
 
-    %{plot: plt,
+    %{config: plt,
       xticks: xticks,
       yticks: yticks,
-      datasets: datasets!,
-    }
+      datasets: datasets!}
   end
 
 end
