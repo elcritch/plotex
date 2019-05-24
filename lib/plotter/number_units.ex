@@ -49,6 +49,7 @@ defmodule Plotter.NumberUnits do
   def optimize_units(xdiff, opts \\ []) do
     count = Keyword.get(opts, :ticks, 10)
 
+    # Logger.warn("xdiff: #{inspect xdiff}")
     r = rank(xdiff, count)
     # Logger.warn("rank: #{inspect r}")
     b = find_basis(xdiff, r, count)
@@ -66,5 +67,7 @@ defmodule Plotter.NumberUnits do
   @doc """
   Calculate the base-10 rank of a number.
   """
-  def rank(x, b), do: trunc(:math.log10(x / b) - 1)
+  def rank(0, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
+  def rank(0.1, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
+  def rank(x, b), do: trunc(:math.log10( (x+1.0e-8) / b) - 1) |> IO.inspect(label: :rank)
 end

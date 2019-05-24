@@ -9,7 +9,12 @@ defmodule Plotter do
   defstruct xaxis: %Axis{},
             yaxis: %Axis{}
 
-  def generate_axis(%{direction: _dir, scale: _scale}) do
+  def generate_axis(%Axis{} = axis) do
+    a = axis.limits.start
+    b = axis.limits.stop
+    n = axis.ticks
+
+    Plotter.NumberUnits.number_scale(a, b, ticks: n)
   end
 
   def scale_data(data, %Axis{} = axis ) do
@@ -62,7 +67,14 @@ defmodule Plotter do
       yaxis: %Axis{limits: ylim, },
     }
 
-    plt
+    xticks = generate_axis(plt.xaxis) |> Enum.to_list()
+    yticks = generate_axis(plt.yaxis) |> Enum.to_list()
+    Logger.warn("xticks: #{inspect xticks }")
+    Logger.warn("yticks: #{inspect yticks }")
+
+    %{plot: plt,
+      xticks: xticks,
+      yticks: yticks}
   end
 
 end
