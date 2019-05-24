@@ -67,14 +67,24 @@ defmodule Plotter do
       yaxis: %Axis{limits: ylim, },
     }
 
-    xticks = generate_axis(plt.xaxis) |> Enum.to_list()
-    yticks = generate_axis(plt.yaxis) |> Enum.to_list()
-    Logger.warn("xticks: #{inspect xticks }")
-    Logger.warn("yticks: #{inspect yticks }")
+    xticks = generate_axis(plt.xaxis)
+    yticks = generate_axis(plt.yaxis)
+    Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
+    Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
+
+    datasets! =
+      for data <- datasets, into: [] do
+        {xd, yd} = Plotter.plot_data(data, plt.xaxis, plt.yaxis)
+        Logger.warn("xdata: #{inspect xd |> Enum.to_list()}")
+        Logger.warn("ydata: #{inspect yd |> Enum.to_list()}")
+        {xd, yd}
+      end
 
     %{plot: plt,
       xticks: xticks,
-      yticks: yticks}
+      yticks: yticks,
+      datasets: datasets!,
+    }
   end
 
 end
