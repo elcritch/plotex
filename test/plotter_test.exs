@@ -49,6 +49,14 @@ defmodule PlotterTest do
     assert %ViewRange{start: 0.09983341664682815, stop: 0.3894183423086505} == yrng
   end
 
+  test "simple plot" do
+    xdata = 1..4 |> Enum.map(& &1 )
+    ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
+
+    plt = Plotter.plot([{xdata, ydata}])
+    Logger.warn("plotter cfg: #{inspect plt }")
+  end
+
   test "nil plot" do
     xdata = []
     ydata = []
@@ -57,11 +65,11 @@ defmodule PlotterTest do
     Logger.warn("plotter cfg: #{inspect plt }")
   end
 
-  test "simple plot" do
-    xdata = 1..4 |> Enum.map(& &1 )
-    ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
+  test "nil date plot" do
+    xdata = []
+    ydata = []
 
-    plt = Plotter.plot([{xdata, ydata}])
+    plt = Plotter.plot([{xdata, ydata}], xkind: :datetime)
     Logger.warn("plotter cfg: #{inspect plt }")
   end
 
