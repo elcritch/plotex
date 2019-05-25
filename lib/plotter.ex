@@ -35,7 +35,7 @@ defmodule Plotter do
     xrng = scale_data(xdata, xaxis)
     yrng = scale_data(ydata, yaxis)
 
-    {xrng, yrng}
+    {Enum.zip(xdata, xrng), Enum.zip(ydata, yrng)}
   end
 
   def range_from(data) do
