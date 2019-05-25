@@ -30,6 +30,7 @@ defmodule Plotter.Axis do
   defstruct limits: %ViewRange{},
             view: %ViewRange{},
             name: "",
-            ticks: 10
+            ticks: 10,
+            kind: :numeric
 
 end

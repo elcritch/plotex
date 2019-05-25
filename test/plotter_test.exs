@@ -49,24 +49,20 @@ defmodule PlotterTest do
     assert %ViewRange{start: 0.09983341664682815, stop: 0.3894183423086505} == yrng
   end
 
-  test "simple plot" do
-
-    xdata = 1..4 |> Enum.map(& &1 )
-    ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
-
-    xlims = Plotter.NumberUnits.range_from(xdata) |> Plotter.ViewRange.new()
-    xaxis = %Axis{limits: xlims}
-    Logger.warn("xlims: #{inspect xlims}")
-    Logger.warn("xaxis: #{inspect xaxis}")
-
-    ylims = Plotter.NumberUnits.range_from(ydata) |> Plotter.ViewRange.new()
-    yaxis = %Axis{limits: ylims}
-    Logger.warn("ylims: #{inspect ylims}")
-    Logger.warn("yaxis: #{inspect yaxis}")
+  test "nil plot" do
+    xdata = []
+    ydata = []
 
     plt = Plotter.plot([{xdata, ydata}])
     Logger.warn("plotter cfg: #{inspect plt }")
+  end
 
+  test "simple plot" do
+    xdata = 1..4 |> Enum.map(& &1 )
+    ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
+
+    plt = Plotter.plot([{xdata, ydata}])
+    Logger.warn("plotter cfg: #{inspect plt }")
   end
 
 end

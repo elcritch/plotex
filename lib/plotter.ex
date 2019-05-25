@@ -9,18 +9,42 @@ defmodule Plotter do
   defstruct xaxis: %Axis{},
             yaxis: %Axis{}
 
-  def generate_axis(%Axis{} = axis) do
+  def generate_axis(%Axis{kind: :numeric} = axis) do
     a = axis.limits.start
     b = axis.limits.stop
     n = axis.ticks
 
-    data = Plotter.NumberUnits.number_scale(a, b, ticks: n)
-    xrng = scale_data(data, axis)
+    unless a == nil || b == nil do
+      data = Plotter.NumberUnits.number_scale(a, b, ticks: n)
+      xrng = scale_data(data, axis)
 
-    Stream.zip(data, xrng)
+      Stream.zip(data, xrng)
+    else
+      []
+    end
   end
 
+  def generate_axis(%Axis{kind: :datetime} = axis) do
+    a = axis.limits.start
+    b = axis.limits.stop
+    n = axis.ticks
+
+    Logger.warn("AXIS: a, b: #{inspect {a,b}}")
+    unless a == nil || b == nil do
+      data = Plotter.TimeUnits.time_scale(a, b, ticks: n)
+      xrng = scale_data(data, axis)
+
+      Stream.zip(data, xrng)
+    else
+      []
+    end
+  end
+
+  def scale_data(_data, %Axis{limits: %{start: nil, stop: nil} } = _axis ) do
+    []
+  end
   def scale_data(data, %Axis{} = axis ) do
+    Logger.warn("SCALE_DATA: #{inspect axis}")
     m = ( axis.view.stop - axis.view.start )
           / ( axis.limits.stop - axis.limits.start )
     b = axis.view.start
@@ -39,7 +63,11 @@ defmodule Plotter do
   end
 
   def range_from(data) do
-    Enum.min_max_by(data, &Plotter.ViewRange.convert/1)
+    unless Enum.count(data) == 0 do
+      Enum.min_max_by(data, &Plotter.ViewRange.convert/1)
+    else
+      {nil, nil}
+    end
   end
 
   def limits(datasets, opts \\ []) do
@@ -62,11 +90,11 @@ defmodule Plotter do
      %ViewRange{start: ya, stop: yb, projection: proj}}
   end
 
-  def plot(datasets, _opts \\ []) do
+  def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets)
 
     plt = %Plotter{
-      xaxis: %Axis{limits: xlim, },
+      xaxis: %Axis{limits: xlim, kind: opts[:xkind] || :numeric},
       yaxis: %Axis{limits: ylim, },
     }
 
