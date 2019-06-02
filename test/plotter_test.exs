@@ -115,8 +115,8 @@ defmodule PlotterTest do
           text-anchor: middle;
         }
 
-        .graph .labels .y-labels {
-          text-anchor: end;
+        .graph .labels, .graph .y-labels {
+          text-anchor: middle;
         }
 
         .graph {
@@ -127,7 +127,7 @@ defmodule PlotterTest do
         .graph .grid {
           stroke: #ccc;
           stroke-dasharray: 0;
-          stroke-width: 0.01;
+          stroke-width: 1.0;
         }
 
         .labels {
@@ -143,7 +143,7 @@ defmodule PlotterTest do
 
         .data {
           fill: red;
-          stroke-width: 0.01;
+          stroke-width: 1.0;
         }
       </style>
     </head>
