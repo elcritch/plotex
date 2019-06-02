@@ -154,7 +154,7 @@ defmodule PlotterTest do
         .data .data-line {
           stroke: #0074d9;
           stroke-width: 0.1em;
-          stroke-width: 0.5em;
+          stroke-width: 0.1em;
           stroke-linecap: round;
           fill: none;
         }
