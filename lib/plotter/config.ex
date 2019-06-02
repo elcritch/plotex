@@ -6,7 +6,8 @@ defmodule Plotter.Config do
   Documentation for Plotter Config.
   """
   defstruct xaxis: %Axis{},
-            yaxis: %Axis{}
+            yaxis: %Axis{},
+            title: "Plot"
 
-  @type t :: %Plotter.Config{xaxis: map, yaxis: map}
+  @type t :: %Plotter.Config{xaxis: map, yaxis: map, title: String.t() }
 end

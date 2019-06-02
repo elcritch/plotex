@@ -95,6 +95,7 @@ defmodule Plotter do
      %ViewRange{start: ya, stop: yb, projection: proj}}
   end
 
+  @spec plot([ [{number, number}] ], nil | keyword | map) :: Plotter.t()
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets)
 
@@ -116,7 +117,7 @@ defmodule Plotter do
 
     Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> Enum.to_list()}"
 
-    %{config: plt,
+    %Plotter{config: plt,
       xticks: xticks,
       yticks: yticks,
       datasets: datasets!}
