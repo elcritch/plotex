@@ -24,7 +24,8 @@ defmodule Plotter.Output.Svg do
 
     ~E"""
         <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-             viewbox="0 0 1 1 " class="graph" version="1.2" >
+             viewbox="0 0 100 100"
+             class="graph" version="1.2" >
         <title id="title"> <%= @config.title %> </title>
         <g class="grid x-grid">
           <line x1="<%= @config.xaxis.view.start %>"

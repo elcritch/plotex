@@ -1,8 +1,8 @@
 defmodule Plotter.ViewRange do
   alias __MODULE__
 
-  defstruct start: 0.1,
-            stop: 0.9,
+  defstruct start: 10,
+            stop: 90,
             projection: :cartesian
 
   @type t :: %Plotter.ViewRange{start: number(), stop: number(), projection: :cartesian | :polar }
