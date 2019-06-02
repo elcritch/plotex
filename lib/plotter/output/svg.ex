@@ -7,6 +7,7 @@ defmodule Plotter.Output.Svg do
     :io_lib.format(fmt, [label])
   end
 
+
   def generate(%Plotter{} = plot, opts \\ []) do
 
     nfmt = Keyword.get(opts, :number_format, "~5.2f")
@@ -15,6 +16,7 @@ defmodule Plotter.Output.Svg do
       plot
       |> Map.from_struct()
       |> Map.put(:opts, opts)
+      |> Map.put(:ds, 1.5)
 
     ~E"""
         <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -77,19 +79,34 @@ defmodule Plotter.Output.Svg do
         <g class="data">
         <%= for dataset <- @datasets do %>
           <g class="data-point" data-setname="">
-            <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
-              <circle cx="<%= xp %>" cy="-<%= yp %>"
-                      data-x-value="<%= xl %>"
-                      data-y-value="<%= yl %>"
-                      r="<%= @opts[:data][:size] || '0.1em' %>"></circle>
-            <% end %>
-
             <polyline class="data-line"
                       points="
                         <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %>
                           <%= xp %>,-<%= yp %>
                         <% end %>
                         "/>
+
+            <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
+              <%= case @opts[:data][:type] do %>
+              <% :circle -> %>
+                <circle
+                      cx="<%= xp %>"
+                      cy="-<%= yp %>"
+                      r="<%= (@opts[:data][:size] || @ds)/2.0 %>"
+                      data-x-value="<%= xl %>"
+                      data-y-value="<%= yl %>"
+                      ></circle>
+              <% _rect_default -> %>
+                <rect
+                      x="<%= xp - (@opts[:data][:size] || @ds)/2  %>"
+                      y="-<%= yp + (@opts[:data][:size] || @ds)/2  %>"
+                      data-x-value="<%= xl %>"
+                      data-y-value="<%= yl %>"
+                      width="<%= @opts[:data][:size] || @ds %>"
+                      height="<%= @opts[:data][:size] || @ds %>"
+                      ></rect>
+              <% end %>
+            <% end %>
           </g>
         <% end %>
         </g>

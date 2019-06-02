@@ -150,9 +150,11 @@ defmodule PlotterTest do
           fill: darkblue;
           stroke-width: 1.0;
         }
+
         .data .data-line {
           stroke: #0074d9;
           stroke-width: 0.1em;
+          stroke-width: 0.0em;
           stroke-linecap: round;
           fill: none;
         }
