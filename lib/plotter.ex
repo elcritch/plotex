@@ -99,25 +99,33 @@ defmodule Plotter do
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets)
 
-    plt = %Plotter.Config{
+    config = %Plotter.Config{
       xaxis: %Axis{limits: xlim, kind: opts[:xkind] || :numeric},
       yaxis: %Axis{limits: ylim, },
     }
 
-    xticks = generate_axis(plt.xaxis)
-    yticks = generate_axis(plt.yaxis)
+    xticks =
+      generate_axis(config.xaxis)
+      |> Stream.filter(& elem(&1, 1) >= 0.98 * config.xaxis.view.start)
+      |> Stream.filter(& elem(&1, 1) <= 0.98 * config.xaxis.view.stop)
+
+    yticks =
+      generate_axis(config.yaxis)
+      |> Stream.filter(& elem(&1, 1) >= config.yaxis.view.start )
+      |> Stream.filter(& elem(&1, 1) <= config.yaxis.view.stop )
+
     Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
     Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
 
     datasets! =
       for data <- datasets, into: [] do
-        {xd, yd} = Plotter.plot_data(data, plt.xaxis, plt.yaxis)
+        {xd, yd} = Plotter.plot_data(data, config.xaxis, config.yaxis)
         Stream.zip(xd, yd)
       end
 
     Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> Enum.to_list()}"
 
-    %Plotter{config: plt,
+    %Plotter{config: config,
       xticks: xticks,
       yticks: yticks,
       datasets: datasets!}

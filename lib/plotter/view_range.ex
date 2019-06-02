@@ -24,4 +24,10 @@ defmodule Plotter.ViewRange do
   def convert(%Date{} = val), do: Date.to_erl(val)
   def convert(%DateTime{} = val), do: DateTime.to_unix(val, :nanosecond)
   def convert(val) when is_number(val), do: val
+
+  @spec dist(Plotter.ViewRange.t()) :: number
+  def dist(%ViewRange{} = range) do
+    range.stop - range.start
+  end
+
 end

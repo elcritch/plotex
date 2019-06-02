@@ -103,7 +103,12 @@ defmodule PlotterTest do
     plt = Plotter.plot([{xdata, ydata}], xkind: :numeric)
     Logger.error("svg plotter cfg: #{inspect plt, pretty: true }")
 
-    svg_str = Plotter.Output.Svg.generate(plt)
+    svg_str = Plotter.Output.Svg.generate(
+                plt,
+                number_format: "~5.3f",
+                x_axis_rotate: 35,
+                y_axis_rotate: 35,
+              )
 
     Logger.warn("SVG: \n#{svg_str}")
 
@@ -131,13 +136,13 @@ defmodule PlotterTest do
         }
 
         .labels {
-          font-size: 5px;
+          font-size: 3px;
         }
 
         .label-title {
+          font-size: 8px;
           font-weight: bold;
           text-transform: uppercase;
-          font-size: 12px;
           fill: black;
         }
 

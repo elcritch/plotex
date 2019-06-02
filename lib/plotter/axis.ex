@@ -1,6 +1,7 @@
 
 defmodule Plotter.Axis do
   alias Plotter.ViewRange
+  alias __MODULE__
 
   defstruct limits: %ViewRange{},
             view: %ViewRange{},
@@ -15,4 +16,5 @@ defmodule Plotter.Axis do
     ticks: non_neg_integer(),
     kind: :numeric | :datetime,
   }
+
 end
