@@ -5,6 +5,8 @@ defmodule Plotter.ViewRange do
             stop: 0.9,
             projection: :cartesian
 
+  @type t :: %Plotter.ViewRange{start: number(), stop: number(), projection: :cartesian | :polar }
+
   def new({a,b}, proj \\ :cartesian) do
     %ViewRange{start: a, stop: b, projection: proj}
   end
@@ -22,15 +24,4 @@ defmodule Plotter.ViewRange do
   def convert(%Date{} = val), do: Date.to_erl(val)
   def convert(%DateTime{} = val), do: DateTime.to_unix(val, :nanosecond)
   def convert(val) when is_number(val), do: val
-end
-
-defmodule Plotter.Axis do
-  alias Plotter.ViewRange
-
-  defstruct limits: %ViewRange{},
-            view: %ViewRange{},
-            name: "",
-            ticks: 10,
-            kind: :numeric
-
 end

@@ -65,12 +65,35 @@ defmodule PlotterTest do
     Logger.warn("plotter cfg: #{inspect plt }")
   end
 
-  test "nil date plot" do
-    xdata = []
-    ydata = []
+  # test "nil date plot" do
+  #   xdata = []
+  #   ydata = []
 
-    plt = Plotter.plot([{xdata, ydata}], xkind: :datetime)
+  #   plt = Plotter.plot([{xdata, ydata}], xkind: :datetime)
+  #   Logger.warn("plotter cfg: #{inspect plt }")
+  # end
+
+  test "date plot" do
+    xdata = [0.0, 2.0, 3.0, 4.0]
+    ydata = [0.1, 0.25, 0.15, 0.1]
+
+    plt = Plotter.plot([{xdata, ydata}], xkind: :numeric)
     Logger.warn("plotter cfg: #{inspect plt }")
+
+    for xt <- plt.xticks do
+      Logger.info("xtick: #{inspect xt}")
+    end
+
+    for yt <- plt.yticks do
+      Logger.info("xtick: #{inspect yt}")
+    end
+
+    for data <- plt.datasets do
+      for {x,y} <- data do
+        Logger.info("data: #{inspect {x,y}}")
+      end
+    end
+
   end
 
 end

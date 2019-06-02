@@ -6,8 +6,12 @@ defmodule Plotter do
   @moduledoc """
   Documentation for Plotter.
   """
-  defstruct xaxis: %Axis{},
-            yaxis: %Axis{}
+  defstruct [:config, :xticks, :yticks, :datasets, :datasets]
+
+  @type t :: %Plotter{config: Plotter.Config.t(),
+                      xticks: Enumerable.t(),
+                      yticks: Enumerable.t(),
+                      datasets: Enumerable.t()}
 
   def generate_axis(%Axis{kind: :numeric} = axis) do
     a = axis.limits.start
@@ -29,9 +33,10 @@ defmodule Plotter do
     b = axis.limits.stop
     n = axis.ticks
 
-    # Logger.warn("AXIS: a, b: #{inspect {a,b}}")
+    Logger.warn("AXIS: a, b: #{inspect {a,b}}")
     unless a == nil || b == nil do
       data = Plotter.TimeUnits.time_scale(a, b, ticks: n)
+      Logger.warn("AXIS DATA: #{inspect data |> Enum.to_list()}")
       xrng = scale_data(data, axis)
 
       Stream.zip(data, xrng)
@@ -44,7 +49,7 @@ defmodule Plotter do
     []
   end
   def scale_data(data, %Axis{} = axis ) do
-    # Logger.warn("SCALE_DATA: #{inspect axis}")
+    Logger.warn("SCALE_DATA: #{inspect axis}")
     m = ( axis.view.stop - axis.view.start )
           / ( axis.limits.stop - axis.limits.start )
     b = axis.view.start
@@ -71,7 +76,7 @@ defmodule Plotter do
   end
 
   def limits(datasets, opts \\ []) do
-    # Logger.warn("plot: opts: #{inspect opts}")
+    Logger.warn("plot: opts: #{inspect opts}")
     proj = Keyword.get(opts, :projection, :cartesian)
 
     {{xa, xb}, {ya, yb}} =
@@ -93,15 +98,15 @@ defmodule Plotter do
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets)
 
-    plt = %Plotter{
+    plt = %Plotter.Config{
       xaxis: %Axis{limits: xlim, kind: opts[:xkind] || :numeric},
       yaxis: %Axis{limits: ylim, },
     }
 
     xticks = generate_axis(plt.xaxis)
     yticks = generate_axis(plt.yaxis)
-    # Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
-    # Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
+    Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
+    Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
 
     datasets! =
       for data <- datasets, into: [] do
@@ -109,7 +114,7 @@ defmodule Plotter do
         Stream.zip(xd, yd)
       end
 
-    # Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> Enum.to_list()}"
+    Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> Enum.to_list()}"
 
     %{config: plt,
       xticks: xticks,
