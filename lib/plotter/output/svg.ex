@@ -89,16 +89,14 @@ defmodule Plotter.Output.Svg do
             <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
               <%= case @opts[:data][:type] do %>
               <% :circle -> %>
-                <circle
-                      cx="<%= xp %>"
-                      cy="-<%= yp %>"
-                      r="<%= (@opts[:data][:size] || @ds)/2.0 %>"
-                      data-x-value="<%= xl %>"
-                      data-y-value="<%= yl %>"
-                      ></circle>
+                <circle cx="<%= xp %>"
+                        cy="-<%= yp %>"
+                        r="<%= (@opts[:data][:size] || @ds)/2.0 %>"
+                        data-x-value="<%= xl %>"
+                        data-y-value="<%= yl %>"
+                        ></circle>
               <% _rect_default -> %>
-                <rect
-                      x="<%= xp - (@opts[:data][:size] || @ds)/2  %>"
+                <rect x="<%= xp - (@opts[:data][:size] || @ds)/2  %>"
                       y="-<%= yp + (@opts[:data][:size] || @ds)/2  %>"
                       data-x-value="<%= xl %>"
                       data-y-value="<%= yl %>"
