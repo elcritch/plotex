@@ -3,14 +3,13 @@ defmodule Plotter.Output.Svg do
 
   use Phoenix.HTML
 
-  def format_number(label, fmt \\ "~5.2f") do
-    :io_lib.format(fmt, [label])
-  end
-
-
   def generate(%Plotter{} = plot, opts \\ []) do
 
-    nfmt = Keyword.get(opts, :number_format, "~5.2f")
+    nfmt = opts[:number_format] || "~5.2f"
+    xfmt = opts[:xaxis][:format] || fn v -> :io_lib.format(nfmt, [v]) end
+    yfmt = opts[:yaxis][:format] || fn v -> :io_lib.format(nfmt, [v]) end
+    # xfmt = fn v -> :io_lib.format(v |> IO.inspect(label: :XFMT)) end
+    # yfmt = fn v -> :io_lib.format(v |> IO.inspect(label: :YFMT)) end
 
     assigns =
       plot
@@ -40,7 +39,7 @@ defmodule Plotter.Output.Svg do
                   transform="rotate(<%= @opts[:x_axis][:rotate] || 0 %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
                   dy="<%= @opts[:x_axis][:em] || '1.5em' %>">
 
-              <%= format_number(xl, nfmt) %>
+              <%= xfmt.(xl) %>
             </text>
           <% end %>
           <text x="<%= (@config.xaxis.view.stop - @config.xaxis.view.start)/2.0 %>"
@@ -65,7 +64,7 @@ defmodule Plotter.Output.Svg do
                   x="<%= @config.xaxis.view.start %>"
                   transform="rotate(<%= @opts[:y_axis][:rotate] || 0 %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
                   dx="-<%= @opts[:y_axis][:em] || '1.5em' %>">
-              <%= format_number(yl, nfmt) %>
+              <%= yfmt.(yl) %>
               </text>
           <% end %>
           <text y="-<%= (@config.yaxis.view.stop - @config.yaxis.view.start)/2.0 %>"

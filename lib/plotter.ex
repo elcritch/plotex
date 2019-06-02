@@ -50,13 +50,13 @@ defmodule Plotter do
   end
   def scale_data(data, %Axis{} = axis ) do
     Logger.warn("SCALE_DATA: #{inspect axis}")
-    m = ( axis.view.stop - axis.view.start )
-          / ( axis.limits.stop - axis.limits.start )
-    b = axis.view.start
-    x! = axis.limits.start
+    m = ViewRange.diff( axis.view.stop, axis.view.start )
+          / ViewRange.diff( axis.limits.stop, axis.limits.start )
+    b = axis.view.start |> ViewRange.val()
+    x! = axis.limits.start |> ViewRange.val()
 
     data
-    |> Stream.map(fn x -> m*(x-x!) + b  end)
+    |> Stream.map(fn x -> m*(ViewRange.val(x)-x!) + b  end)
   end
 
   def plot_data({xdata, ydata}, %Axis{} = xaxis, %Axis{} = yaxis ) do
@@ -76,7 +76,7 @@ defmodule Plotter do
   end
 
   def limits(datasets, opts \\ []) do
-    Logger.warn("plot: opts: #{inspect opts}")
+    Logger.warn("plot: limits: opts: #{inspect opts}")
     proj = Keyword.get(opts, :projection, :cartesian)
 
     {{xa, xb}, {ya, yb}} =
@@ -92,9 +92,9 @@ defmodule Plotter do
       end)
 
     xpad = (opts[:xaxis][:padding] || 0.05) * ViewRange.dist({xa, xb})
-    ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist({ya, yb})
-
     {xa, xb} = ViewRange.pad({xa, xb}, xpad)
+
+    ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist({ya, yb})
     {ya, yb} = ViewRange.pad({ya, yb}, ypad)
 
     {%ViewRange{start: xa, stop: xb, projection: proj},
@@ -106,8 +106,8 @@ defmodule Plotter do
     {xlim, ylim} = limits(datasets, opts)
 
     config = %Plotter.Config{
-      xaxis: %Axis{limits: xlim, kind: opts[:xkind] || :numeric},
-      yaxis: %Axis{limits: ylim, },
+      xaxis: %Axis{limits: xlim, kind: opts[:xaxis][:kind] || :numeric},
+      yaxis: %Axis{limits: ylim, kind: opts[:yaxis][:kind] || :numeric},
     }
 
     xticks =

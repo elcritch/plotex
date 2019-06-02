@@ -25,6 +25,18 @@ defmodule Plotter.ViewRange do
   def convert(%DateTime{} = val), do: DateTime.to_unix(val, :nanosecond)
   def convert(val) when is_number(val), do: val
 
+  def val(%DateTime{} = a), do: DateTime.to_unix(a, :nanosecond)
+  def val(a), do: a
+
+  def diff(%DateTime{} = b, %DateTime{} = a), do: DateTime.diff(b, a, :nanosecond)
+  def diff(b, a), do: b - a
+
+  @spec pad({DateTime.t(), DateTime.t()}, number) :: {DateTime.t(), DateTime.t()}
+  def pad({%DateTime{} = start, %DateTime{} = stop}, amount) do
+    {start |> DateTime.add(-round(amount), :nanosecond),
+     stop |> DateTime.add(round(amount), :nanosecond)}
+  end
+
   def pad({start, stop}, _amount)  when is_nil(start) or is_nil(stop) do
     {nil, nil}
   end
@@ -33,16 +45,19 @@ defmodule Plotter.ViewRange do
     {start - amount, stop + amount}
   end
 
+  @spec dist( { DateTime.t(), DateTime.t() } | {nil, nil} | ViewRange.t() ) :: number
+  def dist({%DateTime{} = start, %DateTime{} = stop}) do
+    DateTime.to_unix(stop, :nanosecond) - DateTime.to_unix(start, :nanosecond)
+  end
+
   def dist({start, stop}) when is_nil(start) or is_nil(stop) do
     0.0
   end
 
-  @spec dist( tuple() ) :: number
   def dist({start, stop}) do
     stop - start
   end
 
-  @spec dist(Plotter.ViewRange.t()) :: number
   def dist(%ViewRange{} = range) do
     range.stop - range.start
   end

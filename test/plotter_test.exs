@@ -110,6 +110,75 @@ defmodule PlotterTest do
                 y_axis: [rotate: 35],
               )
 
+    # Logger.warn("SVG: \n#{svg_str}")
+
+    html_str = """
+    <html>
+    <head>
+      <style>
+        .graph .labels .x-labels {
+          text-anchor: middle;
+        }
+        .graph .labels, .graph .y-labels {
+          text-anchor: middle;
+        }
+        .graph {
+          height: 500px;
+          width: 800px;
+        }
+        .graph .grid {
+          stroke: #ccc;
+          stroke-dasharray: 0;
+          stroke-width: 1.0;
+        }
+        .labels {
+          font-size: 3px;
+        }
+        .label-title {
+          font-size: 8px;
+          font-weight: bold;
+          text-transform: uppercase;
+          fill: black;
+        }
+        .data .data-point {
+          fill: darkblue;
+          stroke-width: 1.0;
+        }
+        .data .data-line {
+          stroke: #0074d9;
+          stroke-width: 0.1em;
+          stroke-width: 0.1em;
+          stroke-linecap: round;
+          fill: none;
+        }
+      </style>
+    </head>
+    <body>
+      #{svg_str}
+    </body>
+    </html>
+    """
+    File.write!("output.html", html_str)
+  end
+
+  test "svg datetime plot" do
+    xdata = [
+      DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:04:17.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:04:23.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:04:25.836Z") |> elem(1),
+    ]
+    ydata = [0.1, 0.25, 0.15, 0.1]
+
+    plt = Plotter.plot([{xdata, ydata}], xaxis: [kind: :datetime, padding: 0.05])
+    Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
+
+    svg_str = Plotter.Output.Svg.generate(
+                plt,
+                x_axis: [rotate: 35],
+                y_axis: [rotate: 35],
+              )
+
     Logger.warn("SVG: \n#{svg_str}")
 
     html_str = """
@@ -119,38 +188,31 @@ defmodule PlotterTest do
         .graph .labels .x-labels {
           text-anchor: middle;
         }
-
         .graph .labels, .graph .y-labels {
           text-anchor: middle;
         }
-
         .graph {
           height: 500px;
           width: 800px;
         }
-
         .graph .grid {
           stroke: #ccc;
           stroke-dasharray: 0;
           stroke-width: 1.0;
         }
-
         .labels {
           font-size: 3px;
         }
-
         .label-title {
           font-size: 8px;
           font-weight: bold;
           text-transform: uppercase;
           fill: black;
         }
-
         .data .data-point {
           fill: darkblue;
           stroke-width: 1.0;
         }
-
         .data .data-line {
           stroke: #0074d9;
           stroke-width: 0.1em;
@@ -158,36 +220,10 @@ defmodule PlotterTest do
           stroke-linecap: round;
           fill: none;
         }
-
       </style>
     </head>
     <body>
       #{svg_str}
-      <h2>Test</h2>
-      <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="graph" aria-labelledby="title" role="img">
-        <title id="title">A line chart showing some information</title>
-        <g class="grid x-grid" id="xGrid">
-          <line x1="90" x2="90" y1="5" y2="371"></line>
-        </g>
-        <g class="grid y-grid" id="yGrid">
-          <line x1="90" x2="705" y1="370" y2="370"></line>
-        </g>
-        <g class="labels x-labels">
-          <text x="100" y="400">2008</text>
-          <text x="246" y="400">2009</text>
-          <text x="392" y="400">2010</text>
-          <text x="538" y="400">2011</text>
-          <text x="684" y="400">2012</text>
-          <text x="400" y="440" class="label-title">Year</text>
-        </g>
-        <g class="labels y-labels">
-          <text x="80" y="15">15</text>
-          <text x="80" y="131">10</text>
-          <text x="80" y="248">5</text>
-          <text x="80" y="373">0</text>
-          <text x="50" y="200" class="label-title">Price</text>
-        </g>
-      </svg>
     </body>
     </html>
     """
