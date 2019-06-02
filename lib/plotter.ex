@@ -103,7 +103,7 @@ defmodule Plotter do
 
   @spec plot([ [{number, number}] ], nil | keyword | map) :: Plotter.t()
   def plot(datasets, opts \\ []) do
-    {xlim, ylim} = limits(datasets)
+    {xlim, ylim} = limits(datasets, opts)
 
     config = %Plotter.Config{
       xaxis: %Axis{limits: xlim, kind: opts[:xkind] || :numeric},
