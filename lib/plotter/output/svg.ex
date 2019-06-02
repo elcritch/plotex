@@ -85,7 +85,6 @@ defmodule Plotter.Output.Svg do
             <% end %>
 
             <polyline class="data-line"
-                      fill="none"
                       points="
                         <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %>
                           <%= xp %>,-<%= yp %>
