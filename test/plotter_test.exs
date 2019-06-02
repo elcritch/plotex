@@ -147,7 +147,7 @@ defmodule PlotterTest do
         }
 
         .data {
-          fill: red;
+          fill: darkblue;
           stroke-width: 1.0;
         }
       </style>

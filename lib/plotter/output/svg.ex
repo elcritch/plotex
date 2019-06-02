@@ -11,26 +11,9 @@ defmodule Plotter.Output.Svg do
 
     nfmt = Keyword.get(opts, :number_format, "~5.2f")
 
-    for xt <- plot.xticks do
-      Logger.info("xtick: #{inspect xt}")
-    end
-
-    for yt <- plot.yticks do
-      Logger.info("xtick: #{inspect yt}")
-    end
-
-    for data <- plot.datasets do
-      for {x,y} <- data do
-        Logger.info("data: #{inspect {x,y}}")
-      end
-    end
-
-
     assigns =
       plot
       |> Map.from_struct()
-      # |> Map.update!(:xticks, & if opts[:x_axis_trim] do &1 |> Enum.drop(1) |> Enum.drop(-1) else &1 end)
-      # |> Map.update!(:yticks, & if opts[:y_axis_trim] do &1 |> Enum.drop(1) |> Enum.drop(-1) else &1 end)
       |> Map.put(:opts, opts)
 
     ~E"""
@@ -89,6 +72,18 @@ defmodule Plotter.Output.Svg do
             <%= @config.xaxis.name %>
           </text>
         </g>
+
+        <!-- Data -->
+        <%= for dataset <- @datasets do %>
+          <g class="data" data-setname="">
+            <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
+              <circle cx="<%= xp %>" cy="-<%= yp %>"
+                      data-x-value="<%= xl %>"
+                      data-y-value="<%= yl %>"
+                      r="<%= @opts[:data][:size] || '0.1em' %>"></circle>
+            <% end %>
+          </g>
+        <% end %>
       </svg>
 
 
