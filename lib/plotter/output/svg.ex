@@ -74,16 +74,26 @@ defmodule Plotter.Output.Svg do
         </g>
 
         <!-- Data -->
+        <g class="data">
         <%= for dataset <- @datasets do %>
-          <g class="data" data-setname="">
+          <g class="data-point" data-setname="">
             <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
               <circle cx="<%= xp %>" cy="-<%= yp %>"
                       data-x-value="<%= xl %>"
                       data-y-value="<%= yl %>"
                       r="<%= @opts[:data][:size] || '0.1em' %>"></circle>
             <% end %>
+
+            <polyline class="data-line"
+                      fill="none"
+                      points="
+                        <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %>
+                          <%= xp %>,-<%= yp %>
+                        <% end %>
+                        "/>
           </g>
         <% end %>
+        </g>
       </svg>
 
 

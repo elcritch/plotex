@@ -101,7 +101,7 @@ defmodule PlotterTest do
     ydata = [0.1, 0.25, 0.15, 0.1]
 
     plt = Plotter.plot([{xdata, ydata}], xkind: :numeric, xaxis: [padding: 0.05])
-    Logger.error("svg plotter cfg: #{inspect plt, pretty: true }")
+    Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
 
     svg_str = Plotter.Output.Svg.generate(
                 plt,
@@ -146,9 +146,13 @@ defmodule PlotterTest do
           fill: black;
         }
 
-        .data {
+        .data .data-point {
           fill: darkblue;
           stroke-width: 1.0;
+        }
+        .data .data-line {
+          stroke: #0074d9;
+          stroke-width: 0.1em;
         }
       </style>
     </head>
