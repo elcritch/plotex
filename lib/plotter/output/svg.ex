@@ -52,8 +52,8 @@ defmodule Plotter.Output.Svg do
           <%= for {xl, xp} <- @xticks do %>
             <text x="<%= xp %>"
                   y="-<%= @config.yaxis.view.start %>"
-                  transform="rotate(<%= @opts[:x_axis_rotate] || 0 %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
-                  dy="1em">
+                  transform="rotate(<%= @opts[:x_axis][:rotate] || 0 %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
+                  dy="<%= @opts[:x_axis][:em] || '1.5em' %>">
 
               <%= format_number(xl, nfmt) %>
             </text>
@@ -78,8 +78,8 @@ defmodule Plotter.Output.Svg do
           <%= for {yl, yp} <- @yticks do %>
             <text y="-<%= yp %>"
                   x="<%= @config.xaxis.view.start %>"
-                  transform="rotate(<%= @opts[:y_axis_rotate] || 0 %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
-                  dx="-1em">
+                  transform="rotate(<%= @opts[:y_axis][:rotate] || 0 %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
+                  dx="-<%= @opts[:y_axis][:em] || '1.5em' %>">
               <%= format_number(yl, nfmt) %>
               </text>
           <% end %>

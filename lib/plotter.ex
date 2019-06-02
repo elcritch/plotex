@@ -106,8 +106,8 @@ defmodule Plotter do
 
     xticks =
       generate_axis(config.xaxis)
-      |> Stream.filter(& elem(&1, 1) >= 0.98 * config.xaxis.view.start)
-      |> Stream.filter(& elem(&1, 1) <= 0.98 * config.xaxis.view.stop)
+      |> Stream.filter(& elem(&1, 1) >= config.xaxis.view.start)
+      |> Stream.filter(& elem(&1, 1) <= config.xaxis.view.stop)
 
     yticks =
       generate_axis(config.yaxis)

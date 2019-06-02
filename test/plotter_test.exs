@@ -106,8 +106,8 @@ defmodule PlotterTest do
     svg_str = Plotter.Output.Svg.generate(
                 plt,
                 number_format: "~5.3f",
-                x_axis_rotate: 35,
-                y_axis_rotate: 35,
+                x_axis: [rotate: 35],
+                y_axis: [rotate: 35],
               )
 
     Logger.warn("SVG: \n#{svg_str}")
