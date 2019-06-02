@@ -124,12 +124,12 @@ defmodule Plotter do
     Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
 
     datasets! =
-      for data <- datasets, into: [] do
+      for {data, idx} <- datasets |> Stream.with_index(), into: [] do
         {xd, yd} = Plotter.plot_data(data, config.xaxis, config.yaxis)
-        Stream.zip(xd, yd)
+        {Stream.zip(xd, yd), idx}
       end
 
-    Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> Enum.to_list()}"
+    Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> elem(0) |> Enum.to_list()}"
 
     %Plotter{config: config,
       xticks: xticks,
