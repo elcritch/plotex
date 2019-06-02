@@ -45,8 +45,8 @@ defmodule PlotterTest do
 
     {xrng, yrng} = Plotter.limits([{xdata, ydata}])
 
-    assert %ViewRange{start: 1, stop: 4} == xrng
-    assert %ViewRange{start: 0.09983341664682815, stop: 0.3894183423086505} == yrng
+    assert xrng = %Plotter.ViewRange{projection: :cartesian, start: 0.85, stop: 4.15}
+    assert yrng = %Plotter.ViewRange{projection: :cartesian, start: 0.08535417036373703, stop: 0.40389758859174163}
   end
 
   test "simple plot" do

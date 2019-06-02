@@ -85,11 +85,17 @@ defmodule Plotter do
         xlims! = xdata |> Plotter.range_from()
         ylims! = ydata |> Plotter.range_from()
 
-        xlims! = Plotter.ViewRange.min_max(xlims, xlims!)
-        ylims! = Plotter.ViewRange.min_max(ylims, ylims!)
+        xlims! = ViewRange.min_max(xlims, xlims!)
+        ylims! = ViewRange.min_max(ylims, ylims!)
 
         {xlims!, ylims!}
       end)
+
+    xpad = (opts[:xaxis][:padding] || 0.05) * ViewRange.dist({xa, xb})
+    ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist({ya, yb})
+
+    {xa, xb} = ViewRange.pad({xa, xb}, xpad)
+    {ya, yb} = ViewRange.pad({ya, yb}, ypad)
 
     {%ViewRange{start: xa, stop: xb, projection: proj},
      %ViewRange{start: ya, stop: yb, projection: proj}}
