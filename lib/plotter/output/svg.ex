@@ -3,11 +3,19 @@ defmodule Plotter.Output.Svg do
 
   use Phoenix.HTML
 
+  def formatter(%Plotter.Axis{kind: :numeric} = _axis, opts) do
+    opts[:format] || fn v -> :io_lib.format("~5.2f", [v]) end
+  end
+
+  # def formatter(%Plotter.Axis{kind: :datetime} = _axis, opts \\ []) do
+    # opts[:format] || fn v -> :io_lib.format("~5.2f", [v]) end
+  # end
+
   def generate(%Plotter{} = plot, opts \\ []) do
 
-    nfmt = opts[:number_format] || "~5.2f"
-    xfmt = opts[:xaxis][:format] || fn v -> :io_lib.format(nfmt, [v]) end
-    yfmt = opts[:yaxis][:format] || fn v -> :io_lib.format(nfmt, [v]) end
+    xfmt = formatter(plot.config.xaxis, opts[:xaxis])
+    yfmt = formatter(plot.config.yaxis, opts[:yaxis])
+
     # xfmt = fn v -> :io_lib.format(v |> IO.inspect(label: :XFMT)) end
     # yfmt = fn v -> :io_lib.format(v |> IO.inspect(label: :YFMT)) end
 

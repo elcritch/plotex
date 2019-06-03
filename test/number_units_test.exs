@@ -75,10 +75,10 @@ defmodule Plotter.NumberUnitsTest do
     # units = Plotter.NumberUnits.units_for(x_a, x_b)
     # Logger.warn("units: #{inspect units}")
 
-    xrange =
+    nscale =
       Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
-      |> Enum.take(50)
 
+    xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
     scale = [0.0, 200.0, 400.0, 600.0, 800.0, 1.0e3, 1.2e3, 1.4e3, 1.6e3, 1.8e3, 2.0e3]
 
@@ -89,10 +89,10 @@ defmodule Plotter.NumberUnitsTest do
     x_a = -110.123
     x_b = 1930.45
 
-    xrange =
+    nscale =
       Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
-      |> Enum.take(50)
 
+    xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
     scale = [-200.0, 0.0, 200.0, 400.0, 600.0, 800.0, 1.0e3, 1.2e3, 1.4e3, 1.6e3, 1.8e3, 2.0e3]
 
@@ -103,10 +103,10 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 11.34
     x_b = 28.47
 
-    xrange =
+    nscale =
       Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
-      |> Enum.take(50)
 
+    xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
     scale = [10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0]
 
@@ -117,10 +117,10 @@ defmodule Plotter.NumberUnitsTest do
     x_a = -28.47
     x_b = -11.34
 
-    xrange =
+    nscale =
       Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
-      |> Enum.take(50)
 
+    xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
     scale = [-30.0, -28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -16.0, -14.0, -12.0, -10.0]
 

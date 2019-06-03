@@ -40,9 +40,12 @@ defmodule Plotter.NumberUnits do
     x_stop = x_b + basis
 
     # Logger.warn("x_start: #{inspect x_start}")
-    0..1_000_000_000
-    |> Stream.map(fn i -> x_start + i * basis end)
-    |> Stream.take_while(fn x -> x < x_stop end)
+    rng =
+      0..1_000_000_000
+      |> Stream.map(fn i -> x_start + i * basis end)
+      |> Stream.take_while(fn x -> x < x_stop end)
+
+    [data: rng, basis: basis]
   end
 
   @spec optimize_units(number(), keyword()) :: %{basis: float(), rank: integer(), val: number()}

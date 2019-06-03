@@ -35,8 +35,6 @@ defmodule Plotter.TimeUnits do
   Get units for a given date range, using the number of ticks.
 
   """
-  @spec units_for(DateTime.t(), DateTime.t(), keyword()) ::
-          {number(), {atom(), integer(), integer()}}
   def units_for(dt_a, dt_b, opts \\ []) do
     DateTime.diff(dt_a, dt_b)
     |> abs()
@@ -55,7 +53,6 @@ defmodule Plotter.TimeUnits do
     end
   end
 
-  @spec optimize_units(number(), keyword()) :: {number(), {atom(), integer(), integer()}}
   def optimize_units(diff_seconds, opts \\ []) do
     count = Keyword.get(opts, :ticks, 10)
     delta = diff_seconds / count
@@ -69,7 +66,7 @@ defmodule Plotter.TimeUnits do
     {basis_name, {basis_val, basis_order}} =
       @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
 
-    {diff_seconds, {basis_name, basis_val, basis_order}}
+    %{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
   end
 
   def time_units() do
@@ -77,7 +74,7 @@ defmodule Plotter.TimeUnits do
   end
 
   def next_smaller_unit({_name, amount}) do
-    optimize_units(amount - 1.0) |> elem(1)
+    optimize_units(amount - 1.0).basis
   end
 
   def time_scale(data, opts \\ []) do
@@ -85,29 +82,30 @@ defmodule Plotter.TimeUnits do
     time_scale(dt_a, dt_b, opts)
   end
 
+  @spec time_scale( DateTime.t(), DateTime.t(), keyword) :: [ data: Stream.t(), units: map() ]
   def time_scale(dt_a, dt_b, opts) do
-    {diff_seconds, unit} = units_for(dt_a, dt_b, opts)
-    {_unit_name, unit_val, _unit_number} = unit
-    # Logger.warn("unit name: #{inspect(unit)}")
-    dt_start = clone(dt_a, unit)
+    %{diff: diff_seconds, val: unit_val} = basis = units_for(dt_a, dt_b, opts)
+    dt_start = clone(dt_a, basis)
 
     basis_count = diff_seconds / unit_val
     stride = round(basis_count / Keyword.get(opts, :ticks, 10))
 
     # Logger.warn("time_stride: #{inspect(stride)}")
 
-    0..1_000_000_000
-    |> Stream.map(fn i ->
-      # Logger.warn("#{inspect(dt_start)}")
-      # Logger.warn("#{inspect({i, unit_val, i * unit_val})}")
-      DateTime.add(dt_start, i * unit_val, :second)
-    end)
-    |> Stream.take_every(stride)
-    |> Stream.take_while(fn dt -> DateTime.compare(dt, dt_b) == :lt end)
+    rng =
+      0..1_000_000_000
+      |> Stream.map(fn i ->
+        # Logger.warn("#{inspect(dt_start)}")
+        # Logger.warn("#{inspect({i, unit_val, i * unit_val})}")
+        DateTime.add(dt_start, i * unit_val, :second)
+      end)
+      |> Stream.take_every(stride)
+      |> Stream.take_while(fn dt -> DateTime.compare(dt, dt_b) == :lt end)
+
+    [data: rng, basis: basis]
   end
 
-  @spec gets(map(), {atom(), integer(), integer()}, atom()) :: integer()
-  defp gets(dt, {_base_unit, _base_number, base_order}, field) do
+  defp gets(dt, %{basis_name: _base_unit, val: _base_number, order: base_order}, field) do
     {_fn, {_fval, field_order}} = Enum.find(@time_basis, fn xf -> field == elem(xf, 0) end)
 
     cond do

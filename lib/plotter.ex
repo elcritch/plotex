@@ -19,12 +19,12 @@ defmodule Plotter do
     n = axis.ticks
 
     unless a == nil || b == nil do
-      data = Plotter.NumberUnits.number_scale(a, b, ticks: n)
+      [data: data, basis: basis] = Plotter.NumberUnits.number_scale(a, b, ticks: n)
       xrng = scale_data(data, axis)
 
-      Stream.zip(data, xrng)
+      [data: Stream.zip(data, xrng), basis: basis]
     else
-      []
+      [data: [], basis: nil]
     end
   end
 
@@ -35,13 +35,13 @@ defmodule Plotter do
 
     Logger.warn("AXIS: a, b: #{inspect {a,b}}")
     unless a == nil || b == nil do
-      data = Plotter.TimeUnits.time_scale(a, b, ticks: n)
+      [data: data, basis: basis] = Plotter.TimeUnits.time_scale(a, b, ticks: n)
       Logger.warn("AXIS DATA: #{inspect data |> Enum.to_list()}")
       xrng = scale_data(data, axis)
 
-      Stream.zip(data, xrng)
+      [data: Stream.zip(data, xrng), basis: basis]
     else
-      []
+      [data: [], basis: nil]
     end
   end
 
@@ -110,13 +110,16 @@ defmodule Plotter do
       yaxis: %Axis{limits: ylim, kind: opts[:yaxis][:kind] || :numeric},
     }
 
+    [data: xticks, basis: _xbasis] = generate_axis(config.xaxis)
+
     xticks =
-      generate_axis(config.xaxis)
+      xticks
       |> Stream.filter(& elem(&1, 1) >= config.xaxis.view.start)
       |> Stream.filter(& elem(&1, 1) <= config.xaxis.view.stop)
 
+    [data: yticks, basis: _ybasis] = generate_axis(config.yaxis)
     yticks =
-      generate_axis(config.yaxis)
+      yticks
       |> Stream.filter(& elem(&1, 1) >= config.yaxis.view.start )
       |> Stream.filter(& elem(&1, 1) <= config.yaxis.view.stop )
 

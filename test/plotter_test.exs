@@ -101,7 +101,7 @@ defmodule PlotterTest do
     ydata = [0.1, 0.25, 0.15, 0.1]
 
     plt = Plotter.plot([{xdata, ydata}], xkind: :numeric, xaxis: [padding: 0.05])
-    Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
+    # Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
 
     svg_str = Plotter.Output.Svg.generate(
                 plt,
