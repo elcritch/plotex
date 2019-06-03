@@ -11,7 +11,7 @@ defmodule Plotter.Output.Svg do
   def formatter(%Plotter.Axis{kind: :datetime, basis: basis} = axis, opts) do
     years =
 
-    Logger.error("formatter: axis: #{inspect axis} ")
+    Logger.info("formatter: axis: #{inspect axis} ")
 
     opts[:format] || fn v ->
       epoch = TimeUnits.display_epoch(basis.order)
