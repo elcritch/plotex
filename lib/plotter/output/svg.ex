@@ -54,7 +54,8 @@ defmodule Plotter.Output.Svg do
 
     ~E"""
         <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-             viewbox="0 -100 100 100"
+             viewbox="0 -100 <%= opts[:width] || 100 %> <%= opts[:height] || 100 %>"
+             preserveAspectRatio="none"
              class="graph" version="1.2" >
         <title id="title"> <%= @config.title %> </title>
 

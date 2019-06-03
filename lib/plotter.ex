@@ -109,11 +109,13 @@ defmodule Plotter do
       limits: xlim,
       kind: opts[:xaxis][:kind] || :numeric,
       ticks: opts[:xaxis][:ticks] || 10,
+      view: %ViewRange{start: 10, stop: (opts[:xaxis][:width] || 100) - 10}
     }
     yaxis = %Axis{
       limits: ylim,
       kind: opts[:yaxis][:kind] || :numeric,
       ticks: opts[:yaxis][:ticks] || 10,
+      view: %ViewRange{start: 10, stop: (opts[:yaxis][:width] || 100) - 10}
     }
 
     # Logger.warn("plot xaxis: #{inspect xaxis}")
