@@ -116,8 +116,8 @@ defmodule Plotter do
       ticks: opts[:yaxis][:ticks] || 10,
     }
 
-    Logger.warn("plot xaxis: #{inspect xaxis}")
-    Logger.warn("plot yaxis: #{inspect yaxis}")
+    # Logger.warn("plot xaxis: #{inspect xaxis}")
+    # Logger.warn("plot yaxis: #{inspect yaxis}")
 
     [data: xticks, basis: xbasis] = generate_axis(xaxis)
 
