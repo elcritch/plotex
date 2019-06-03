@@ -203,6 +203,9 @@ defmodule PlotterTest do
         .labels {
           font-size: 3px;
         }
+        .labels .x-labels {
+          font-size: 1px;
+        }
         .label-title {
           font-size: 8px;
           font-weight: bold;
@@ -227,7 +230,7 @@ defmodule PlotterTest do
     </body>
     </html>
     """
-    File.write!("output.html", html_str)
+    File.write!("output-dt.html", html_str)
   end
 
 end

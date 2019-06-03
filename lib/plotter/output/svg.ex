@@ -1,5 +1,6 @@
 defmodule Plotter.Output.Svg do
   require Logger
+  alias Plotter.TimeUnits
 
   use Phoenix.HTML
 
@@ -7,9 +8,20 @@ defmodule Plotter.Output.Svg do
     opts[:format] || fn v -> :io_lib.format("~5.2f", [v]) end
   end
 
-  # def formatter(%Plotter.Axis{kind: :datetime} = _axis, opts \\ []) do
-    # opts[:format] || fn v -> :io_lib.format("~5.2f", [v]) end
-  # end
+  def formatter(%Plotter.Axis{kind: :datetime, basis: basis} = axis, opts) do
+    years =
+
+    Logger.error("formatter: axis: #{inspect axis} ")
+
+    opts[:format] || fn v ->
+      {{yy, mm, dd}, {hh, mm, ss}} =
+        v |> DateTime.to_naive() |> NaiveDateTime.to_erl()
+
+      ts = [year: yy, month: mm, day: dd, hour: hh, minute: mm, second: ss]
+
+      eposh = TimeUnits.display_epoch(basis[:order])
+    end
+  end
 
   def generate(%Plotter{} = plot, opts \\ []) do
 
