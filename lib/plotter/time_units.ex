@@ -33,13 +33,13 @@ defmodule Plotter.TimeUnits do
 
   def display_epoch(order) do
       case order do
-        ord when ord >= 2 -> :year
-        ord when ord >= 4 -> :month
-        ord when ord >= 5 -> :day
-        ord when ord >= 6 -> :hour
-        ord when ord >= 7 -> :minute
-        ord when ord >= 8 -> :second
-        ord when ord >= 9 -> :millisecond
+        ord when ord <= 2 -> :year
+        ord when ord <= 4 -> :month
+        ord when ord <= 5 -> :day
+        ord when ord <= 6 -> :hour
+        ord when ord <= 7 -> :minute
+        ord when ord <= 8 -> :second
+        ord when ord <= 9 -> :millisecond
       end
   end
 

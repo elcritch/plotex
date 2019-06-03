@@ -14,12 +14,28 @@ defmodule Plotter.Output.Svg do
     Logger.error("formatter: axis: #{inspect axis} ")
 
     opts[:format] || fn v ->
-      {{yy, mm, dd}, {hh, mm, ss}} =
-        v |> DateTime.to_naive() |> NaiveDateTime.to_erl()
+      epoch = TimeUnits.display_epoch(basis.order)
+      Logger.error("EPOCH: #{inspect epoch}")
 
-      ts = [year: yy, month: mm, day: dd, hour: hh, minute: mm, second: ss]
+      {:ok, result} =
+        case epoch do
+          :year ->
+            v |> Calendar.Strftime.strftime("%Y/%m/%d")
+          :month ->
+            v |> Calendar.Strftime.strftime("%y/%m/%d")
+          :day ->
+            v |> Calendar.Strftime.strftime("%m/%d %H")
+          :hour ->
+            v |> Calendar.Strftime.strftime("%d %H:%M")
+          :minute ->
+            v |> Calendar.Strftime.strftime("%H:%M:%S")
+          :second ->
+            v |> Calendar.Strftime.strftime("%H:%M:%S")
+          :millisecond ->
+            {:ok, v |> DateTime.to_unix(:microsecond)}
+        end
 
-      eposh = TimeUnits.display_epoch(basis[:order])
+      result
     end
   end
 
@@ -56,8 +72,8 @@ defmodule Plotter.Output.Svg do
           <%= for {xl, xp} <- @xticks do %>
             <text x="<%= xp %>"
                   y="-<%= @config.yaxis.view.start %>"
-                  transform="rotate(<%= @opts[:x_axis][:rotate] || 0 %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
-                  dy="<%= @opts[:x_axis][:em] || '1.5em' %>">
+                  transform="rotate(<%= @opts[:xaxis][:rotate] || 0 %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
+                  dy="<%= @opts[:xaxis][:dy] || '1.5em' %>">
 
               <%= xfmt.(xl) %>
             </text>
@@ -82,8 +98,8 @@ defmodule Plotter.Output.Svg do
           <%= for {yl, yp} <- @yticks do %>
             <text y="-<%= yp %>"
                   x="<%= @config.xaxis.view.start %>"
-                  transform="rotate(<%= @opts[:y_axis][:rotate] || 0 %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
-                  dx="-<%= @opts[:y_axis][:em] || '1.5em' %>">
+                  transform="rotate(<%= @opts[:yaxis][:rotate] || 0 %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
+                  dx="-<%= @opts[:yaxis][:dy] || '1.5em' %>">
               <%= yfmt.(yl) %>
               </text>
           <% end %>
@@ -133,6 +149,5 @@ defmodule Plotter.Output.Svg do
 
 
       """
-      |> safe_to_string()
   end
 end

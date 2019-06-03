@@ -106,9 +106,9 @@ defmodule PlotterTest do
     svg_str = Plotter.Output.Svg.generate(
                 plt,
                 number_format: "~5.3f",
-                x_axis: [rotate: 35],
-                y_axis: [rotate: 35],
-              )
+                xaxis: [rotate: 35],
+                yaxis: [rotate: 35],
+      ) |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 
@@ -161,7 +161,7 @@ defmodule PlotterTest do
     File.write!("output.html", html_str)
   end
 
-  test "svg datetime plot" do
+  test "svg datetime (short) plot" do
     xdata = [
       DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
       DateTime.from_iso8601("2019-05-20T05:04:17.836Z") |> elem(1),
@@ -170,14 +170,20 @@ defmodule PlotterTest do
     ]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotter.plot([{xdata, ydata}], xaxis: [kind: :datetime, padding: 0.05])
+    plt = Plotter.plot(
+      [{xdata, ydata}],
+      xaxis: [kind: :datetime,
+              ticks: 5,
+              padding: 0.05]
+    )
     Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
 
-    svg_str = Plotter.Output.Svg.generate(
-                plt,
-                x_axis: [rotate: 35],
-                y_axis: [rotate: 35],
-              )
+    svg_str =
+      Plotter.Output.Svg.generate(
+        plt,
+        xaxis: [rotate: 35, dy: '2.5em' ],
+        yaxis: [],
+      ) |> Phoenix.HTML.safe_to_string()
 
     Logger.warn("SVG: \n#{svg_str}")
 
@@ -231,6 +237,84 @@ defmodule PlotterTest do
     </html>
     """
     File.write!("output-dt.html", html_str)
+  end
+
+  test "svg datetime (hours) plot" do
+    xdata = [
+      DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:13:17.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:21:23.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:33:25.836Z") |> elem(1),
+    ]
+    ydata = [0.1, 0.25, 0.15, 0.1]
+
+    plt = Plotter.plot(
+      [{xdata, ydata}],
+      xaxis: [kind: :datetime,
+              ticks: 5,
+              padding: 0.05]
+    )
+    Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
+
+    svg_str =
+      Plotter.Output.Svg.generate(
+        plt,
+        xaxis: [rotate: 35, dy: '2.5em' ],
+        yaxis: [],
+      ) |> Phoenix.HTML.safe_to_string()
+
+    Logger.warn("SVG: \n#{svg_str}")
+
+    html_str = """
+    <html>
+    <head>
+      <style>
+        .graph .labels .x-labels {
+          text-anchor: middle;
+        }
+        .graph .labels, .graph .y-labels {
+          text-anchor: middle;
+        }
+        .graph {
+          height: 500px;
+          width: 800px;
+        }
+        .graph .grid {
+          stroke: #ccc;
+          stroke-dasharray: 0;
+          stroke-width: 1.0;
+        }
+        .labels {
+          font-size: 3px;
+        }
+        .labels .x-labels {
+          font-size: 1px;
+        }
+        .label-title {
+          font-size: 8px;
+          font-weight: bold;
+          text-transform: uppercase;
+          fill: black;
+        }
+        .data .data-point {
+          fill: darkblue;
+          stroke-width: 1.0;
+        }
+        .data .data-line {
+          stroke: #0074d9;
+          stroke-width: 0.1em;
+          stroke-width: 0.1em;
+          stroke-linecap: round;
+          fill: none;
+        }
+      </style>
+    </head>
+    <body>
+      #{svg_str}
+    </body>
+    </html>
+    """
+    File.write!("output-dt-hours.html", html_str)
   end
 
 end

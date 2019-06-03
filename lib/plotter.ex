@@ -105,28 +105,37 @@ defmodule Plotter do
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets, opts)
 
-    config = %Plotter.Config{
-      xaxis: %Axis{limits: xlim, kind: opts[:xaxis][:kind] || :numeric},
-      yaxis: %Axis{limits: ylim, kind: opts[:yaxis][:kind] || :numeric},
+    xaxis = %Axis{
+      limits: xlim,
+      kind: opts[:xaxis][:kind] || :numeric,
+      ticks: opts[:xaxis][:ticks] || 10,
+    }
+    yaxis = %Axis{
+      limits: ylim,
+      kind: opts[:yaxis][:kind] || :numeric,
+      ticks: opts[:yaxis][:ticks] || 10,
     }
 
-    [data: xticks, basis: xbasis] = generate_axis(config.xaxis)
+    [data: xticks, basis: xbasis] = generate_axis(xaxis)
 
     xticks =
       xticks
-      |> Stream.filter(& elem(&1, 1) >= config.xaxis.view.start)
-      |> Stream.filter(& elem(&1, 1) <= config.xaxis.view.stop)
+      |> Stream.filter(& elem(&1, 1) >= xaxis.view.start)
+      |> Stream.filter(& elem(&1, 1) <= xaxis.view.stop)
 
-    [data: yticks, basis: ybasis] = generate_axis(config.yaxis)
+    [data: yticks, basis: ybasis] = generate_axis(yaxis)
     yticks =
       yticks
-      |> Stream.filter(& elem(&1, 1) >= config.yaxis.view.start )
-      |> Stream.filter(& elem(&1, 1) <= config.yaxis.view.stop )
+      |> Stream.filter(& elem(&1, 1) >= yaxis.view.start )
+      |> Stream.filter(& elem(&1, 1) <= yaxis.view.stop )
 
-    config =
-      config
-      |> Map.update!(:xaxis, & &1 |> Map.put(:basis, xbasis) )
-      |> Map.update!(:yaxis, & &1 |> Map.put(:basis, ybasis) )
+    xaxis = xaxis |> Map.put(:basis, xbasis)
+    yaxis = yaxis |> Map.put(:basis, ybasis)
+
+    config = %Plotter.Config{
+      xaxis: xaxis,
+      yaxis: yaxis,
+    }
 
     Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
     Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
