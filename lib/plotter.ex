@@ -35,7 +35,7 @@ defmodule Plotter do
 
     Logger.warn("AXIS: a, b: #{inspect {a,b}}")
     unless a == nil || b == nil do
-      [data: data, basis: basis] = Plotter.TimeUnits.time_scale(a, b, ticks: n)
+      %{data: data, basis: basis} = Plotter.TimeUnits.time_scale(a, b, ticks: n)
       Logger.warn("AXIS DATA: #{inspect data |> Enum.to_list()}")
       xrng = scale_data(data, axis)
 

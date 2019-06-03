@@ -31,6 +31,9 @@ defmodule Plotter.TimeUnits do
     microsecond: {1.0e-6, 10}
   ]
 
+  defstruct [:basis_name, :val, :order, :diff]
+
+  @type t :: %Plotter.TimeUnits{basis_name: atom, val: number, order: number, diff: number }
   @doc """
   Get units for a given date range, using the number of ticks.
 
@@ -53,6 +56,7 @@ defmodule Plotter.TimeUnits do
     end
   end
 
+  @spec optimize_units(number, keyword) :: Plotter.TimeUnits.t()
   def optimize_units(diff_seconds, opts \\ []) do
     count = Keyword.get(opts, :ticks, 10)
     delta = diff_seconds / count
@@ -66,7 +70,7 @@ defmodule Plotter.TimeUnits do
     {basis_name, {basis_val, basis_order}} =
       @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
 
-    %{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
+    %Plotter.TimeUnits{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
   end
 
   def time_units() do
@@ -74,7 +78,7 @@ defmodule Plotter.TimeUnits do
   end
 
   def next_smaller_unit({_name, amount}) do
-    optimize_units(amount - 1.0).basis
+    optimize_units(amount - 1.0).basis_name
   end
 
   def time_scale(data, opts \\ []) do
@@ -82,7 +86,7 @@ defmodule Plotter.TimeUnits do
     time_scale(dt_a, dt_b, opts)
   end
 
-  @spec time_scale( DateTime.t(), DateTime.t(), keyword) :: [ data: Stream.t(), units: map() ]
+  @spec time_scale( DateTime.t(), DateTime.t(), keyword) :: [ data: Stream.t(), units: Plotter.TimeUnits.t() ]
   def time_scale(dt_a, dt_b, opts) do
     %{diff: diff_seconds, val: unit_val} = basis = units_for(dt_a, dt_b, opts)
     dt_start = clone(dt_a, basis)
@@ -102,7 +106,7 @@ defmodule Plotter.TimeUnits do
       |> Stream.take_every(stride)
       |> Stream.take_while(fn dt -> DateTime.compare(dt, dt_b) == :lt end)
 
-    [data: rng, basis: basis]
+    %{data: rng, basis: basis}
   end
 
   defp gets(dt, %{basis_name: _base_unit, val: _base_number, order: base_order}, field) do
