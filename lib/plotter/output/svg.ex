@@ -15,7 +15,6 @@ defmodule Plotter.Output.Svg do
 
     opts[:format] || fn v ->
       epoch = TimeUnits.display_epoch(basis.order)
-      Logger.error("EPOCH: #{inspect epoch}")
 
       {:ok, result} =
         case epoch do
