@@ -33,10 +33,10 @@ defmodule Plotter do
     b = axis.limits.stop
     n = axis.ticks
 
-    Logger.warn("AXIS: a, b: #{inspect {a,b}}")
+    # Logger.warn("AXIS: a, b: #{inspect {a,b}}")
     unless a == nil || b == nil do
       %{data: data, basis: basis} = Plotter.TimeUnits.time_scale(a, b, ticks: n)
-      Logger.warn("AXIS DATA: #{inspect data |> Enum.to_list()}")
+      # Logger.warn("AXIS DATA: #{inspect data |> Enum.to_list()}")
       xrng = scale_data(data, axis)
 
       [data: Stream.zip(data, xrng), basis: basis]
@@ -49,7 +49,7 @@ defmodule Plotter do
     []
   end
   def scale_data(data, %Axis{} = axis ) do
-    Logger.warn("SCALE_DATA: #{inspect axis}")
+    # Logger.warn("SCALE_DATA: #{inspect axis}")
     m = ViewRange.diff( axis.view.stop, axis.view.start )
           / ViewRange.diff( axis.limits.stop, axis.limits.start )
     b = axis.view.start |> ViewRange.val()
@@ -76,7 +76,7 @@ defmodule Plotter do
   end
 
   def limits(datasets, opts \\ []) do
-    Logger.warn("plot: limits: opts: #{inspect opts}")
+    # Logger.warn("plot: limits: opts: #{inspect opts}")
     proj = Keyword.get(opts, :projection, :cartesian)
 
     {{xa, xb}, {ya, yb}} =
@@ -137,8 +137,8 @@ defmodule Plotter do
       yaxis: yaxis,
     }
 
-    Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
-    Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
+    # Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
+    # Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
 
     datasets! =
       for {data, idx} <- datasets |> Stream.with_index(), into: [] do
@@ -146,7 +146,7 @@ defmodule Plotter do
         {Stream.zip(xd, yd), idx}
       end
 
-    Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> elem(0) |> Enum.to_list()}"
+    # Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> elem(0) |> Enum.to_list()}"
 
     %Plotter{config: config,
       xticks: xticks,

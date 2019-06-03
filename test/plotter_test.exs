@@ -54,7 +54,7 @@ defmodule PlotterTest do
     ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
 
     plt = Plotter.plot([{xdata, ydata}])
-    Logger.warn("plotter cfg: #{inspect plt }")
+    # Logger.warn("plotter cfg: #{inspect plt }")
   end
 
   test "nil plot" do
@@ -62,7 +62,7 @@ defmodule PlotterTest do
     ydata = []
 
     plt = Plotter.plot([{xdata, ydata}])
-    Logger.warn("plotter cfg: #{inspect plt }")
+    # Logger.warn("plotter cfg: #{inspect plt }")
   end
 
   # test "nil date plot" do
@@ -176,7 +176,7 @@ defmodule PlotterTest do
               ticks: 5,
               padding: 0.05]
     )
-    Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
+    # Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
 
     svg_str =
       Plotter.Output.Svg.generate(
@@ -185,7 +185,7 @@ defmodule PlotterTest do
         yaxis: [],
       ) |> Phoenix.HTML.safe_to_string()
 
-    Logger.warn("SVG: \n#{svg_str}")
+    # Logger.warn("SVG: \n#{svg_str}")
 
     html_str = """
     <html>
@@ -254,7 +254,7 @@ defmodule PlotterTest do
               ticks: 5,
               padding: 0.05]
     )
-    Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
+    # Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
 
     svg_str =
       Plotter.Output.Svg.generate(
@@ -263,7 +263,7 @@ defmodule PlotterTest do
         yaxis: [],
       ) |> Phoenix.HTML.safe_to_string()
 
-    Logger.warn("SVG: \n#{svg_str}")
+    # Logger.warn("SVG: \n#{svg_str}")
 
     html_str = """
     <html>
