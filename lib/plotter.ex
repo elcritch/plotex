@@ -45,7 +45,7 @@ defmodule Plotter do
     end
   end
 
-  def scale_data(_data, %Axis{limits: %{start: nil, stop: nil} } = _axis ) do
+  def scale_data(_data, %Axis{limits: %{start: start, stop: stop} } = _axis ) when is_nil(start) or is_nil(stop) do
     []
   end
   def scale_data(data, %Axis{} = axis ) do
@@ -115,6 +115,9 @@ defmodule Plotter do
       kind: opts[:yaxis][:kind] || :numeric,
       ticks: opts[:yaxis][:ticks] || 10,
     }
+
+    Logger.warn("plot xaxis: #{inspect xaxis}")
+    Logger.warn("plot yaxis: #{inspect yaxis}")
 
     [data: xticks, basis: xbasis] = generate_axis(xaxis)
 

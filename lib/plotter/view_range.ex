@@ -45,21 +45,30 @@ defmodule Plotter.ViewRange do
     {start - amount, stop + amount}
   end
 
-  @spec dist( { DateTime.t(), DateTime.t() } | {nil, nil} | ViewRange.t() ) :: number
-  def dist({%DateTime{} = start, %DateTime{} = stop}) do
-    DateTime.to_unix(stop, :nanosecond) - DateTime.to_unix(start, :nanosecond)
+  def dist({start, stop}) when is_nil(start) or is_nil(stop) do
+    1.0
   end
 
-  def dist({start, stop}) when is_nil(start) or is_nil(stop) do
-    0.0
+  @spec dist( { DateTime.t(), DateTime.t() } | {nil, nil} | ViewRange.t() ) :: number
+  def dist({%DateTime{} = start, %DateTime{} = stop}) do
+    diff = DateTime.to_unix(stop, :nanosecond) - DateTime.to_unix(start, :nanosecond)
+    if diff != 0 do
+      diff
+    else
+      1_000_000_000
+    end
   end
 
   def dist({start, stop}) do
-    stop - start
+    if stop != start do
+      stop - start
+    else
+      1.0
+    end
   end
 
   def dist(%ViewRange{} = range) do
-    range.stop - range.start
+    dist({range.start, range.stop})
   end
 
 end
