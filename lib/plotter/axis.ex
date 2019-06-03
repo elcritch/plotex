@@ -6,6 +6,7 @@ defmodule Plotter.Axis do
   defstruct limits: %ViewRange{},
             view: %ViewRange{},
             name: "",
+            basis: %{},
             ticks: 10,
             kind: :numeric
 
@@ -13,6 +14,7 @@ defmodule Plotter.Axis do
     limits: ViewRange.t(),
     view: ViewRange.t(),
     name: String.t(),
+    basis: map(),
     ticks: non_neg_integer(),
     kind: :numeric | :datetime,
   }

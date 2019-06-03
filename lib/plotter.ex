@@ -110,18 +110,23 @@ defmodule Plotter do
       yaxis: %Axis{limits: ylim, kind: opts[:yaxis][:kind] || :numeric},
     }
 
-    [data: xticks, basis: _xbasis] = generate_axis(config.xaxis)
+    [data: xticks, basis: xbasis] = generate_axis(config.xaxis)
 
     xticks =
       xticks
       |> Stream.filter(& elem(&1, 1) >= config.xaxis.view.start)
       |> Stream.filter(& elem(&1, 1) <= config.xaxis.view.stop)
 
-    [data: yticks, basis: _ybasis] = generate_axis(config.yaxis)
+    [data: yticks, basis: ybasis] = generate_axis(config.yaxis)
     yticks =
       yticks
       |> Stream.filter(& elem(&1, 1) >= config.yaxis.view.start )
       |> Stream.filter(& elem(&1, 1) <= config.yaxis.view.stop )
+
+    config =
+      config
+      |> Map.update!(:xaxis, & &1 |> Map.put(:basis, xbasis) )
+      |> Map.update!(:yaxis, & &1 |> Map.put(:basis, ybasis) )
 
     Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
     Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
