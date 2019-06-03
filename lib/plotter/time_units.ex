@@ -98,7 +98,6 @@ defmodule Plotter.TimeUnits do
     time_scale(dt_a, dt_b, opts)
   end
 
-  @spec time_scale( DateTime.t(), DateTime.t(), keyword) :: [ data: Stream.t(), units: Plotter.TimeUnits.t() ]
   def time_scale(dt_a, dt_b, opts) do
     %{diff: diff_seconds, val: unit_val} = basis = units_for(dt_a, dt_b, opts)
     dt_start = clone(dt_a, basis)
@@ -113,7 +112,7 @@ defmodule Plotter.TimeUnits do
       |> Stream.map(fn i ->
         # Logger.warn("#{inspect(dt_start)}")
         # Logger.warn("#{inspect({i, unit_val, i * unit_val})}")
-        DateTime.add(dt_start, i * unit_val, :second)
+        DateTime.add(dt_start, round(i * unit_val), :second)
       end)
       |> Stream.take_every(stride)
       |> Stream.take_while(fn dt -> DateTime.compare(dt, dt_b) == :lt end)
