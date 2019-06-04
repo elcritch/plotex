@@ -8,8 +8,21 @@ defmodule Plotter.NumberUnits do
 
   """
   def units_for(x_a, x_b, opts \\ []) do
-    abs(x_a - x_b)
-    |> optimize_units(opts)
+    xmax = max(x_a, x_b)
+
+    xdiff = abs(x_a - x_b)
+
+    xmin = 1.0e-9
+    xmin = if xmax/1.0e3 < xmin do xmax/1.0e3 else xmin end
+
+    xdiff! =
+      if xdiff < xmin do
+        xmin
+      else
+        xdiff
+      end
+
+    xdiff! |> optimize_units(opts)
   end
 
   @spec range_from(Enumerable.t()) :: {Number.t(), Number.t()}
@@ -71,6 +84,6 @@ defmodule Plotter.NumberUnits do
   Calculate the base-10 rank of a number.
   """
   def rank(0, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
-  def rank(0.1, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
+  # def rank(0.1, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
   def rank(x, b), do: trunc(:math.log10( (x+1.0e-8) / b) - 1)
 end
