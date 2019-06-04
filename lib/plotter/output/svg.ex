@@ -5,7 +5,7 @@ defmodule Plotter.Output.Svg do
   use Phoenix.HTML
 
   def formatter(%Plotter.Axis{kind: :numeric} = _axis, opts) do
-    opts[:format] || fn v -> :io_lib.format("~5.2f", [v]) end
+    opts[:format] || fn v -> :io_lib.format("~8.2f", [v]) end
   end
 
   def formatter(%Plotter.Axis{kind: :datetime, basis: basis} = axis, opts) do
