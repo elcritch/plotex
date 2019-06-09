@@ -1,0 +1,253 @@
+<html>
+<head>
+  <style>
+    .graph .labels .x-labels {
+      text-anchor: middle;
+    }
+    .graph .labels, .graph .y-labels {
+      text-anchor: middle;
+    }
+    .graph {
+      height: 500px;
+      width: 800px;
+    }
+    .graph .grid {
+      stroke: #ccc;
+      stroke-dasharray: 0;
+      stroke-width: 1.0;
+    }
+    .labels {
+      font-size: 3px;
+    }
+    .labels .x-labels {
+      font-size: 1px;
+    }
+    .label-title {
+      font-size: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+      fill: black;
+    }
+    .data .data-point {
+      fill: darkblue;
+      stroke-width: 1.0;
+    }
+    .data .data-line {
+      stroke: #0074d9;
+      stroke-width: 0.1em;
+      stroke-width: 0.1em;
+      stroke-linecap: round;
+      fill: none;
+    }
+  </style>
+</head>
+<body>
+    <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+       viewbox="0 -100 100 100"
+       preserveAspectRatio="none"
+       class="graph" version="1.2" >
+  <title id="title"> Plot </title>
+
+  <!-- X Axis -->
+  <g class="grid x-grid">
+    <line x1="10"
+          x2="90"
+          y1="-10"
+          y2="-10" >
+    </line>
+
+  </g>
+  <g class="labels x-labels">
+    
+      <text x="23.060789296271327"
+            y="-10"
+            transform="rotate(35, 23.060789296271327, -10)"
+            dy="2.5em">
+
+        05:08:00
+      </text>
+    
+      <text x="37.99622465384017"
+            y="-10"
+            transform="rotate(35, 37.99622465384017, -10)"
+            dy="2.5em">
+
+        05:14:00
+      </text>
+    
+      <text x="52.93166001140901"
+            y="-10"
+            transform="rotate(35, 52.93166001140901, -10)"
+            dy="2.5em">
+
+        05:20:00
+      </text>
+    
+      <text x="67.86709536897786"
+            y="-10"
+            transform="rotate(35, 67.86709536897786, -10)"
+            dy="2.5em">
+
+        05:26:00
+      </text>
+    
+      <text x="82.80253072654669"
+            y="-10"
+            transform="rotate(35, 82.80253072654669, -10)"
+            dy="2.5em">
+
+        05:32:00
+      </text>
+    
+    <text x="40.0"
+          y="-5.0"
+          class="label-title">
+      
+    </text>
+  </g>
+
+  <!-- Y Axis -->
+  <g class="grid y-grid">
+    <line x1="10"
+          x2="10"
+          y1="-10"
+          y2="-90" >
+    </line>
+
+  </g>
+  <g class="labels y-labels">
+    
+      <text y="-13.63636363636364"
+            x="10"
+            transform="rotate(0, 10, -13.63636363636364)"
+            dx="-1.5em">
+            0.10
+        </text>
+    
+      <text y="-23.33333333333333"
+            x="10"
+            transform="rotate(0, 10, -23.33333333333333)"
+            dx="-1.5em">
+            0.12
+        </text>
+    
+      <text y="-33.03030303030303"
+            x="10"
+            transform="rotate(0, 10, -33.03030303030303)"
+            dx="-1.5em">
+            0.14
+        </text>
+    
+      <text y="-42.72727272727273"
+            x="10"
+            transform="rotate(0, 10, -42.72727272727273)"
+            dx="-1.5em">
+            0.16
+        </text>
+    
+      <text y="-52.42424242424242"
+            x="10"
+            transform="rotate(0, 10, -52.42424242424242)"
+            dx="-1.5em">
+            0.18
+        </text>
+    
+      <text y="-62.121212121212125"
+            x="10"
+            transform="rotate(0, 10, -62.121212121212125)"
+            dx="-1.5em">
+            0.20
+        </text>
+    
+      <text y="-71.81818181818183"
+            x="10"
+            transform="rotate(0, 10, -71.81818181818183)"
+            dx="-1.5em">
+            0.22
+        </text>
+    
+      <text y="-81.5151515151515"
+            x="10"
+            transform="rotate(0, 10, -81.5151515151515)"
+            dx="-1.5em">
+            0.24
+        </text>
+    
+    <text y="-40.0"
+          x="5.0"
+          class="label-title">
+      
+    </text>
+  </g>
+
+  <!-- Data -->
+  <g class="data">
+  
+    <g class="dataset-0" data-setname="data-0">
+      <polyline class="data-line"
+                points="
+                  
+                    13.636363636363637,-13.63636363636364
+                  
+                    36.24695327490535,-86.36363636363636
+                  
+                    56.40979100762329,-37.878787878787875
+                  
+                    86.36363636363636,-13.63636363636364
+                  
+                  "/>
+
+      
+        
+          <rect class="data-point "
+                x="12.886363636363637"
+                y="-14.38636363636364"
+                data-x-value="2019-05-20 05:04:12.836Z"
+                data-y-value="0.1"
+                width="1.5"
+                height="1.5"
+                ></rect>
+        
+      
+        
+          <rect class="data-point "
+                x="35.49695327490535"
+                y="-87.11363636363636"
+                data-x-value="2019-05-20 05:13:17.836Z"
+                data-y-value="0.25"
+                width="1.5"
+                height="1.5"
+                ></rect>
+        
+      
+        
+          <rect class="data-point "
+                x="55.65979100762329"
+                y="-38.628787878787875"
+                data-x-value="2019-05-20 05:21:23.836Z"
+                data-y-value="0.15"
+                width="1.5"
+                height="1.5"
+                ></rect>
+        
+      
+        
+          <rect class="data-point "
+                x="85.61363636363636"
+                y="-14.38636363636364"
+                data-x-value="2019-05-20 05:33:25.836Z"
+                data-y-value="0.1"
+                width="1.5"
+                height="1.5"
+                ></rect>
+        
+      
+    </g>
+  
+  </g>
+</svg>
+
+
+
+</body>
+</html>
