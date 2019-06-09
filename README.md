@@ -104,9 +104,9 @@ end
 
 ## TODO
 
-[] The configuration API needs to be expanded upon. 
-[] Needs work in plumbing through options for adjusting the side widths and adjusting the overall size. 
-[] Lots of work on documentation work. 
-[] Would like to remove the dependency on Calendar and TZData dependency.  
-[] PR's welcome. 
+- [ ] The configuration API needs to be expanded upon. 
+- [ ] Needs work in plumbing through options for adjusting the side widths and adjusting the overall size. 
+- [ ] Lots of work on documentation work. 
+- [ ] Would like to remove the dependency on Calendar and TZData dependency.  
+- [ ] PR's welcome. 
 
