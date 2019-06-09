@@ -104,7 +104,7 @@ end
 
 [Example DateTime Output](./test/output-dt-hours.html)
 
-![Example DateTime Output](./test/output-dt-hours.html "Example DateTime Plot")
+![Example DateTime Output](./test/output-dt-hours.png "Example DateTime Plot")
 
 
 
