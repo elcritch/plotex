@@ -6,6 +6,10 @@ Warning, alpha status! It works, but is still very rough in many areas. However,
 
 See units tests for examples of producing SVG graphs. 
 
+### Features 
+
+Supports creating axis and scaling for both numeric (floats) and DateTime series from Elixir Streams. All scaling and sizing can be modified, though the config API is still a work in progress. The graph generation is designed to be modular. There's a simple SVG output module in only about ~150 lines of code which is intended to be fully customizable with CSS. 
+
 ## Installation
 
 ```elixir
@@ -106,6 +110,7 @@ end
 
 ![Example DateTime Output](./test/output-dt-hours.png "Example DateTime Plot")
 
+Note, SVG uses a "graphics" coordinate system where the X-Y origin are centered on the top-left. Most graphing configurations assume the X-Y origin is in the bottom left. The SVG output adjusts this by setting the Y origin to range from `-100..0` and adds a negative sign to the Y-data axis. This turns out to be the simplest general way to adjust the SVG origin. 
 
 
 ## TODO
