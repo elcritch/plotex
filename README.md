@@ -102,6 +102,12 @@ end
 
 ```
 
+[Example DateTime Output](./test/output-dt-hours.html)
+
+![Example DateTime Output](./test/output-dt-hours.png "Example DateTime Plot")
+
+
+
 ## TODO
 
 - [ ] The configuration API needs to be expanded upon. 
