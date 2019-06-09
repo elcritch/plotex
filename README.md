@@ -102,7 +102,11 @@ end
 
 ```
 
-[Example output](./test/output-dt-hours.html)
+[Example DateTime Output](./test/output-dt-hours.html)
+
+![Example DateTime Output](./test/output-dt-hours.html "Example DateTime Plot")
+
+
 
 ## TODO
 
