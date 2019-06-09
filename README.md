@@ -1,4 +1,4 @@
-# Plotter
+# Plotex
 
 Pure Elixir library for producing simple plots. It's useful for producing streaming SVG graphs with the new Phoenix LiveView library. It could readily be used for other frameworks like Scenic. 
 
@@ -11,7 +11,7 @@ See units tests for examples of producing SVG graphs.
 ```elixir
 def deps do
   [
-    {:plotter, github: "elcritch/plotter", "~> 0.1.0"}
+    {:plotex, github: "elcritch/plotex", "~> 0.1.0"}
   ]
 end
 ```
