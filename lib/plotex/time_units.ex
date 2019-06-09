@@ -1,4 +1,4 @@
-defmodule Plotter.TimeUnits do
+defmodule PlotEx.TimeUnits do
   require Logger
 
   @time_basis [
@@ -45,7 +45,7 @@ defmodule Plotter.TimeUnits do
 
   defstruct [:basis_name, :val, :order, :diff]
 
-  @type t :: %Plotter.TimeUnits{basis_name: atom, val: number, order: number, diff: number }
+  @type t :: %PlotEx.TimeUnits{basis_name: atom, val: number, order: number, diff: number }
   @doc """
   Get units for a given date range, using the number of ticks.
 
@@ -68,7 +68,7 @@ defmodule Plotter.TimeUnits do
     end
   end
 
-  @spec optimize_units(number, keyword) :: Plotter.TimeUnits.t()
+  @spec optimize_units(number, keyword) :: PlotEx.TimeUnits.t()
   def optimize_units(diff_seconds, opts \\ []) do
     count = Keyword.get(opts, :ticks, 10)
     delta = diff_seconds / count
@@ -82,7 +82,7 @@ defmodule Plotter.TimeUnits do
     {basis_name, {basis_val, basis_order}} =
       @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
 
-    %Plotter.TimeUnits{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
+    %PlotEx.TimeUnits{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
   end
 
   def time_units() do

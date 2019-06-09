@@ -1,12 +1,12 @@
-defmodule Plotter.NumberUnitsTest do
+defmodule PlotEx.NumberUnitsTest do
   use ExUnit.Case
-  doctest Plotter
+  doctest PlotEx
   require Logger
 
   test "base-10 rank for numbers" do
     ranks =
       [1000, 120.2, 53.9, 13.1, 8.9, 0.98, 0.0396]
-      |> Enum.map(&Plotter.NumberUnits.rank(&1, 10))
+      |> Enum.map(&PlotEx.NumberUnits.rank(&1, 10))
 
     assert ranks == [1, 0, 0, 0, -1, -2, -3]
   end
@@ -15,7 +15,7 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 1.123
     x_b = 13.45
 
-    %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
+    %{basis: xbasis} = PlotEx.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 1.0
   end
 
@@ -23,7 +23,7 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 1.123
     x_b = 1.52
 
-    %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
+    %{basis: xbasis} = PlotEx.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 0.05
   end
 
@@ -31,7 +31,7 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 1.123
     x_b = 130.45
 
-    %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
+    %{basis: xbasis} = PlotEx.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 10.0
   end
 
@@ -39,10 +39,10 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 1.123
     x_b = 530.45
 
-    # units = Plotter.NumberUnits.units_for(x_a, x_b)
+    # units = PlotEx.NumberUnits.units_for(x_a, x_b)
     # Logger.warn("units: #{inspect units}")
 
-    %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
+    %{basis: xbasis} = PlotEx.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 50.0
   end
 
@@ -50,10 +50,10 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 1.123
     x_b = 930.45
 
-    # units = Plotter.NumberUnits.units_for(x_a, x_b)
+    # units = PlotEx.NumberUnits.units_for(x_a, x_b)
     # Logger.warn("units: #{inspect units}")
 
-    %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
+    %{basis: xbasis} = PlotEx.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 100.0
   end
 
@@ -61,10 +61,10 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 1.123
     x_b = 1930.45
 
-    # units = Plotter.NumberUnits.units_for(x_a, x_b)
+    # units = PlotEx.NumberUnits.units_for(x_a, x_b)
     # Logger.warn("units: #{inspect units}")
 
-    %{basis: xbasis} = Plotter.NumberUnits.units_for(x_a, x_b)
+    %{basis: xbasis} = PlotEx.NumberUnits.units_for(x_a, x_b)
     assert xbasis == 200.0
   end
 
@@ -72,11 +72,11 @@ defmodule Plotter.NumberUnitsTest do
     x_a = 40.123
     x_b = 1930.45
 
-    # units = Plotter.NumberUnits.units_for(x_a, x_b)
+    # units = PlotEx.NumberUnits.units_for(x_a, x_b)
     # Logger.warn("units: #{inspect units}")
 
     nscale =
-      Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
+      PlotEx.NumberUnits.number_scale(x_a, x_b, ticks: 10)
 
     xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
@@ -90,7 +90,7 @@ defmodule Plotter.NumberUnitsTest do
     x_b = 1930.45
 
     nscale =
-      Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
+      PlotEx.NumberUnits.number_scale(x_a, x_b, ticks: 10)
 
     xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
@@ -104,7 +104,7 @@ defmodule Plotter.NumberUnitsTest do
     x_b = 28.47
 
     nscale =
-      Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
+      PlotEx.NumberUnits.number_scale(x_a, x_b, ticks: 10)
 
     xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
@@ -118,7 +118,7 @@ defmodule Plotter.NumberUnitsTest do
     x_b = -11.34
 
     nscale =
-      Plotter.NumberUnits.number_scale(x_a, x_b, ticks: 10)
+      PlotEx.NumberUnits.number_scale(x_a, x_b, ticks: 10)
 
     xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")

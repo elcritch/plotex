@@ -12,11 +12,11 @@ config :tzdata, :autoupdate, :disabled
 
 # You can configure your application as:
 #
-#     config :plotter, key: :value
+#     config :plotex, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:plotter, :key)
+#     Application.get_env(:plotex, :key)
 #
 # You can also configure a third-party app:
 #

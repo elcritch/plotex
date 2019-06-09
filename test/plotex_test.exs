@@ -1,10 +1,10 @@
-defmodule PlotterTest do
+defmodule PlotExTest do
   require Logger
   use ExUnit.Case
-  alias Plotter.Axis
-  alias Plotter.ViewRange
+  alias PlotEx.Axis
+  alias PlotEx.ViewRange
 
-  doctest Plotter
+  doctest PlotEx
 
   test "data plots" do
 
@@ -12,17 +12,17 @@ defmodule PlotterTest do
     ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
 
 
-    xlims = Plotter.NumberUnits.range_from(xdata) |> Plotter.ViewRange.new(:horiz)
+    xlims = PlotEx.NumberUnits.range_from(xdata) |> PlotEx.ViewRange.new(:horiz)
     xaxis = %Axis{limits: xlims}
     # Logger.warn("xlims: #{inspect xlims}")
     # Logger.warn("xaxis: #{inspect xaxis}")
 
-    ylims = Plotter.NumberUnits.range_from(ydata) |> Plotter.ViewRange.new(:vert)
+    ylims = PlotEx.NumberUnits.range_from(ydata) |> PlotEx.ViewRange.new(:vert)
     yaxis = %Axis{limits: ylims}
     # Logger.warn("ylims: #{inspect ylims}")
     # Logger.warn("yaxis: #{inspect yaxis}")
 
-    {xrng, yrng} = Plotter.plot_data({xdata, ydata}, xaxis, yaxis)
+    {xrng, yrng} = PlotEx.plot_data({xdata, ydata}, xaxis, yaxis)
     # Logger.warn("xrng: #{inspect xrng |> Enum.to_list()}")
     # Logger.warn("yrng: #{inspect yrng |> Enum.to_list()}")
 
@@ -37,48 +37,48 @@ defmodule PlotterTest do
     xdata = 1..4 |> Enum.map(& &1 )
     ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
 
-    xlims = Plotter.NumberUnits.range_from(xdata) |> Plotter.ViewRange.new()
+    xlims = PlotEx.NumberUnits.range_from(xdata) |> PlotEx.ViewRange.new()
     xaxis = %Axis{limits: xlims}
 
-    ylims = Plotter.NumberUnits.range_from(ydata) |> Plotter.ViewRange.new()
+    ylims = PlotEx.NumberUnits.range_from(ydata) |> PlotEx.ViewRange.new()
     yaxis = %Axis{limits: ylims}
 
-    {xrng, yrng} = Plotter.limits([{xdata, ydata}])
+    {xrng, yrng} = PlotEx.limits([{xdata, ydata}])
 
-    assert xrng = %Plotter.ViewRange{projection: :cartesian, start: 0.85, stop: 4.15}
-    assert yrng = %Plotter.ViewRange{projection: :cartesian, start: 0.08535417036373703, stop: 0.40389758859174163}
+    assert xrng = %PlotEx.ViewRange{projection: :cartesian, start: 0.85, stop: 4.15}
+    assert yrng = %PlotEx.ViewRange{projection: :cartesian, start: 0.08535417036373703, stop: 0.40389758859174163}
   end
 
   test "simple plot" do
     xdata = 1..4 |> Enum.map(& &1 )
     ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
 
-    plt = Plotter.plot([{xdata, ydata}])
-    # Logger.warn("plotter cfg: #{inspect plt }")
+    plt = PlotEx.plot([{xdata, ydata}])
+    # Logger.warn("plotex cfg: #{inspect plt }")
   end
 
   test "nil plot" do
     xdata = []
     ydata = []
 
-    plt = Plotter.plot([{xdata, ydata}])
-    # Logger.warn("plotter cfg: #{inspect plt }")
+    plt = PlotEx.plot([{xdata, ydata}])
+    # Logger.warn("plotex cfg: #{inspect plt }")
   end
 
   # test "nil date plot" do
   #   xdata = []
   #   ydata = []
 
-  #   plt = Plotter.plot([{xdata, ydata}], xkind: :datetime)
-  #   Logger.warn("plotter cfg: #{inspect plt }")
+  #   plt = PlotEx.plot([{xdata, ydata}], xkind: :datetime)
+  #   Logger.warn("plotex cfg: #{inspect plt }")
   # end
 
   test "date plot" do
     xdata = [0.0, 2.0, 3.0, 4.0]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotter.plot([{xdata, ydata}], xkind: :numeric)
-    # Logger.warn("plotter cfg: #{inspect plt }")
+    plt = PlotEx.plot([{xdata, ydata}], xkind: :numeric)
+    # Logger.warn("plotex cfg: #{inspect plt }")
 
     # for xt <- plt.xticks do
     #   Logger.info("xtick: #{inspect xt}")
@@ -100,10 +100,10 @@ defmodule PlotterTest do
     xdata = [0.0, 2.0, 3.0, 4.0]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotter.plot([{xdata, ydata}], xkind: :numeric, xaxis: [padding: 0.05])
-    # Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
+    plt = PlotEx.plot([{xdata, ydata}], xkind: :numeric, xaxis: [padding: 0.05])
+    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
-    svg_str = Plotter.Output.Svg.generate(
+    svg_str = PlotEx.Output.Svg.generate(
                 plt,
                 number_format: "~5.3f",
                 xaxis: [rotate: 35],
@@ -170,16 +170,16 @@ defmodule PlotterTest do
     ]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotter.plot(
+    plt = PlotEx.plot(
       [{xdata, ydata}],
       xaxis: [kind: :datetime,
               ticks: 5,
               padding: 0.05]
     )
-    # Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
+    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
-      Plotter.Output.Svg.generate(
+      PlotEx.Output.Svg.generate(
         plt,
         xaxis: [rotate: 35, dy: '2.5em' ],
         yaxis: [],
@@ -248,16 +248,16 @@ defmodule PlotterTest do
     ]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotter.plot(
+    plt = PlotEx.plot(
       [{xdata, ydata}],
       xaxis: [kind: :datetime,
               ticks: 5,
               padding: 0.05]
     )
-    # Logger.warn("svg plotter cfg: #{inspect plt, pretty: true }")
+    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
-      Plotter.Output.Svg.generate(
+      PlotEx.Output.Svg.generate(
         plt,
         xaxis: [rotate: 35, dy: '2.5em' ],
         yaxis: [],

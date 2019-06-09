@@ -1,14 +1,14 @@
-defmodule Plotter do
-  alias Plotter.ViewRange
-  alias Plotter.Axis
+defmodule PlotEx do
+  alias PlotEx.ViewRange
+  alias PlotEx.Axis
   require Logger
 
   @moduledoc """
-  Documentation for Plotter.
+  Documentation for PlotEx.
   """
   defstruct [:config, :xticks, :yticks, :datasets, :datasets]
 
-  @type t :: %Plotter{config: Plotter.Config.t(),
+  @type t :: %PlotEx{config: PlotEx.Config.t(),
                       xticks: Enumerable.t(),
                       yticks: Enumerable.t(),
                       datasets: Enumerable.t()}
@@ -19,7 +19,7 @@ defmodule Plotter do
     n = axis.ticks
 
     unless a == nil || b == nil do
-      [data: data, basis: basis] = Plotter.NumberUnits.number_scale(a, b, ticks: n)
+      [data: data, basis: basis] = PlotEx.NumberUnits.number_scale(a, b, ticks: n)
       xrng = scale_data(data, axis)
 
       [data: Stream.zip(data, xrng), basis: basis]
@@ -35,7 +35,7 @@ defmodule Plotter do
 
     # Logger.warn("AXIS: a, b: #{inspect {a,b}}")
     unless a == nil || b == nil do
-      %{data: data, basis: basis} = Plotter.TimeUnits.time_scale(a, b, ticks: n)
+      %{data: data, basis: basis} = PlotEx.TimeUnits.time_scale(a, b, ticks: n)
       # Logger.warn("AXIS DATA: #{inspect data |> Enum.to_list()}")
       xrng = scale_data(data, axis)
 
@@ -69,7 +69,7 @@ defmodule Plotter do
 
   def range_from(data) do
     unless Enum.count(data) == 0 do
-      Enum.min_max_by(data, &Plotter.ViewRange.convert/1)
+      Enum.min_max_by(data, &PlotEx.ViewRange.convert/1)
     else
       {nil, nil}
     end
@@ -82,8 +82,8 @@ defmodule Plotter do
     {{xa, xb}, {ya, yb}} =
       datasets
       |> Enum.reduce({nil, nil}, fn {xdata, ydata}, {xlims, ylims} ->
-        xlims! = xdata |> Plotter.range_from()
-        ylims! = ydata |> Plotter.range_from()
+        xlims! = xdata |> PlotEx.range_from()
+        ylims! = ydata |> PlotEx.range_from()
 
         xlims! = ViewRange.min_max(xlims, xlims!)
         ylims! = ViewRange.min_max(ylims, ylims!)
@@ -101,7 +101,7 @@ defmodule Plotter do
      %ViewRange{start: ya, stop: yb, projection: proj}}
   end
 
-  @spec plot([ [{number, number}] ], nil | keyword | map) :: Plotter.t()
+  @spec plot([ [{number, number}] ], nil | keyword | map) :: PlotEx.t()
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets, opts)
 
@@ -137,7 +137,7 @@ defmodule Plotter do
     xaxis = xaxis |> Map.put(:basis, xbasis)
     yaxis = yaxis |> Map.put(:basis, ybasis)
 
-    config = %Plotter.Config{
+    config = %PlotEx.Config{
       xaxis: xaxis,
       yaxis: yaxis,
     }
@@ -147,13 +147,13 @@ defmodule Plotter do
 
     datasets! =
       for {data, idx} <- datasets |> Stream.with_index(), into: [] do
-        {xd, yd} = Plotter.plot_data(data, config.xaxis, config.yaxis)
+        {xd, yd} = PlotEx.plot_data(data, config.xaxis, config.yaxis)
         {Stream.zip(xd, yd), idx}
       end
 
     # Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> elem(0) |> Enum.to_list()}"
 
-    %Plotter{config: config,
+    %PlotEx{config: config,
       xticks: xticks,
       yticks: yticks,
       datasets: datasets!}

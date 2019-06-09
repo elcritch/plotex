@@ -1,6 +1,6 @@
-defmodule Plotter.TimeUnitsTest do
+defmodule PlotEx.TimeUnitsTest do
   use ExUnit.Case
-  doctest Plotter
+  doctest PlotEx
   require Logger
 
   test "a first b after" do
@@ -8,7 +8,7 @@ defmodule Plotter.TimeUnitsTest do
     dt_b = DateTime.from_iso8601("2019-05-20T05:05:00.836Z") |> elem(1)
 
     %{basis_name: unit_name, val: unit_val, order: _unit_ord, diff: delta} =
-      Plotter.TimeUnits.units_for(dt_a, dt_b, ticks: 3)
+      PlotEx.TimeUnits.units_for(dt_a, dt_b, ticks: 3)
 
     assert delta == 300
     assert unit_name == :minute
@@ -19,7 +19,7 @@ defmodule Plotter.TimeUnitsTest do
     dt_a = DateTime.from_iso8601("2019-05-20T05:05:00.836Z") |> elem(1)
     dt_b = DateTime.from_iso8601("2019-05-20T05:00:00.836Z") |> elem(1)
 
-    %{basis_name: unit_name, val: unit_val, order: _unit_ord, diff: delta} = Plotter.TimeUnits.units_for(dt_a, dt_b, ticks: 3)
+    %{basis_name: unit_name, val: unit_val, order: _unit_ord, diff: delta} = PlotEx.TimeUnits.units_for(dt_a, dt_b, ticks: 3)
     assert delta == 300
     assert unit_name == :minute
     assert unit_val == 60
@@ -29,7 +29,7 @@ defmodule Plotter.TimeUnitsTest do
     dt_a = DateTime.from_iso8601("2019-05-20T05:04:10.836Z") |> elem(1)
     dt_b = DateTime.from_iso8601("2019-05-20T05:15:00.836Z") |> elem(1)
 
-    scale = Plotter.TimeUnits.time_scale(dt_a, dt_b, [])
+    scale = PlotEx.TimeUnits.time_scale(dt_a, dt_b, [])
 
     scale! = scale[:data] |> Enum.take(30)
 
@@ -42,7 +42,7 @@ defmodule Plotter.TimeUnitsTest do
     dt_a = DateTime.from_iso8601("2019-05-20T05:04:10.836Z") |> elem(1)
     dt_b = DateTime.from_iso8601("2019-05-20T05:15:00.836Z") |> elem(1)
 
-    scale = Plotter.TimeUnits.time_scale(dt_a, dt_b, ticks: 4)
+    scale = PlotEx.TimeUnits.time_scale(dt_a, dt_b, ticks: 4)
     scale! = scale[:data] |> Enum.take(30)
 
     # for i <- scale! do Logger.warn("#{inspect(i)}") end
@@ -54,7 +54,7 @@ defmodule Plotter.TimeUnitsTest do
     dt_a = DateTime.from_iso8601("2019-05-20T05:04:10.836Z") |> elem(1)
     dt_b = DateTime.from_iso8601("2019-05-20T08:15:00.836Z") |> elem(1)
 
-    scale = Plotter.TimeUnits.time_scale(dt_a, dt_b, [])
+    scale = PlotEx.TimeUnits.time_scale(dt_a, dt_b, [])
 
     scale! = scale[:data] |> Enum.take(30)
 

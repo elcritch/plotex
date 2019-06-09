@@ -1,6 +1,6 @@
 
-defmodule Plotter.Axis do
-  alias Plotter.ViewRange
+defmodule PlotEx.Axis do
+  alias PlotEx.ViewRange
   alias __MODULE__
 
   defstruct limits: %ViewRange{},
@@ -10,7 +10,7 @@ defmodule Plotter.Axis do
             ticks: 10,
             kind: :numeric
 
-  @type t :: %Plotter.Axis{
+  @type t :: %PlotEx.Axis{
     limits: ViewRange.t(),
     view: ViewRange.t(),
     name: String.t(),
