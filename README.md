@@ -102,6 +102,8 @@ end
 
 ```
 
+[Example output](./test/output-dt-hours.html)
+
 ## TODO
 
 - [ ] The configuration API needs to be expanded upon. 
