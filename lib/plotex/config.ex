@@ -1,13 +1,13 @@
-defmodule PlotEx.Config do
-  alias PlotEx.Axis
+defmodule Plotex.Config do
+  alias Plotex.Axis
   require Logger
 
   @moduledoc """
-  Documentation for PlotEx Config.
+  Documentation for Plotex Config.
   """
   defstruct xaxis: %Axis{},
             yaxis: %Axis{},
             title: "Plot"
 
-  @type t :: %PlotEx.Config{xaxis: map, yaxis: map, title: String.t() }
+  @type t :: %Plotex.Config{xaxis: map, yaxis: map, title: String.t() }
 end

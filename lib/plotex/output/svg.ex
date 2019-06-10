@@ -1,14 +1,14 @@
-defmodule PlotEx.Output.Svg do
+defmodule Plotex.Output.Svg do
   require Logger
-  alias PlotEx.TimeUnits
+  alias Plotex.TimeUnits
 
   use Phoenix.HTML
 
-  def formatter(%PlotEx.Axis{kind: :numeric} = _axis, opts) do
+  def formatter(%Plotex.Axis{kind: :numeric} = _axis, opts) do
     opts[:format] || fn v -> :io_lib.format("~8.2f", [v]) end
   end
 
-  def formatter(%PlotEx.Axis{kind: :datetime, basis: basis} = axis, opts) do
+  def formatter(%Plotex.Axis{kind: :datetime, basis: basis} = axis, opts) do
     years =
 
     # Logger.info("formatter: axis: #{inspect axis} ")
@@ -38,7 +38,7 @@ defmodule PlotEx.Output.Svg do
     end
   end
 
-  def generate(%PlotEx{} = plot, opts \\ []) do
+  def generate(%Plotex{} = plot, opts \\ []) do
 
     xfmt = formatter(plot.config.xaxis, opts[:xaxis])
     yfmt = formatter(plot.config.yaxis, opts[:yaxis])

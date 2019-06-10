@@ -1,4 +1,4 @@
-defmodule PlotEx.MixProject do
+defmodule Plotex.MixProject do
   use Mix.Project
 
   def project do

@@ -1,11 +1,11 @@
-defmodule PlotEx.ViewRange do
+defmodule Plotex.ViewRange do
   alias __MODULE__
 
   defstruct start: 10,
             stop: 90,
             projection: :cartesian
 
-  @type t :: %PlotEx.ViewRange{start: number(), stop: number(), projection: :cartesian | :polar }
+  @type t :: %Plotex.ViewRange{start: number(), stop: number(), projection: :cartesian | :polar }
 
   def new({a,b}, proj \\ :cartesian) do
     %ViewRange{start: a, stop: b, projection: proj}

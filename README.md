@@ -35,7 +35,7 @@ def render(socket) do
     ]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = PlotEx.plot(
+    plt = Plotex.plot(
       [{xdata, ydata}],
       xaxis: [kind: :datetime,
               ticks: 5,
@@ -44,7 +44,7 @@ def render(socket) do
     Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
-      PlotEx.Output.Svg.generate(
+      Plotex.Output.Svg.generate(
         plt,
         xaxis: [rotate: 35, dy: '2.5em' ],
         yaxis: [],

@@ -1,4 +1,4 @@
-defmodule PlotEx.NumberUnits do
+defmodule Plotex.NumberUnits do
   require Logger
 
   @number_basis [1, 2, 5, 10, 20, 50, 100]
