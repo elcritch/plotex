@@ -31,7 +31,7 @@ defmodule Plotex.Output.Svg do
           :second ->
             v |> Calendar.Strftime.strftime("%H:%M:%S")
           :millisecond ->
-            {:ok, v |> ViewRange.convert(:microsecond)}
+            {:ok, v |> ViewRange.val(:microsecond)}
         end
 
       result
