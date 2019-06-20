@@ -50,11 +50,17 @@ defmodule Plotex.TimeUnits do
   Get units for a given date range, using the number of ticks.
 
   """
-  def units_for(dt_a, dt_b, opts \\ []) do
+  def units_for(%DateTime{} = dt_a, %DateTime{} = dt_b, opts) do
     DateTime.diff(dt_a, dt_b)
     |> abs()
     |> optimize_units(opts)
   end
+  def units_for(%NaiveDateTime{} = dt_a, %NaiveDateTime{} = dt_b, opts) do
+    NaiveDateTime.diff(dt_a, dt_b)
+    |> abs()
+    |> optimize_units(opts)
+  end
+
 
   @spec date_range_from(Enumerable.t()) :: {DateTime.t(), DateTime.t()}
   def date_range_from(data) do
