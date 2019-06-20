@@ -1,6 +1,7 @@
 defmodule Plotex.Output.Svg do
   require Logger
   alias Plotex.TimeUnits
+  alias Plotex.ViewRange
 
   use Phoenix.HTML
 
