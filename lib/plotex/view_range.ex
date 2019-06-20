@@ -1,6 +1,8 @@
 defmodule Plotex.ViewRange do
   alias __MODULE__
 
+  @unix_epoch ~N[1970-01-01 00:00:00]
+
   defstruct start: 10,
             stop: 90,
             projection: :cartesian
@@ -26,15 +28,22 @@ defmodule Plotex.ViewRange do
   def convert(val) when is_number(val), do: val
 
   def val(%DateTime{} = a), do: DateTime.to_unix(a, :nanosecond)
+  def val(%NaiveDateTime{} = a), do: NaiveDateTime.diff(a, @unix_epoch, :nanosecond)
   def val(a), do: a
 
   def diff(%DateTime{} = b, %DateTime{} = a), do: DateTime.diff(b, a, :nanosecond)
+  def diff(%NaiveDateTime{} = b, %NaiveDateTime{} = a), do: NaiveDateTime.diff(b, a, :nanosecond)
   def diff(b, a), do: b - a
 
   @spec pad({DateTime.t(), DateTime.t()}, number) :: {DateTime.t(), DateTime.t()}
   def pad({%DateTime{} = start, %DateTime{} = stop}, amount) do
     {start |> DateTime.add(-round(amount), :nanosecond),
      stop |> DateTime.add(round(amount), :nanosecond)}
+  end
+  @spec pad({NaiveDateTime.t(), NaiveDateTime.t()}, number) :: {NaiveDateTime.t(), NaiveDateTime.t()}
+  def pad({%NaiveDateTime{} = start, %NaiveDateTime{} = stop}, amount) do
+    {start |> NaiveDateTime.add(-round(amount), :nanosecond),
+     stop |> NaiveDateTime.add(round(amount), :nanosecond)}
   end
 
   def pad({start, stop}, _amount)  when is_nil(start) or is_nil(stop) do
@@ -49,9 +58,11 @@ defmodule Plotex.ViewRange do
     1.0
   end
 
-  @spec dist( { DateTime.t(), DateTime.t() } | {nil, nil} | ViewRange.t() ) :: number
-  def dist({%DateTime{} = start, %DateTime{} = stop}) do
-    diff = DateTime.to_unix(stop, :nanosecond) - DateTime.to_unix(start, :nanosecond)
+  @type datetime :: DateTime.t() | NaiveDateTime.t()
+
+  @spec dist( { datetime(), datetime() } | {nil, nil} | ViewRange.t() ) :: number
+  def dist({%{} = start, %{} = stop}) do
+    diff = val(stop) - val(start)
     if diff != 0 do
       diff
     else

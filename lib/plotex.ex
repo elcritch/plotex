@@ -5,6 +5,13 @@ defmodule Plotex do
 
   @moduledoc """
   Documentation for Plotex.
+
+  To set the default "time_module" (used for scaling time series) use:
+
+  ```elixir
+  config :plotex, :time_module, NaiveDateTime
+  ```
+
   """
   defstruct [:config, :xticks, :yticks, :datasets, :datasets]
 
