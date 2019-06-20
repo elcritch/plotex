@@ -118,10 +118,10 @@ defmodule Plotex.TimeUnits do
       |> Stream.map(fn i ->
         # Logger.warn("#{inspect(dt_start)}")
         # Logger.warn("#{inspect({i, unit_val, i * unit_val})}")
-        DateTime.add(dt_start, round(i * unit_val), :second)
+        dt_add(dt_start, round(i * unit_val), :second)
       end)
       |> Stream.take_every(stride)
-      |> Stream.take_while(fn dt -> DateTime.compare(dt, dt_b) == :lt end)
+      |> Stream.take_while(fn dt -> dt_compare(dt, dt_b) == :lt end)
 
     %{data: rng, basis: basis}
   end
@@ -137,6 +137,21 @@ defmodule Plotex.TimeUnits do
         0
     end
   end
+
+  def dt_add(%DateTime{} = dt_start, val, units) do
+      DateTime.add(dt_start, val, units)
+  end
+  def dt_add(%NaiveDateTime{} = dt_start, val, units) do
+      NaiveDateTime.add(dt_start, val, units)
+  end
+
+  def dt_compare(%DateTime{} = dt_a, %DateTime{} = dt_b) do
+      DateTime.compare(dt_a, dt_b)
+  end
+  def dt_compare(%NaiveDateTime{} = dt_a, %NaiveDateTime{} = dt_b) do
+      NaiveDateTime.compare(dt_a, dt_b)
+  end
+
 
   def clone(%DateTime{} = dt, unit) do
     dt = dt |> Map.from_struct()
@@ -154,6 +169,21 @@ defmodule Plotex.TimeUnits do
       utc_offset: dt.utc_offset,
       year: dt.year,
       zone_abbr: dt.zone_abbr
+    }
+  end
+
+  def clone(%NaiveDateTime{} = dt, unit) do
+    dt = dt |> Map.from_struct()
+
+    %NaiveDateTime{
+      day: gets(dt, unit, :day),
+      hour: gets(dt, unit, :hour),
+      minute: gets(dt, unit, :minute),
+      month: gets(dt, unit, :month),
+      second: gets(dt, unit, :second),
+      microsecond: {gets(dt, unit, :microsecond), 6},
+      calendar: dt.calendar,
+      year: dt.year,
     }
   end
 end
