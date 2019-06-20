@@ -25,6 +25,7 @@ defmodule Plotex.ViewRange do
   def convert(%Time{} = val), do: Time.to_erl(val)
   def convert(%Date{} = val), do: Date.to_erl(val)
   def convert(%DateTime{} = val), do: DateTime.to_unix(val, :nanosecond)
+  def convert(%NaiveDateTime{} = a), do: NaiveDateTime.diff(a, @unix_epoch, :nanosecond)
   def convert(val) when is_number(val), do: val
 
   def val(%DateTime{} = a), do: DateTime.to_unix(a, :nanosecond)
