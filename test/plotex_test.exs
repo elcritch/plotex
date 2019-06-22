@@ -317,4 +317,82 @@ defmodule PlotexTest do
     File.write!("output-dt-hours.html", html_str)
   end
 
+  test "svg naivedatetime (hours) plot" do
+    xdata = [
+      NaiveDateTime.from_iso8601("2019-05-20T05:04:12.836") |> elem(1),
+      NaiveDateTime.from_iso8601("2019-05-20T05:13:17.836") |> elem(1),
+      NaiveDateTime.from_iso8601("2019-05-20T05:21:23.836") |> elem(1),
+      NaiveDateTime.from_iso8601("2019-05-20T05:33:25.836") |> elem(1),
+    ]
+    ydata = [0.1, 0.25, 0.15, 0.1]
+
+    plt = Plotex.plot(
+      [{xdata, ydata}],
+      xaxis: [kind: :datetime,
+              ticks: 5,
+              padding: 0.05]
+    )
+    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
+
+    svg_str =
+      Plotex.Output.Svg.generate(
+        plt,
+        xaxis: [rotate: 35, dy: '2.5em' ],
+        yaxis: [],
+      ) |> Phoenix.HTML.safe_to_string()
+
+    # Logger.warn("SVG: \n#{svg_str}")
+
+    html_str = """
+    <html>
+    <head>
+      <style>
+        .graph .labels .x-labels {
+          text-anchor: middle;
+        }
+        .graph .labels, .graph .y-labels {
+          text-anchor: middle;
+        }
+        .graph {
+          height: 500px;
+          width: 800px;
+        }
+        .graph .grid {
+          stroke: #ccc;
+          stroke-dasharray: 0;
+          stroke-width: 1.0;
+        }
+        .labels {
+          font-size: 3px;
+        }
+        .labels .x-labels {
+          font-size: 1px;
+        }
+        .label-title {
+          font-size: 8px;
+          font-weight: bold;
+          text-transform: uppercase;
+          fill: black;
+        }
+        .data .data-point {
+          fill: darkblue;
+          stroke-width: 1.0;
+        }
+        .data .data-line {
+          stroke: #0074d9;
+          stroke-width: 0.1em;
+          stroke-width: 0.1em;
+          stroke-linecap: round;
+          fill: none;
+        }
+      </style>
+    </head>
+    <body>
+      #{svg_str}
+    </body>
+    </html>
+    """
+    File.write!("output-naive-dt-hours.html", html_str)
+  end
+
 end

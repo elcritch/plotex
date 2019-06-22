@@ -5,6 +5,8 @@ defmodule Plotex do
 
   @moduledoc """
   Documentation for Plotex.
+
+  TODO
   """
   defstruct [:config, :xticks, :yticks, :datasets, :datasets]
 

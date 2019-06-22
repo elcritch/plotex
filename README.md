@@ -6,6 +6,18 @@ Warning, alpha status! It works, but is still very rough in many areas. However,
 
 See units tests for examples of producing SVG graphs. 
 
+## Changes
+
+- v0.1.0 has basic plotting functionality included 
+- v0.1.1 has support for NaiveDateTime (easier to convert to user local time on the fly)
+
+## Next Features 
+
+- The API and handline of the plot gutters need to be polished, including better support for changing aspect ratios 
+- Add introspective abilities
+- Add tests and verify multiple plots can be handled
+- Make hex package 
+
 ### Features 
 
 Supports creating axis and scaling for both numeric (floats) and DateTime series from Elixir Streams. All scaling and sizing can be modified, though the config API is still a work in progress. The graph generation is designed to be modular. There's a simple SVG output module in only about ~150 lines of code which is intended to be fully customizable with CSS. 

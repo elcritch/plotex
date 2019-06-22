@@ -1,6 +1,7 @@
 defmodule Plotex.Output.Svg do
   require Logger
   alias Plotex.TimeUnits
+  alias Plotex.ViewRange
 
   use Phoenix.HTML
 
@@ -31,7 +32,7 @@ defmodule Plotex.Output.Svg do
           :second ->
             v |> Calendar.Strftime.strftime("%H:%M:%S")
           :millisecond ->
-            {:ok, v |> DateTime.to_unix(:microsecond)}
+            {:ok, ViewRange.vals(v, :microsecond)}
         end
 
       result
