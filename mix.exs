@@ -18,6 +18,21 @@ defmodule Plotex.MixProject do
     ]
   end
 
+  defp description do
+    """
+    Extensible plotting library and core plotting routines written in pure Elixir.
+    """
+  end
+
+  defp package do
+    [
+      files: ["lib", "mix.exs", "README*", "LICENSE*", "test"],
+      maintainers: ["Jaremy Creechley"],
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => "https://github.com/elcritch/plotex"}
+    ]
+  end
+
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
