@@ -38,6 +38,7 @@ defmodule Plotex.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ex_doc, ">= 0.0.0", only: :dev},
       {:phoenix_html, "~> 2.13", optional: true},
       # {:ex_cldr_dates_times, "~> 2.1", optional: true},
       {:tzdata, "~> 1.0", optional: true},

@@ -39,6 +39,28 @@ defmodule Plotex.Output.Svg do
     end
   end
 
+  @doc """
+  Primary function to generate SVG plots from a given Plotex structure. The SVG can be
+  styled using standard CSS. Options include ability to set the tick rotation and offset.
+
+  The overall SVG structure and CSS classes that can be used to style the SVG graph are:
+
+  ```sass
+  .graph
+    .label-title
+    .labels
+      .x-labels
+      .y-labels
+    .grid
+    .data
+      .data-point
+      .data-line
+  ```
+
+  The generated SVG includes both a ployline connecting each dataset, and also either
+  datapoints as either `rect` or `circle` type via `opts.data.type = :rect | :circle`.
+
+  """
   def generate(%Plotex{} = plot, opts \\ []) do
 
     xfmt = formatter(plot.config.xaxis, opts[:xaxis])

@@ -15,6 +15,9 @@ defmodule Plotex do
                       yticks: Enumerable.t(),
                       datasets: Enumerable.t()}
 
+  @doc """
+  Generates a stream of the data points (ticks) for a given axis.
+  """
   def generate_axis(%Axis{kind: :numeric} = axis) do
     a = axis.limits.start
     b = axis.limits.stop
@@ -47,6 +50,9 @@ defmodule Plotex do
     end
   end
 
+  @doc """
+  Returns a stream of scaled data points zipped with the original points.
+  """
   def scale_data(_data, %Axis{limits: %{start: start, stop: stop} } = _axis ) when is_nil(start) or is_nil(stop) do
     []
   end
@@ -61,6 +67,9 @@ defmodule Plotex do
     |> Stream.map(fn x -> m*(ViewRange.val(x)-x!) + b  end)
   end
 
+  @doc """
+  Returns of scaled data for both X & Y coordinates for a given {X,Y} dataset.
+  """
   def plot_data({xdata, ydata}, %Axis{} = xaxis, %Axis{} = yaxis ) do
 
     xrng = scale_data(xdata, xaxis)
@@ -69,6 +78,9 @@ defmodule Plotex do
     {Enum.zip(xdata, xrng), Enum.zip(ydata, yrng)}
   end
 
+  @doc """
+  Find the maximum and minumun points for a given line of data.
+  """
   def range_from(data) do
     unless Enum.count(data) == 0 do
       Enum.min_max_by(data, &Plotex.ViewRange.convert/1)
@@ -77,6 +89,12 @@ defmodule Plotex do
     end
   end
 
+  @doc """
+  Find the appropriate limits given an enumerable of datasets.
+
+  For example, given {[1,2,3,4], [0.4,0.3,0.2,0.1]} will find the X limits 1..4
+  and the Y limits of 0.1..0.4.
+  """
   def limits(datasets, opts \\ []) do
     # Logger.warn("plot: limits: opts: #{inspect opts}")
     proj = Keyword.get(opts, :projection, :cartesian)
@@ -103,6 +121,10 @@ defmodule Plotex do
      %ViewRange{start: ya, stop: yb, projection: proj}}
   end
 
+  @doc """
+  Create a Plotex struct for given datasets and configuration. Will load and scan data
+  for all input datasets.
+  """
   @spec plot([ [{number, number}] ], nil | keyword | map) :: Plotex.t()
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets, opts)
