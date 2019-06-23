@@ -46,15 +46,17 @@ defmodule Plotex.Output.Svg do
   The overall SVG structure and CSS classes that can be used to style the SVG graph are:
 
   ```sass
-  .graph
-    .label-title
-    .labels
-      .x-labels
-      .y-labels
-    .grid
-    .data
-      .data-point
-      .data-line
+  .plx-graph
+    .plx-title
+    .plx-label-title
+    .plx-labels
+      .plx-x-labels
+      .plx-y-labels
+    .plx-grid
+    .plx-data
+      .plx-dataset-<n>
+        .plx-data-point
+        .plx-data-line
   ```
 
   The generated SVG includes both a ployline connecting each dataset, and also either
@@ -79,11 +81,11 @@ defmodule Plotex.Output.Svg do
         <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewbox="0 -100 <%= opts[:width] || 100 %> <%= opts[:height] || 100 %>"
              preserveAspectRatio="none"
-             class="graph" version="1.2" >
-        <title id="title"> <%= @config.title %> </title>
+             class="plx-graph" version="1.2" >
+        <title class="plx-title"> <%= @config.title %> </title>
 
         <!-- X Axis -->
-        <g class="grid x-grid">
+        <g class="plx-grid plx-x-grid plx-border">
           <line x1="<%= @config.xaxis.view.start %>"
                 x2="<%= @config.xaxis.view.stop %>"
                 y1="-<%= @config.yaxis.view.start %>"
@@ -91,7 +93,7 @@ defmodule Plotex.Output.Svg do
           </line>
 
         </g>
-        <g class="labels x-labels">
+        <g class="plx-labels plx-x-labels">
           <%= for {xl, xp} <- @xticks do %>
             <text x="<%= xp %>"
                   y="-<%= @config.yaxis.view.start %>"
@@ -109,7 +111,7 @@ defmodule Plotex.Output.Svg do
         </g>
 
         <!-- Y Axis -->
-        <g class="grid y-grid">
+        <g class="plx-grid plx-y-grid">
           <line x1="<%= @config.xaxis.view.start %>"
                 x2="<%= @config.xaxis.view.start %>"
                 y1="-<%= @config.yaxis.view.start %>"
@@ -117,7 +119,7 @@ defmodule Plotex.Output.Svg do
           </line>
 
         </g>
-        <g class="labels y-labels">
+        <g class="plx-labels plx-y-labels">
           <%= for {yl, yp} <- @yticks do %>
             <text y="-<%= yp %>"
                   x="<%= @config.xaxis.view.start %>"
@@ -134,10 +136,10 @@ defmodule Plotex.Output.Svg do
         </g>
 
         <!-- Data -->
-        <g class="data">
+        <g class="plx-data">
         <%= for {dataset, idx} <- @datasets do %>
-          <g class="dataset-<%= idx %>" data-setname="data-<%= idx %>">
-            <polyline class="data-line"
+          <g class="plx-dataset-<%= idx %>" data-setname="plx-data-<%= idx %>">
+            <polyline class="plx-data-line"
                       points="
                         <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %>
                           <%= xp %>,-<%= yp %>
@@ -147,7 +149,7 @@ defmodule Plotex.Output.Svg do
             <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
               <%= case @opts[:data][:type] do %>
               <% :circle -> %>
-                <circle class="data-point "
+                <circle class="plx-data-point "
                         cx="<%= xp %>"
                         cy="-<%= yp %>"
                         r="<%= (@opts[:data][:size] || @ds)/2.0 %>"
@@ -155,7 +157,7 @@ defmodule Plotex.Output.Svg do
                         data-y-value="<%= yl %>"
                         ></circle>
               <% _rect_default -> %>
-                <rect class="data-point "
+                <rect class="plx-data-point "
                       x="<%= xp - (@opts[:data][:size] || @ds)/2  %>"
                       y="-<%= yp + (@opts[:data][:size] || @ds)/2  %>"
                       data-x-value="<%= xl %>"
