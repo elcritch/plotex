@@ -39,6 +39,9 @@ defmodule Plotex.Output.Svg do
     end
   end
 
+  @doc """
+  Default example CSS Styling.
+  """
   def default_css() do
     """
         .plx-graph .plx-labels .plx-x-labels {
