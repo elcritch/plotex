@@ -24,6 +24,9 @@ defmodule Plotex.Output.Svg do
           stroke-dasharray: 0;
           stroke-width: 1.0;
         }
+        .plx-grid-lines {
+          stroke-width: 0.1;
+        }
         .plx-ticks {
           stroke: #ccc;
           stroke-dasharray: 0;
