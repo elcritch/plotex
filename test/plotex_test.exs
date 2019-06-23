@@ -153,7 +153,7 @@ defmodule PlotexTest do
         plt,
         %Options{
           # xaxis: [rotate: 35, offset: '2.5em' ],
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: '2.5em' } },
+          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 } },
           yaxis: %Options.Axis{ label: %Options.Item{ } },
         }
       ) |> Phoenix.HTML.safe_to_string()
@@ -197,7 +197,7 @@ defmodule PlotexTest do
         plt,
         %Options{
           # xaxis: [rotate: 35, offset: '2.5em' ],
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: '2.5em' } },
+          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 } },
           yaxis: %Options.Axis{ },
         }
       ) |> Phoenix.HTML.safe_to_string()
@@ -240,8 +240,8 @@ defmodule PlotexTest do
       Plotex.Output.Svg.generate(
         plt,
         %Options{
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: 2.0 } },
-          yaxis: %Options.Axis{ },
+          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: 5.0 } },
+          yaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
         }
       ) |> Phoenix.HTML.safe_to_string()
 

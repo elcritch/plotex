@@ -1,7 +1,7 @@
 defmodule Plotex.Output.Options.Item do
 
   defstruct size: 2.0,
-            offset: 1.0,
+            offset: 5.0,
             rotate: 0.0
 end
 
@@ -9,7 +9,7 @@ defmodule Plotex.Output.Options.Axis do
   alias Plotex.Output.Options
 
   defstruct ticks: %Options.Item{},
-            label: %Options.Item{rotate: 0.0, offset: 1.5, size: nil},
+            label: %Options.Item{},
             format: nil
 end
 
@@ -82,8 +82,8 @@ defmodule Plotex.Output.Options do
   require Logger
   alias Plotex.Output.Options
 
-  defstruct xaxis: %Options.Axis{},
-            yaxis: %Options.Axis{},
+  defstruct xaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
+            yaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
             width: 100,
             height: 100,
             data: %{},

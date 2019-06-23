@@ -11,11 +11,9 @@ defmodule Plotex.Output.Svg do
   """
   def default_css() do
     """
-        .plx-graph .plx-labels .plx-x-labels {
+        .plx-labels {
           text-anchor: middle;
-        }
-        .plx-graph .plx-labels, .plx-graph .plx-y-labels {
-          text-anchor: middle;
+          dominant-baseline: central;
         }
         .plx-graph {
           height: 500px;
@@ -126,7 +124,7 @@ defmodule Plotex.Output.Svg do
           <%= for {xl, xp} <- @xticks do %>
             <text x="<%= xp %>"
                   y="-<%= @config.yaxis.view.start %>"
-                  transform="rotate(<%= @opts.xaxis.label.rotate %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
+                  transform="rotate(<%= @opts.xaxis.label.rotate %>, <%= xp %>, -<%= @config.yaxis.view.start - @opts.xaxis.label.offset %>)"
                   dy="<%= @opts.xaxis.label.offset %>">
                 <%= Options.Formatter.calc(xfmt, xl) %>
             </text>
@@ -164,7 +162,7 @@ defmodule Plotex.Output.Svg do
           <%= for {yl, yp} <- @yticks do %>
             <text y="-<%= yp %>"
                   x="<%= @config.xaxis.view.start %>"
-                  transform="rotate(<%= @opts.yaxis.label.rotate %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
+                  transform="rotate(<%= @opts.yaxis.label.rotate %>, <%= @config.xaxis.view.start - @opts.yaxis.label.offset %>, -<%= yp %>)"
                   dx="-<%= @opts.yaxis.label.offset %>">
                 <%= Options.Formatter.calc(yfmt, yl) %>
               </text>
