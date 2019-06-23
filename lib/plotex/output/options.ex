@@ -44,6 +44,7 @@ defmodule Plotex.Output.Options.DateTimeFormatter do
 end
 defimpl Plotex.Output.Options.Formatter, for: Plotex.Output.Options.DateTimeFormatter do
   alias Plotex.TimeUnits
+  alias Plotex.ViewRange
 
   def calc(opts, v) do
     # fn v ->
@@ -66,7 +67,7 @@ defimpl Plotex.Output.Options.Formatter, for: Plotex.Output.Options.DateTimeForm
             v |> Calendar.Strftime.strftime(opts.second || "%H:%M:%S")
           :millisecond ->
             if opts.millisecond do
-              Calendar.Strftime.strftime(opts.second || "%H:%M:%S")
+              v |> Calendar.Strftime.strftime(opts.second || "%H:%M:%S")
             else
               {:ok, ViewRange.vals(v, :microsecond)}
             end
@@ -94,7 +95,7 @@ defmodule Plotex.Output.Options do
   end
 
   def formatter(%Plotex.Axis{} = axis, formatter) do
-    Logger.warn("formatter: #{inspect axis}")
+    # Logger.warn("formatter: #{inspect axis}")
     if formatter do
       formatter
     else
