@@ -39,6 +39,49 @@ defmodule Plotex.Output.Svg do
     end
   end
 
+  def default_css() do
+    """
+        .plx-graph .plx-labels .plx-x-labels {
+          text-anchor: middle;
+        }
+        .plx-graph .plx-labels, .plx-graph .plx-y-labels {
+          text-anchor: middle;
+        }
+        .plx-graph {
+          height: 500px;
+          width: 800px;
+        }
+        .plx-graph .plx-grid {
+          stroke: #ccc;
+          stroke-dasharray: 0;
+          stroke-width: 1.plx-0;
+        }
+        .plx-labels {
+          font-size: 3px;
+        }
+        .plx-labels .plx-x-labels {
+          font-size: 1px;
+        }
+        .plx-label-title {
+          font-size: 8px;
+          font-weight: bold;
+          text-transform: uppercase;
+          fill: black;
+        }
+        .plx-data .plx-data-point {
+          fill: darkblue;
+          stroke-width: 1.plx-0;
+        }
+        .plx-data .plx-data-line {
+          stroke: #0074d9;
+          stroke-width: 0.plx-1em;
+          stroke-width: 0.plx-1em;
+          stroke-linecap: round;
+          fill: none;
+        }
+    """
+  end
+
   @doc """
   Primary function to generate SVG plots from a given Plotex structure. The SVG can be
   styled using standard CSS. Options include ability to set the tick rotation and offset.

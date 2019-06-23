@@ -4,6 +4,8 @@ defmodule PlotexTest do
   alias Plotex.Axis
   alias Plotex.ViewRange
 
+  @default_css
+
   doctest Plotex
 
   test "data plots" do
@@ -191,44 +193,6 @@ defmodule PlotexTest do
     <html>
     <head>
       <style>
-        .graph .labels .x-labels {
-          text-anchor: middle;
-        }
-        .graph .labels, .graph .y-labels {
-          text-anchor: middle;
-        }
-        .graph {
-          height: 500px;
-          width: 800px;
-        }
-        .graph .grid {
-          stroke: #ccc;
-          stroke-dasharray: 0;
-          stroke-width: 1.0;
-        }
-        .labels {
-          font-size: 3px;
-        }
-        .labels .x-labels {
-          font-size: 1px;
-        }
-        .label-title {
-          font-size: 8px;
-          font-weight: bold;
-          text-transform: uppercase;
-          fill: black;
-        }
-        .data .data-point {
-          fill: darkblue;
-          stroke-width: 1.0;
-        }
-        .data .data-line {
-          stroke: #0074d9;
-          stroke-width: 0.1em;
-          stroke-width: 0.1em;
-          stroke-linecap: round;
-          fill: none;
-        }
       </style>
     </head>
     <body>
@@ -269,44 +233,7 @@ defmodule PlotexTest do
     <html>
     <head>
       <style>
-        .graph .labels .x-labels {
-          text-anchor: middle;
-        }
-        .graph .labels, .graph .y-labels {
-          text-anchor: middle;
-        }
-        .graph {
-          height: 500px;
-          width: 800px;
-        }
-        .graph .grid {
-          stroke: #ccc;
-          stroke-dasharray: 0;
-          stroke-width: 1.0;
-        }
-        .labels {
-          font-size: 3px;
-        }
-        .labels .x-labels {
-          font-size: 1px;
-        }
-        .label-title {
-          font-size: 8px;
-          font-weight: bold;
-          text-transform: uppercase;
-          fill: black;
-        }
-        .data .data-point {
-          fill: darkblue;
-          stroke-width: 1.0;
-        }
-        .data .data-line {
-          stroke: #0074d9;
-          stroke-width: 0.1em;
-          stroke-width: 0.1em;
-          stroke-linecap: round;
-          fill: none;
-        }
+        #{Plotex.Output.Svg.default_css()}
       </style>
     </head>
     <body>
@@ -347,44 +274,7 @@ defmodule PlotexTest do
     <html>
     <head>
       <style>
-        .graph .labels .x-labels {
-          text-anchor: middle;
-        }
-        .graph .labels, .graph .y-labels {
-          text-anchor: middle;
-        }
-        .graph {
-          height: 500px;
-          width: 800px;
-        }
-        .graph .grid {
-          stroke: #ccc;
-          stroke-dasharray: 0;
-          stroke-width: 1.0;
-        }
-        .labels {
-          font-size: 3px;
-        }
-        .labels .x-labels {
-          font-size: 1px;
-        }
-        .label-title {
-          font-size: 8px;
-          font-weight: bold;
-          text-transform: uppercase;
-          fill: black;
-        }
-        .data .data-point {
-          fill: darkblue;
-          stroke-width: 1.0;
-        }
-        .data .data-line {
-          stroke: #0074d9;
-          stroke-width: 0.1em;
-          stroke-width: 0.1em;
-          stroke-linecap: round;
-          fill: none;
-        }
+        #{Plotex.Output.Svg.default_css()}
       </style>
     </head>
     <body>
