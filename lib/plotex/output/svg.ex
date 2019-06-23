@@ -108,12 +108,23 @@ defmodule Plotex.Output.Svg do
           </g>
 
           <g class="plx-ticks">
-            <%= for {xl, xp} <- @xticks do %>
+            <%= for {_xl, xp} <- @xticks do %>
               <line
                     x1="<%= xp %>"
                     y1="-<%= @config.yaxis.view.start %>"
                     x2="<%= xp %>"
                     y2="-<%= @config.yaxis.view.start + @opts.xaxis.ticks.size %>"
+                    >
+              </line>
+            <% end %>
+          </g>
+          <g class="plx-grid-lines">
+            <%= for {_xl, xp} <- @xticks do %>
+              <line
+                    x1="<%= xp %>"
+                    y1="-<%= @config.yaxis.view.start %>"
+                    x2="<%= xp %>"
+                    y2="-<%= @config.yaxis.view.stop %>"
                     >
               </line>
             <% end %>
@@ -147,11 +158,22 @@ defmodule Plotex.Output.Svg do
           </g>
 
           <g class="plx-ticks">
-            <%= for {yl, yp} <- @yticks do %>
+            <%= for {_yl, yp} <- @yticks do %>
               <line
                     x1="<%= @config.xaxis.view.start %>"
                     y1="-<%= yp %>"
                     x2="<%= @config.xaxis.view.start + @opts.yaxis.ticks.size %>"
+                    y2="-<%= yp %>"
+                    >
+              </line>
+            <% end %>
+          </g>
+          <g class="plx-grid-lines">
+            <%= for {_yl, yp} <- @yticks do %>
+              <line
+                    x1="<%= @config.xaxis.view.start %>"
+                    y1="-<%= yp %>"
+                    x2="<%= @config.xaxis.view.stop %>"
                     y2="-<%= yp %>"
                     >
               </line>
