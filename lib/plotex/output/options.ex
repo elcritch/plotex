@@ -21,31 +21,34 @@ defmodule Plotex.Output.Options.Data do
             height: 1.5
 end
 
-defprotocol Plotex.Output.Options.Formmater do
+defprotocol Plotex.Output.Options.Formatter do
   @doc "Formats a value"
-  def func(axis, opts)
+  def calc(formatter, val)
 end
 
 defmodule Plotex.Output.Options.NumericFormatter do
   defstruct precision: 8, decimals: 2
 end
-defimpl Plotex.Output.Options.Formmater, for: Plotex.Output.Options.NumberFormat do
+defimpl Plotex.Output.Options.Formatter, for: Plotex.Output.Options.NumericFormatter do
   alias Plotex.Output.Options
 
-  def func(%Plotex.Axis{kind: :numeric} = _axis, opts) do
-    fn v ->
-      :io_lib.format("~#{opts.precision}.#{opts.decimals}f", [v])
-    end
+  def calc(formatter, val) do
+    # fn v ->
+      :io_lib.format("~#{formatter.precision}.#{formatter.decimals}f", [val])
+    # end
   end
 end
 
 defmodule Plotex.Output.Options.DateTimeFormatter do
-  defstruct [ :year, :month, :day, :hour, :minute, :second, :millisecond ]
+  defstruct [ :basis, :year, :month, :day, :hour, :minute, :second, :millisecond ]
 end
-defimpl Plotex.Output.Options.Formmater, for: Plotex.Output.Options.DateTimeFormat do
-  def func(%Plotex.Axis{kind: :datetime, basis: basis} = _axis, opts) do
-    fn v ->
-      epoch = TimeUnits.display_epoch(basis.order)
+defimpl Plotex.Output.Options.Formatter, for: Plotex.Output.Options.DateTimeFormatter do
+  alias Plotex.TimeUnits
+
+  def calc(opts, v) do
+    # fn v ->
+      # epoch = nil
+      epoch = TimeUnits.display_epoch(opts.basis.order)
 
       {:ok, result} =
         case epoch do
@@ -70,18 +73,19 @@ defimpl Plotex.Output.Options.Formmater, for: Plotex.Output.Options.DateTimeForm
         end
 
       result
-    end
+    # end
   end
 end
 
 
 defmodule Plotex.Output.Options do
+  require Logger
   alias Plotex.Output.Options
 
   defstruct xaxis: %Options.Axis{},
             yaxis: %Options.Axis{},
             width: 100,
-            heights: 100,
+            height: 100,
             data: %{},
             default_data: %Options.Data{}
 
@@ -90,6 +94,7 @@ defmodule Plotex.Output.Options do
   end
 
   def formatter(%Plotex.Axis{} = axis, formatter) do
+    Logger.warn("formatter: #{inspect axis}")
     if formatter do
       formatter
     else
@@ -97,7 +102,7 @@ defmodule Plotex.Output.Options do
         :numeric ->
           %Options.NumericFormatter{}
         :datetime ->
-          %Options.DateTimeFormatter{}
+          %Options.DateTimeFormatter{basis: axis.basis}
       end
     end
   end

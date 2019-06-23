@@ -108,10 +108,11 @@ defmodule PlotexTest do
 
     svg_str = Plotex.Output.Svg.generate(
                 plt,
-                number_format: "~5.3f",
-                xaxis: [rotate: 35],
-                yaxis: [rotate: 35],
-      ) |> Phoenix.HTML.safe_to_string()
+                %Options{
+                  xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 }},
+                  xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 }},
+                }
+            ) |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 
@@ -150,8 +151,11 @@ defmodule PlotexTest do
     svg_str =
       Plotex.Output.Svg.generate(
         plt,
-        xaxis: [rotate: 35, dy: '2.5em' ],
-        yaxis: [],
+        %Options{
+          # xaxis: [rotate: 35, offset: '2.5em' ],
+          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: '2.5em' } },
+          yaxis: %Options.Axis{ label: %Options.Item{ } },
+        }
       ) |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
@@ -191,8 +195,11 @@ defmodule PlotexTest do
     svg_str =
       Plotex.Output.Svg.generate(
         plt,
-        xaxis: [rotate: 35, dy: '2.5em' ],
-        yaxis: [],
+        %Options{
+          # xaxis: [rotate: 35, offset: '2.5em' ],
+          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: '2.5em' } },
+          yaxis: %Options.Axis{ },
+        }
       ) |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
@@ -232,8 +239,10 @@ defmodule PlotexTest do
     svg_str =
       Plotex.Output.Svg.generate(
         plt,
-        xaxis: [rotate: 35, dy: '2.5em' ],
-        yaxis: [],
+        %Options{
+          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: 2.0 } },
+          yaxis: %Options.Axis{ },
+        }
       ) |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")

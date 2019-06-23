@@ -126,10 +126,9 @@ defmodule Plotex.Output.Svg do
           <%= for {xl, xp} <- @xticks do %>
             <text x="<%= xp %>"
                   y="-<%= @config.yaxis.view.start %>"
-                  transform="rotate(<%= @opts.xaxis.label_rotate %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
-                  dy="<%= @opts.xaxis.label_offset %>">
-
-              <%= xfmt.(xl) %>
+                  transform="rotate(<%= @opts.xaxis.label.rotate %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
+                  dy="<%= @opts.xaxis.label.offset %>">
+                <%= Options.Formatter.calc(xfmt, xl) %>
             </text>
           <% end %>
           <text x="<%= (@config.xaxis.view.stop - @config.xaxis.view.start)/2.0 %>"
@@ -165,9 +164,9 @@ defmodule Plotex.Output.Svg do
           <%= for {yl, yp} <- @yticks do %>
             <text y="-<%= yp %>"
                   x="<%= @config.xaxis.view.start %>"
-                  transform="rotate(<%= @opts.yaxis.rotate %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
-                  dx="-<%= @opts.yaxis.offset %>">
-              <%= yfmt.(yl) %>
+                  transform="rotate(<%= @opts.yaxis.label.rotate %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
+                  dx="-<%= @opts.yaxis.label.offset %>">
+                <%= Options.Formatter.calc(yfmt, yl) %>
               </text>
           <% end %>
           <text y="-<%= (@config.yaxis.view.stop - @config.yaxis.view.start)/2.0 %>"
@@ -189,19 +188,19 @@ defmodule Plotex.Output.Svg do
                         "/>
 
             <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
-              <%= case @opts.data[idx].shape do %>
+              <%= case Options.data(@opts,idx).shape do %>
               <% :circle -> %>
                 <circle class="plx-data-point "
                         cx="<%= xp %>"
                         cy="-<%= yp %>"
-                        r="<%= Options.data(@opts, idx).size / 2.0 %>"
+                        r="<%= Options.data(@opts, idx).width / 2.0 %>"
                         data-x-value="<%= xl %>"
                         data-y-value="<%= yl %>"
                         ></circle>
               <% _rect_default -> %>
                 <rect class="plx-data-point "
-                      x="<%= xp - Options.data(@opts, idx).size / 2  %>"
-                      y="<%= yp - Options.data(@opts, idx).size / 2  %>"
+                      x="<%= xp - Options.data(@opts, idx).width / 2  %>"
+                      y="<%= yp - Options.data(@opts, idx).height / 2  %>"
                       data-x-value="<%= xl %>"
                       data-y-value="<%= yl %>"
                       width="<%= Options.data(@opts, idx).width %>"
