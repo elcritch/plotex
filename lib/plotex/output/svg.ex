@@ -2,42 +2,9 @@ defmodule Plotex.Output.Svg do
   require Logger
   alias Plotex.TimeUnits
   alias Plotex.ViewRange
+  alias Plotex.Output.Options
 
   use Phoenix.HTML
-
-  def formatter(%Plotex.Axis{kind: :numeric} = _axis, opts) do
-    opts[:format] || fn v -> :io_lib.format("~8.2f", [v]) end
-  end
-
-  def formatter(%Plotex.Axis{kind: :datetime, basis: basis} = axis, opts) do
-    years =
-
-    # Logger.info("formatter: axis: #{inspect axis} ")
-
-    opts[:format] || fn v ->
-      epoch = TimeUnits.display_epoch(basis.order)
-
-      {:ok, result} =
-        case epoch do
-          :year ->
-            v |> Calendar.Strftime.strftime("%Y/%m/%d")
-          :month ->
-            v |> Calendar.Strftime.strftime("%y/%m/%d")
-          :day ->
-            v |> Calendar.Strftime.strftime("%m/%d %H")
-          :hour ->
-            v |> Calendar.Strftime.strftime("%d %H:%M")
-          :minute ->
-            v |> Calendar.Strftime.strftime("%H:%M:%S")
-          :second ->
-            v |> Calendar.Strftime.strftime("%H:%M:%S")
-          :millisecond ->
-            {:ok, ViewRange.vals(v, :microsecond)}
-        end
-
-      result
-    end
-  end
 
   @doc """
   Default example CSS Styling.
@@ -57,7 +24,12 @@ defmodule Plotex.Output.Svg do
         .plx-graph .plx-grid {
           stroke: #ccc;
           stroke-dasharray: 0;
-          stroke-width: 1.plx-0;
+          stroke-width: 1.0;
+        }
+        .plx-ticks {
+          stroke: #ccc;
+          stroke-dasharray: 0;
+          stroke-width: 0.5;
         }
         .plx-labels {
           font-size: 3px;
@@ -73,12 +45,12 @@ defmodule Plotex.Output.Svg do
         }
         .plx-data .plx-data-point {
           fill: darkblue;
-          stroke-width: 1.plx-0;
+          stroke-width: 1.0;
         }
         .plx-data .plx-data-line {
           stroke: #0074d9;
-          stroke-width: 0.plx-1em;
-          stroke-width: 0.plx-1em;
+          stroke-width: 0.05em;
+          stroke-width: 0.05em;
           stroke-linecap: round;
           fill: none;
         }
@@ -109,13 +81,10 @@ defmodule Plotex.Output.Svg do
   datapoints as either `rect` or `circle` type via `opts.data.type = :rect | :circle`.
 
   """
-  def generate(%Plotex{} = plot, opts \\ []) do
+  def generate(%Plotex{} = plot, %Options{} = opts) do
 
-    xfmt = formatter(plot.config.xaxis, opts[:xaxis])
-    yfmt = formatter(plot.config.yaxis, opts[:yaxis])
-
-    # xfmt = fn v -> :io_lib.format(v |> IO.inspect(label: :XFMT)) end
-    # yfmt = fn v -> :io_lib.format(v |> IO.inspect(label: :YFMT)) end
+    xfmt = Options.Formatter.func(plot.config.xaxis, opts.xaxis.format)
+    yfmt = Options.Formatter.func(plot.config.yaxis, opts.yaxis.format)
 
     assigns =
       plot
@@ -125,26 +94,40 @@ defmodule Plotex.Output.Svg do
 
     ~E"""
         <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-             viewbox="0 -100 <%= opts[:width] || 100 %> <%= opts[:height] || 100 %>"
+             viewbox="0 -100 <%= @opts.width %> <%= @opts.height %>"
              preserveAspectRatio="none"
              class="plx-graph" version="1.2" >
         <title class="plx-title"> <%= @config.title %> </title>
 
         <!-- X Axis -->
-        <g class="plx-grid plx-x-grid plx-border">
-          <line x1="<%= @config.xaxis.view.start %>"
-                x2="<%= @config.xaxis.view.stop %>"
-                y1="-<%= @config.yaxis.view.start %>"
-                y2="-<%= @config.yaxis.view.start %>" >
-          </line>
+        <g class="plx-grid plx-x-axis ">
+          <g class="plx-border">
+            <line x1="<%= @config.xaxis.view.start %>"
+                  x2="<%= @config.xaxis.view.stop %>"
+                  y1="-<%= @config.yaxis.view.start %>"
+                  y2="-<%= @config.yaxis.view.start %>" >
+            </line>
+          </g>
 
+          <g class="plx-ticks">
+            <%= for {xl, xp} <- @xticks do %>
+              <line
+                    x1="<%= xp %>"
+                    y1="-<%= @config.yaxis.view.start %>"
+                    x2="<%= xp %>"
+                    y2="-<%= @config.yaxis.view.start + @opts.xaxis.ticks.size %>"
+                    >
+              </line>
+            <% end %>
+          </g>
         </g>
+
         <g class="plx-labels plx-x-labels">
           <%= for {xl, xp} <- @xticks do %>
             <text x="<%= xp %>"
                   y="-<%= @config.yaxis.view.start %>"
-                  transform="rotate(<%= @opts[:xaxis][:rotate] || 0 %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
-                  dy="<%= @opts[:xaxis][:dy] || '1.5em' %>">
+                  transform="rotate(<%= @opts.xaxis.label_rotate %>, <%= xp %>, -<%= @config.yaxis.view.start %>)"
+                  dy="<%= @opts.xaxis.label_offset %>">
 
               <%= xfmt.(xl) %>
             </text>
@@ -157,27 +140,40 @@ defmodule Plotex.Output.Svg do
         </g>
 
         <!-- Y Axis -->
-        <g class="plx-grid plx-y-grid">
-          <line x1="<%= @config.xaxis.view.start %>"
-                x2="<%= @config.xaxis.view.start %>"
-                y1="-<%= @config.yaxis.view.start %>"
-                y2="-<%= @config.yaxis.view.stop %>" >
-          </line>
+        <g class="plx-grid plx-y-axis">
+          <g class="plx-border">
+            <line x1="<%= @config.xaxis.view.start %>"
+                  x2="<%= @config.xaxis.view.start %>"
+                  y1="-<%= @config.yaxis.view.start %>"
+                  y2="-<%= @config.yaxis.view.stop %>" >
+            </line>
+          </g>
 
+          <g class="plx-ticks">
+            <%= for {yl, yp} <- @yticks do %>
+              <line
+                    x1="<%= @config.xaxis.view.start %>"
+                    y1="-<%= yp %>"
+                    x2="<%= @config.xaxis.view.start + @opts.yaxis.ticks.size %>"
+                    y2="-<%= yp %>"
+                    >
+              </line>
+            <% end %>
+          </g>
         </g>
         <g class="plx-labels plx-y-labels">
           <%= for {yl, yp} <- @yticks do %>
             <text y="-<%= yp %>"
                   x="<%= @config.xaxis.view.start %>"
-                  transform="rotate(<%= @opts[:yaxis][:rotate] || 0 %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
-                  dx="-<%= @opts[:yaxis][:dy] || '1.5em' %>">
+                  transform="rotate(<%= @opts.yaxis.rotate %>, <%= @config.xaxis.view.start %>, -<%= yp %>)"
+                  dx="-<%= @opts.yaxis.offset %>">
               <%= yfmt.(yl) %>
               </text>
           <% end %>
           <text y="-<%= (@config.yaxis.view.stop - @config.yaxis.view.start)/2.0 %>"
                 x="<%= @config.xaxis.view.start/2.0 %>"
                 class="label-title">
-            <%= @config.xaxis.name %>
+            <%= @config.yaxis.name %>
           </text>
         </g>
 
@@ -193,23 +189,23 @@ defmodule Plotex.Output.Svg do
                         "/>
 
             <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
-              <%= case @opts[:data][:type] do %>
+              <%= case @opts.data[idx].shape do %>
               <% :circle -> %>
                 <circle class="plx-data-point "
                         cx="<%= xp %>"
                         cy="-<%= yp %>"
-                        r="<%= (@opts[:data][:size] || @ds)/2.0 %>"
+                        r="<%= Options.data(@opts, idx).size / 2.0 %>"
                         data-x-value="<%= xl %>"
                         data-y-value="<%= yl %>"
                         ></circle>
               <% _rect_default -> %>
                 <rect class="plx-data-point "
-                      x="<%= xp - (@opts[:data][:size] || @ds)/2  %>"
-                      y="-<%= yp + (@opts[:data][:size] || @ds)/2  %>"
+                      x="<%= xp - Options.data(@opts, idx).size / 2  %>"
+                      y="<%= yp - Options.data(@opts, idx).size / 2  %>"
                       data-x-value="<%= xl %>"
                       data-y-value="<%= yl %>"
-                      width="<%= @opts[:data][:size] || @ds %>"
-                      height="<%= @opts[:data][:size] || @ds %>"
+                      width="<%= Options.data(@opts, idx).width %>"
+                      height="<%= Options.data(@opts, idx).height %>"
                       ></rect>
               <% end %>
             <% end %>
