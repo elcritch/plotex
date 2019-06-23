@@ -9,7 +9,8 @@ defmodule Plotex.Output.Options.Axis do
   alias Plotex.Output.Options
 
   defstruct ticks: %Options.Item{},
-            label: %Options.Item{rotate: 0.0, offset: 1.5, size: nil}
+            label: %Options.Item{rotate: 0.0, offset: 1.5, size: nil},
+            format: nil
 end
 
 defmodule Plotex.Output.Options.Data do
@@ -22,10 +23,10 @@ end
 
 defprotocol Plotex.Output.Options.Formmater do
   @doc "Formats a value"
-  def formatter(data)
+  def func(axis, opts)
 end
 
-defmodule Plotex.Output.Options.NumberFormmater do
+defmodule Plotex.Output.Options.NumericFormatter do
   defstruct precision: 8, decimals: 2
 end
 defimpl Plotex.Output.Options.Formmater, for: Plotex.Output.Options.NumberFormat do
@@ -38,8 +39,8 @@ defimpl Plotex.Output.Options.Formmater, for: Plotex.Output.Options.NumberFormat
   end
 end
 
-defmodule Plotex.Output.Options.DaetTimeFormmater do
-  defstruct [ :year, :month, :day, :hour, :minute, :second, :millisecond, ]
+defmodule Plotex.Output.Options.DateTimeFormatter do
+  defstruct [ :year, :month, :day, :hour, :minute, :second, :millisecond ]
 end
 defimpl Plotex.Output.Options.Formmater, for: Plotex.Output.Options.DateTimeFormat do
   def func(%Plotex.Axis{kind: :datetime, basis: basis} = _axis, opts) do
@@ -73,6 +74,7 @@ defimpl Plotex.Output.Options.Formmater, for: Plotex.Output.Options.DateTimeForm
   end
 end
 
+
 defmodule Plotex.Output.Options do
   alias Plotex.Output.Options
 
@@ -87,6 +89,16 @@ defmodule Plotex.Output.Options do
     opts.data[idx] || opts.default_data
   end
 
-  def formatter(%Plotex.Axis{kind: :datetime, basis: basis} = _axis, opts) do
+  def formatter(%Plotex.Axis{} = axis, formatter) do
+    if formatter do
+      formatter
+    else
+      case axis.kind do
+        :numeric ->
+          %Options.NumericFormatter{}
+        :datetime ->
+          %Options.DateTimeFormatter{}
+      end
+    end
   end
 end

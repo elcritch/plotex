@@ -83,8 +83,8 @@ defmodule Plotex.Output.Svg do
   """
   def generate(%Plotex{} = plot, %Options{} = opts) do
 
-    xfmt = Options.Formatter.func(plot.config.xaxis, opts.xaxis.format)
-    yfmt = Options.Formatter.func(plot.config.yaxis, opts.yaxis.format)
+    xfmt = Options.formatter(plot.config.xaxis, opts.xaxis.format)
+    yfmt = Options.formatter(plot.config.yaxis, opts.yaxis.format)
 
     assigns =
       plot
