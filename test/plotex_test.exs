@@ -14,7 +14,6 @@ defmodule PlotexTest do
     xdata = 1..4 |> Enum.map(& &1 )
     ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
 
-
     xlims = Plotex.NumberUnits.range_from(xdata) |> Plotex.ViewRange.new(:horiz)
     xaxis = %Axis{limits: xlims}
     # Logger.warn("xlims: #{inspect xlims}")
