@@ -10,6 +10,7 @@ See units tests for examples of producing SVG graphs.
 
 - v0.1.0 has basic plotting functionality included 
 - v0.1.1 has support for NaiveDateTime (easier to convert to user local time on the fly)
+- v0.1.1 added hex package 
 
 ## Next Features 
 
@@ -27,7 +28,7 @@ Supports creating axis and scaling for both numeric (floats) and DateTime series
 ```elixir
 def deps do
   [
-    {:plotex, github: "elcritch/plotex", "~> 0.1.0"}
+    {:plotex, "~> 0.1.0"}
   ]
 end
 ```
