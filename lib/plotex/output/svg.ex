@@ -94,12 +94,10 @@ defmodule Plotex.Output.Svg do
       |> Map.put(:ds, 1.5)
 
     ~E"""
-        <svg
+        <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewbox="0 -100 <%= @opts.width %> <%= @opts.height %>"
-            <%= for {attr, val} <- @opts.svg_attrs do %>
-             <%= ~s{#{attr}="#{val}"} %>
-            <% end %>
-          <title class="plx-title"> <%= @config.title %> </title>
+            <%= for {attr, val} <- @opts.svg_attrs do %> <%= raw ~s{#{attr}="#{val}"} %> <% end %> >
+          <title class="plx-title"><%= @config.title %></title>
 
           <%= for item <- @opts.custom_svg do %>
             <%= item %>

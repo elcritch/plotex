@@ -82,11 +82,10 @@ defmodule Plotex.Output.Options do
   require Logger
   alias Plotex.Output.Options
 
-  @default_svg_attrs %{:preserveAspectRatio => "none",
-      :class => "plx-graph",
-      :xmlns => "http://www.w3.org/2000/svg",
-      :"xmlns:xlink" => "http://www.w3.org/1999/xlink",
-      :version => "1.2" }
+  @default_svg_attrs %{
+    :preserveAspectRatio => "none",
+    :class => "plx-graph",
+  }
 
   defstruct xaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
             yaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
