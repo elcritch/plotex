@@ -78,15 +78,22 @@ defimpl Plotex.Output.Options.Formatter, for: Plotex.Output.Options.DateTimeForm
   end
 end
 
-
 defmodule Plotex.Output.Options do
   require Logger
   alias Plotex.Output.Options
+
+  @default_svg_attrs %{:preserveAspectRatio => "none",
+      :class => "plx-graph",
+      :xmlns => "http://www.w3.org/2000/svg",
+      :"xmlns:xlink" => "http://www.w3.org/1999/xlink",
+      :version => "1.2" }
 
   defstruct xaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
             yaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
             width: 100,
             height: 100,
+            svg_attrs: @default_svg_attrs,
+            custom_svg: [],
             data: %{},
             default_data: %Options.Data{}
 
@@ -107,4 +114,5 @@ defmodule Plotex.Output.Options do
       end
     end
   end
+
 end
