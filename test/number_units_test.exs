@@ -3,6 +3,7 @@ defmodule Axis.Units.NumericTest do
   doctest Plotex
   require Logger
   alias Plotex.Axis
+  alias Plotex.ViewRange
 
   test "base-10 rank for numbers" do
     ranks =
@@ -79,7 +80,7 @@ defmodule Axis.Units.NumericTest do
     # Logger.warn("units: #{inspect units}")
 
     nscale =
-      Axis.Units.Numeric.number_scale(x_a, x_b, ticks: 10)
+      Axis.Units.scale(%{ @config | ticks: 10 }, %ViewRange{start: x_a, stop: x_b})
 
     xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
@@ -93,7 +94,7 @@ defmodule Axis.Units.NumericTest do
     x_b = 1930.45
 
     nscale =
-      Axis.Units.Numeric.number_scale(x_a, x_b, ticks: 10)
+      Axis.Units.scale(%{ @config | ticks: 10 }, %ViewRange{start: x_a, stop: x_b})
 
     xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
@@ -107,7 +108,7 @@ defmodule Axis.Units.NumericTest do
     x_b = 28.47
 
     nscale =
-      Axis.Units.Numeric.number_scale(x_a, x_b, ticks: 10)
+      Axis.Units.scale(%{ @config | ticks: 10 }, %ViewRange{start: x_a, stop: x_b})
 
     xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
@@ -121,7 +122,7 @@ defmodule Axis.Units.NumericTest do
     x_b = -11.34
 
     nscale =
-      Axis.Units.Numeric.number_scale(x_a, x_b, ticks: 10)
+      Axis.Units.scale(%{ @config | ticks: 10 }, %ViewRange{start: x_a, stop: x_b})
 
     xrange = nscale[:data] |> Enum.take(50)
     # Logger.warn("number scale range: #{inspect(Enum.take(xrange, 50))}")
