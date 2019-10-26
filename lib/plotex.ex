@@ -21,10 +21,9 @@ defmodule Plotex do
   def generate_axis(%Axis{units: units} = axis) do
     a = axis.limits.start
     b = axis.limits.stop
-    n = axis.ticks
 
     unless a == nil || b == nil do
-      [data: data, basis: basis] = Plotex.Axis.Units.scale(units, a, b)
+      %{data: data, basis: basis} = Plotex.Axis.Units.scale(units, axis.limits)
       xrng = scale_data(data, axis)
 
       [data: Stream.zip(data, xrng), basis: basis]
@@ -120,15 +119,16 @@ defmodule Plotex do
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets, opts)
 
+    # And this part is kludgy...
     xaxis = %Axis{
       limits: xlim,
-      units: opts[:xaxis][:units] || std_units(opts[:xaxis]) || %Axis.Units.Numeric{},
+      units: struct(opts[:xaxis][:units] || std_units(opts[:xaxis]) || %Axis.Units.Numeric{}),
       ticks: opts[:xaxis][:ticks] || 10,
       view: %ViewRange{start: 10, stop: (opts[:xaxis][:width] || 100) - 10}
     }
     yaxis = %Axis{
       limits: ylim,
-      units: opts[:yaxis][:units] || std_units(opts[:yaxis]) || %Axis.Units.Numeric{},
+      units: struct(opts[:yaxis][:units] || std_units(opts[:yaxis]) || %Axis.Units.Numeric{}),
       ticks: opts[:yaxis][:ticks] || 10,
       view: %ViewRange{start: 10, stop: (opts[:yaxis][:width] || 100) - 10}
     }

@@ -41,7 +41,7 @@ defmodule Plotex.Axis.Units.Time do
     microsecond: {1.0e-6, 10}
   ]
 
-  defstruct time_basis: @default_time_basis
+  defstruct time_basis: @default_time_basis, ticks: 10
 
   def display_epoch(order) do
       case order do
@@ -83,34 +83,32 @@ defmodule Plotex.Axis.Units.Time do
     end
   end
 
-  @spec optimize_units(number, keyword) :: __MODULE__.t()
-  def optimize_units(diff_seconds, config \\ []) do
-    count = Keyword.get(config, :ticks, 10)
+  @spec optimize_units(number, struct()) :: __MODULE__.t()
+  def optimize_units(diff_seconds, config) do
+    count = config.ticks
     delta = diff_seconds / count
 
     idx =
-      @time_basis
+      config.time_basis
       |> Enum.find_index(fn {_time_unit, {diff_val, _time_ord}} ->
         delta >= diff_val
       end)
 
+    bcount = Enum.count(config.time_basis)
+
     {basis_name, {basis_val, basis_order}} =
-      @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
+      config.time_basis |> Enum.at(idx |> max(0) |> min(bcount - 1))
 
     %__MODULE__.Item{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
   end
 
-  def time_units() do
-    @time_basis
-  end
-
-  def next_smaller_unit({_name, amount}) do
-    optimize_units(amount - 1.0).basis_name
+  def next_smaller_unit({_name, amount}, config) do
+    optimize_units(amount - 1.0, config).basis_name
   end
 
 
-  defp gets(dt, %{basis_name: _base_unit, val: _base_number, order: base_order}, field) do
-    {_fn, {_fval, field_order}} = Enum.find(@time_basis, fn xf -> field == elem(xf, 0) end)
+  defp gets(dt, %{basis_name: _base_unit, val: _base_number, order: base_order}, config, field) do
+    {_fn, {_fval, field_order}} = Enum.find(config.time_basis, fn xf -> field == elem(xf, 0) end)
 
     cond do
       base_order >= field_order ->
@@ -136,16 +134,16 @@ defmodule Plotex.Axis.Units.Time do
   end
 
 
-  def clone(%DateTime{} = dt, unit) do
+  def clone(%DateTime{} = dt, unit, config) do
     dt = dt |> Map.from_struct()
 
     %DateTime{
-      day: gets(dt, unit, :day),
-      hour: gets(dt, unit, :hour),
-      minute: gets(dt, unit, :minute),
-      month: gets(dt, unit, :month),
-      second: gets(dt, unit, :second),
-      microsecond: {gets(dt, unit, :microsecond), 6},
+      day: gets(dt, unit, config, :day),
+      hour: gets(dt, unit, config, :hour),
+      minute: gets(dt, unit, config, :minute),
+      month: gets(dt, unit, config, :month),
+      second: gets(dt, unit, config, :second),
+      microsecond: {gets(dt, unit, config, :microsecond), 6},
       calendar: dt.calendar,
       std_offset: dt.std_offset,
       time_zone: dt.time_zone,
@@ -155,16 +153,16 @@ defmodule Plotex.Axis.Units.Time do
     }
   end
 
-  def clone(%NaiveDateTime{} = dt, unit) do
+  def clone(%NaiveDateTime{} = dt, unit, config) do
     dt = dt |> Map.from_struct()
 
     %NaiveDateTime{
-      day: gets(dt, unit, :day),
-      hour: gets(dt, unit, :hour),
-      minute: gets(dt, unit, :minute),
-      month: gets(dt, unit, :month),
-      second: gets(dt, unit, :second),
-      microsecond: {gets(dt, unit, :microsecond), 6},
+      day: gets(dt, unit, config, :day),
+      hour: gets(dt, unit, config, :hour),
+      minute: gets(dt, unit, config, :minute),
+      month: gets(dt, unit, config, :month),
+      second: gets(dt, unit, config, :second),
+      microsecond: {gets(dt, unit, config, :microsecond), 6},
       calendar: dt.calendar,
       year: dt.year,
     }
@@ -182,12 +180,12 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Time do
   #   time_scale(dt_a, dt_b, config)
   # end
 
-  def scale(%ViewRange{start: dt_a, stop: dt_b}, config) do
+  def scale(config, %ViewRange{start: dt_a, stop: dt_b}) do
     %{diff: diff_seconds, val: unit_val} = basis = Units.Time.units_for(dt_a, dt_b, config)
-    dt_start = Units.Time.clone(dt_a, basis)
+    dt_start = Units.Time.clone(dt_a, basis, config)
 
     basis_count = diff_seconds / unit_val
-    stride = round(basis_count / Keyword.get(config, :ticks, 10))
+    stride = round(basis_count / config.ticks )
 
     # Logger.warn("time_stride: #{inspect(stride)}")
 

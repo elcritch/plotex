@@ -2,6 +2,7 @@ defmodule Plotex.Axis.Units.Numeric do
   require Logger
   alias Plotex.ViewRange
   alias Plotex.Axis
+  alias __MODULE__
 
   @default_number_basis [1, 2, 5, 10, 20, 50, 100]
 
@@ -37,14 +38,13 @@ defmodule Plotex.Axis.Units.Numeric do
     {a, b}
   end
 
-  @spec optimize_units(number(), keyword()) :: %{basis: float(), rank: integer(), val: number()}
   def optimize_units(xdiff, config) do
-    count = Keyword.get(config, :ticks, 10)
+    count = config.ticks
 
     # Logger.warn("xdiff: #{inspect xdiff}")
     r = rank(xdiff, count)
     # Logger.warn("rank: #{inspect r}")
-    b = config.basis |> find_basis(xdiff, r, count)
+    b = find_basis(config.basis, xdiff, r, count)
     # Logger.warn("basis: #{inspect b}")
     %{val: xdiff, rank: r, basis: :math.pow(10, r) * b}
   end
@@ -65,13 +65,10 @@ defmodule Plotex.Axis.Units.Numeric do
 end
 
 defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Numeric do
-  alias Plotex.Output.Options
   alias Plotex.ViewRange
-  alias Plotex.Axis
   alias Plotex.Axis.Units
 
-
-  def scale(config, %ViewRange{start: x_a, stop: x_b}) do
+  def scale(%Plotex.Axis.Units.Numeric{} = config, %ViewRange{start: x_a, stop: x_b}) do
     %{basis: basis} = _units = Units.Numeric.units_for(x_a, x_b, config)
     # Logger.warn("x_basis: #{inspect units}")
 
@@ -96,7 +93,7 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Numeric do
       |> Stream.map(fn i -> x_start + i * basis end)
       |> Stream.take_while(fn x -> x < x_stop end)
 
-    [data: rng, basis: basis]
+    %{data: rng, basis: basis}
   end
 
 end
