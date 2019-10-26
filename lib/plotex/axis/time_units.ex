@@ -1,3 +1,10 @@
+
+defmodule Plotex.Axis.Units.Time.Item do
+  defstruct [:basis_name, :val, :order, :diff]
+  @type t :: %__MODULE__{basis_name: atom, val: number, order: number, diff: number }
+end
+
+
 defmodule Plotex.Axis.Units.Time do
   require Logger
   alias Plotex.Axis.Units
@@ -48,9 +55,6 @@ defmodule Plotex.Axis.Units.Time do
       end
   end
 
-  # defstruct [:basis_name, :val, :order, :diff]
-
-  @type t :: %__MODULE__{basis_name: atom, val: number, order: number, diff: number }
   @doc """
   Get units for a given date range, using the number of ticks.
 
@@ -93,7 +97,7 @@ defmodule Plotex.Axis.Units.Time do
     {basis_name, {basis_val, basis_order}} =
       @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
 
-    %__MODULE__{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
+    %__MODULE__.Item{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
   end
 
   def time_units() do

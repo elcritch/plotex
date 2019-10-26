@@ -1,4 +1,4 @@
-defmodule Plotex.NumberUnits do
+defmodule Plotex.Axis.Units.Numeric do
   require Logger
   alias Plotex.ViewRange
   alias Plotex.Axis
@@ -35,7 +35,7 @@ defmodule Plotex.NumberUnits do
     b = Enum.max(data)
 
     {a, b}
-  d
+  end
 
   @spec optimize_units(number(), keyword()) :: %{basis: float(), rank: integer(), val: number()}
   def optimize_units(xdiff, config) do
@@ -44,13 +44,13 @@ defmodule Plotex.NumberUnits do
     # Logger.warn("xdiff: #{inspect xdiff}")
     r = rank(xdiff, count)
     # Logger.warn("rank: #{inspect r}")
-    b = find_basis(xdiff, r, count)
+    b = config.basis |> find_basis(xdiff, r, count)
     # Logger.warn("basis: #{inspect b}")
     %{val: xdiff, rank: r, basis: :math.pow(10, r) * b}
   end
 
-  def find_basis(x, rank, count) do
-    @number_basis
+  def find_basis(number_basis, x, rank, count) do
+    number_basis
     |> Enum.map(&{&1, x / (&1 * :math.pow(count, 1 * rank))})
     |> Enum.min_by(fn {_base, val} -> abs(count - val) end)
     |> elem(0)
@@ -71,7 +71,7 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Numeric do
   alias Plotex.Axis.Units
 
 
-  def scale(%ViewRange{start: x_a, stop: x_b}, config) do
+  def scale(config, %ViewRange{start: x_a, stop: x_b}) do
     %{basis: basis} = _units = Units.Numeric.units_for(x_a, x_b, config)
     # Logger.warn("x_basis: #{inspect units}")
 

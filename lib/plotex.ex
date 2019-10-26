@@ -104,6 +104,14 @@ defmodule Plotex do
      %ViewRange{start: ya, stop: yb, projection: proj}}
   end
 
+  def std_units(opts) do
+    case opts[:kind] do
+      nil -> nil
+      :numeric -> %Axis.Units.Numeric{}
+      :datetime -> %Axis.Units.Time{}
+    end
+  end
+
   @doc """
   Create a Plotex struct for given datasets and configuration. Will load and scan data
   for all input datasets.
@@ -114,13 +122,13 @@ defmodule Plotex do
 
     xaxis = %Axis{
       limits: xlim,
-      kind: opts[:xaxis][:kind] || %Axis.Units.Numeric{},
+      units: opts[:xaxis][:units] || std_units(opts[:xaxis]) || %Axis.Units.Numeric{},
       ticks: opts[:xaxis][:ticks] || 10,
       view: %ViewRange{start: 10, stop: (opts[:xaxis][:width] || 100) - 10}
     }
     yaxis = %Axis{
       limits: ylim,
-      kind: opts[:yaxis][:kind] || %Axis.Units.Numeric{},
+      units: opts[:yaxis][:units] || std_units(opts[:yaxis]) || %Axis.Units.Numeric{},
       ticks: opts[:yaxis][:ticks] || 10,
       view: %ViewRange{start: 10, stop: (opts[:yaxis][:width] || 100) - 10}
     }
