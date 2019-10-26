@@ -160,16 +160,15 @@ defmodule Plotex do
     xaxis = xaxis |> Map.put(:basis, xbasis)
     yaxis = yaxis |> Map.put(:basis, ybasis)
 
-    Logger.warn("plot xaxis: #{inspect xaxis}")
-    Logger.warn("plot yaxis: #{inspect yaxis}")
-
+    # Logger.warn("plot xaxis: #{inspect xaxis}")
+    # Logger.warn("plot yaxis: #{inspect yaxis}")
 
     config = %Plotex.Config{
       xaxis: xaxis,
       yaxis: yaxis,
     }
 
-    Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
+    # Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
     # Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
 
     datasets! =

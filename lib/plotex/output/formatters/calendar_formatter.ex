@@ -12,7 +12,7 @@ defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.DateTime.Calendar 
     # fn v ->
       # epoch = nil
 
-      Logger.debug("DateTime.Calendar: opts: #{inspect opts}")
+     # Logger.debug("DateTime.Calendar: opts: #{inspect opts}")
       epoch = Units.Time.display_epoch(axis.basis.order)
 
       {:ok, result} =
