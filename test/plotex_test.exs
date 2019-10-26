@@ -5,6 +5,7 @@ defmodule PlotexTest do
   alias Plotex.Axis.Units
   alias Plotex.ViewRange
   alias Plotex.Output.Options
+  alias Plotex.Output.Formatter
 
   @default_css
 
@@ -145,7 +146,9 @@ defmodule PlotexTest do
 
     plt = Plotex.plot(
       [{xdata, ydata}],
-      xaxis: [units: %Axis.Units.Time{},
+      xaxis: [
+              units: %Axis.Units.Time{},
+              formatter: Formatter.DateTime.Calendar,
               ticks: 5,
               padding: 0.05]
     )
