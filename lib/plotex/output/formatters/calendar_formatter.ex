@@ -1,16 +1,19 @@
 
 defmodule Plotex.Output.Formatter.DateTime.Calendar do
-  defstruct [ :basis, :year, :month, :day, :hour, :minute, :second, :millisecond ]
+  defstruct [ :year, :month, :day, :hour, :minute, :second, :millisecond ]
 end
 
 defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.DateTime.Calendar do
-  alias Plotex.TimeUnits
+  alias Plotex.Axis.Units
   alias Plotex.ViewRange
+  require Logger
 
-  def calc(opts, v) do
+  def output(opts, axis, v) do
     # fn v ->
       # epoch = nil
-      epoch = TimeUnits.display_epoch(opts.basis.order)
+
+      Logger.debug("DateTime.Calendar: opts: #{inspect opts}")
+      epoch = Units.Time.display_epoch(axis.basis.order)
 
       {:ok, result} =
         case epoch do

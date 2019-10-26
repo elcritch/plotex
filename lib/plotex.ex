@@ -1,6 +1,7 @@
 defmodule Plotex do
   alias Plotex.ViewRange
   alias Plotex.Axis
+  alias Plotex.Output.Formatter
   require Logger
 
   @moduledoc """
@@ -110,6 +111,13 @@ defmodule Plotex do
       :datetime -> %Axis.Units.Time{}
     end
   end
+  def std_fmt(opts) do
+    case opts[:kind] do
+      nil -> %Plotex.Output.Formatter.NumericDefault{}
+      :numeric -> %Plotex.Output.Formatter.NumericDefault{}
+      :datetime -> %Plotex.Output.Formatter.DateTime.Calendar{}
+    end
+  end
 
   @doc """
   Create a Plotex struct for given datasets and configuration. Will load and scan data
@@ -119,22 +127,21 @@ defmodule Plotex do
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets, opts)
 
+    # ticks = opts[:xaxis][:ticks]
+
     # And this part is kludgy...
     xaxis = %Axis{
       limits: xlim,
       units: struct(opts[:xaxis][:units] || std_units(opts[:xaxis]) || %Axis.Units.Numeric{}),
-      ticks: opts[:xaxis][:ticks] || 10,
+      formatter: struct(opts[:xaxis][:formatter] || std_fmt(opts[:xaxis]) || %Formatter.NumericDefault{}),
       view: %ViewRange{start: 10, stop: (opts[:xaxis][:width] || 100) - 10}
     }
     yaxis = %Axis{
       limits: ylim,
       units: struct(opts[:yaxis][:units] || std_units(opts[:yaxis]) || %Axis.Units.Numeric{}),
-      ticks: opts[:yaxis][:ticks] || 10,
+      formatter: struct(opts[:yaxis][:formatter] || std_fmt(opts[:yaxis]) || %Formatter.DateTime.Calendar{}),
       view: %ViewRange{start: 10, stop: (opts[:yaxis][:width] || 100) - 10}
     }
-
-    # Logger.warn("plot xaxis: #{inspect xaxis}")
-    # Logger.warn("plot yaxis: #{inspect yaxis}")
 
     [data: xticks, basis: xbasis] = generate_axis(xaxis)
 
@@ -142,6 +149,7 @@ defmodule Plotex do
       xticks
       |> Stream.filter(& elem(&1, 1) >= xaxis.view.start)
       |> Stream.filter(& elem(&1, 1) <= xaxis.view.stop)
+      |> Enum.to_list
 
     [data: yticks, basis: ybasis] = generate_axis(yaxis)
     yticks =
@@ -152,12 +160,16 @@ defmodule Plotex do
     xaxis = xaxis |> Map.put(:basis, xbasis)
     yaxis = yaxis |> Map.put(:basis, ybasis)
 
+    Logger.warn("plot xaxis: #{inspect xaxis}")
+    Logger.warn("plot yaxis: #{inspect yaxis}")
+
+
     config = %Plotex.Config{
       xaxis: xaxis,
       yaxis: yaxis,
     }
 
-    # Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
+    Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
     # Logger.warn("yticks: #{inspect yticks  |> Enum.to_list()}")
 
     datasets! =

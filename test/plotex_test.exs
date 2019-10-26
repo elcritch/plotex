@@ -2,6 +2,7 @@ defmodule PlotexTest do
   require Logger
   use ExUnit.Case
   alias Plotex.Axis
+  alias Plotex.Axis.Units
   alias Plotex.ViewRange
   alias Plotex.Output.Options
 
@@ -188,8 +189,9 @@ defmodule PlotexTest do
 
     plt = Plotex.plot(
       [{xdata, ydata}],
-      xaxis: [kind: :datetime,
-              ticks: 5,
+      xaxis: [
+              kind: :datetime,
+              units: %Units.Time{ticks: 5},
               padding: 0.05]
     )
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")

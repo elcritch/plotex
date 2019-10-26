@@ -85,8 +85,10 @@ defmodule Plotex.Output.Svg do
   """
   def generate(%Plotex{} = plot, %Options{} = opts) do
 
-    xfmt = Options.formatter(plot.config.xaxis, opts.xaxis.format)
-    yfmt = Options.formatter(plot.config.yaxis, opts.yaxis.format)
+    xaxis = plot.config.xaxis
+    yaxis = plot.config.yaxis
+    xfmt = plot.config.xaxis.formatter
+    yfmt = plot.config.yaxis.formatter
 
     assigns =
       plot
@@ -144,7 +146,7 @@ defmodule Plotex.Output.Svg do
                   y="-<%= @config.yaxis.view.start %>"
                   transform="rotate(<%= @opts.xaxis.label.rotate %>, <%= xp %>, -<%= @config.yaxis.view.start - @opts.xaxis.label.offset %>)"
                   dy="<%= @opts.xaxis.label.offset %>">
-                <%= Formatter.calc(xfmt, xl) %>
+                <%= Formatter.output(xfmt, xaxis, xl) %>
             </text>
           <% end %>
           <text x="<%= (@config.xaxis.view.stop - @config.xaxis.view.start)/2.0 %>"
@@ -193,7 +195,7 @@ defmodule Plotex.Output.Svg do
                   x="<%= @config.xaxis.view.start %>"
                   transform="rotate(<%= @opts.yaxis.label.rotate %>, <%= @config.xaxis.view.start - @opts.yaxis.label.offset %>, -<%= yp %>)"
                   dx="-<%= @opts.yaxis.label.offset %>">
-                <%= Formatter.calc(yfmt, yl) %>
+                <%= Formatter.output(yfmt, yaxis, yl) %>
               </text>
           <% end %>
           <text y="-<%= (@config.yaxis.view.stop - @config.yaxis.view.start)/2.0 %>"

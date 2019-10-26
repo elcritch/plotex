@@ -4,13 +4,14 @@ defmodule Plotex.Output.Formatter.DateTime.Cldr do
 end
 
 defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.DateTime.Cldr do
+  alias Plotex.Axis.Units
   alias Plotex.TimeUnits
   alias Plotex.ViewRange
 
-  def calc(opts, v) do
+  def output(opts, axis, v) do
     # fn v ->
       # epoch = nil
-      epoch = TimeUnits.display_epoch(opts.basis.order)
+      epoch = Units.Time.display_epoch(axis.basis.order)
 
       {:ok, result} =
         case epoch do
