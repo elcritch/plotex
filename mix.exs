@@ -40,7 +40,7 @@ defmodule Plotex.MixProject do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:phoenix_html, "~> 2.13", optional: true},
-      # {:ex_cldr_dates_times, "~> 2.1", optional: true},
+      {:ex_cldr_dates_times, "~> 2.2", optional: true},
       {:tzdata, "~> 1.0", optional: true},
       {:calendar, "~> 0.17.5", optional: true},
 

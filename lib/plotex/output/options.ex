@@ -21,66 +21,10 @@ defmodule Plotex.Output.Options.Data do
             height: 1.5
 end
 
-defprotocol Plotex.Output.Options.Formatter do
-  @doc "Formats a value"
-  def calc(formatter, val)
-end
-
-defmodule Plotex.Output.Options.NumericFormatter do
-  defstruct precision: 8, decimals: 2
-end
-defimpl Plotex.Output.Options.Formatter, for: Plotex.Output.Options.NumericFormatter do
-  alias Plotex.Output.Options
-
-  def calc(formatter, val) do
-    # fn v ->
-      :io_lib.format("~#{formatter.precision}.#{formatter.decimals}f", [val])
-    # end
-  end
-end
-
-defmodule Plotex.Output.Options.DateTimeFormatter do
-  defstruct [ :basis, :year, :month, :day, :hour, :minute, :second, :millisecond ]
-end
-defimpl Plotex.Output.Options.Formatter, for: Plotex.Output.Options.DateTimeFormatter do
-  alias Plotex.TimeUnits
-  alias Plotex.ViewRange
-
-  def calc(opts, v) do
-    # fn v ->
-      # epoch = nil
-      epoch = TimeUnits.display_epoch(opts.basis.order)
-
-      {:ok, result} =
-        case epoch do
-          :year ->
-            v |> Calendar.Strftime.strftime(opts.year || "%Y/%m/%d")
-          :month ->
-            v |> Calendar.Strftime.strftime(opts.month || "%y/%m/%d")
-          :day ->
-            v |> Calendar.Strftime.strftime(opts.day || "%m/%d %H")
-          :hour ->
-            v |> Calendar.Strftime.strftime(opts.hour || "%d %H:%M")
-          :minute ->
-            v |> Calendar.Strftime.strftime(opts.minute || "%H:%M:%S")
-          :second ->
-            v |> Calendar.Strftime.strftime(opts.second || "%H:%M:%S")
-          :millisecond ->
-            if opts.millisecond do
-              v |> Calendar.Strftime.strftime(opts.second || "%H:%M:%S")
-            else
-              {:ok, ViewRange.vals(v, :microsecond)}
-            end
-        end
-
-      result
-    # end
-  end
-end
-
 defmodule Plotex.Output.Options do
   require Logger
   alias Plotex.Output.Options
+  alias Plotex.Output.Formatter
 
   @default_svg_attrs %{
     :preserveAspectRatio => "none",
@@ -107,9 +51,9 @@ defmodule Plotex.Output.Options do
     else
       case axis.kind do
         :numeric ->
-          %Options.NumericFormatter{}
+          %Formatter.NumericDefault{}
         :datetime ->
-          %Options.DateTimeFormatter{basis: axis.basis}
+          %Formatter.DateTime.Calendar{basis: axis.basis}
       end
     end
   end
