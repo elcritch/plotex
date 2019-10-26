@@ -54,6 +54,8 @@ defmodule Plotex.Output.Options do
           %Formatter.NumericDefault{}
         :datetime ->
           %Formatter.DateTime.Calendar{basis: axis.basis}
+        :cldr_default ->
+          %Formatter.DateTime.Cldr{basis: axis.basis}
       end
     end
   end

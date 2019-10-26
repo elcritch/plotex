@@ -1,5 +1,7 @@
 defmodule Plotex.NumberUnits do
   require Logger
+  alias Plotex.ViewRange
+  alias Plotex.Axis
 
   @number_basis [1, 2, 5, 10, 20, 50, 100]
 
@@ -33,8 +35,42 @@ defmodule Plotex.NumberUnits do
     {a, b}
   end
 
-  def number_scale(x_a, x_b, opts) do
-    %{basis: basis} = _units = units_for(x_a, x_b, opts)
+  @spec optimize_units(number(), keyword()) :: %{basis: float(), rank: integer(), val: number()}
+  def optimize_units(xdiff, opts \\ []) do
+    count = Keyword.get(opts, :ticks, 10)
+
+    # Logger.warn("xdiff: #{inspect xdiff}")
+    r = rank(xdiff, count)
+    # Logger.warn("rank: #{inspect r}")
+    b = find_basis(xdiff, r, count)
+    # Logger.warn("basis: #{inspect b}")
+    %{val: xdiff, rank: r, basis: :math.pow(10, r) * b}
+  end
+
+  def find_basis(x, rank, count) do
+    @number_basis
+    |> Enum.map(&{&1, x / (&1 * :math.pow(count, 1 * rank))})
+    |> Enum.min_by(fn {_base, val} -> abs(count - val) end)
+    |> elem(0)
+  end
+
+  @doc """
+  Calculate the base-10 rank of a number.
+  """
+  def rank(0, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
+  # def rank(0.1, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
+  def rank(x, b), do: trunc(:math.log10( (x+1.0e-8) / b) - 1)
+end
+
+defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Numeric do
+  alias Plotex.Output.Options
+  alias Plotex.ViewRange
+  alias Plotex.Axis
+  alias Plotex.Axis.Units
+
+
+  def scale(%ViewRange{start: x_a, stop: x_b}, opts) do
+    %{basis: basis} = _units = Units.Numeric.units_for(x_a, x_b, opts)
     # Logger.warn("x_basis: #{inspect units}")
 
     # stride = round(basis_count / Keyword.get(opts, :ticks, 10))
@@ -61,29 +97,4 @@ defmodule Plotex.NumberUnits do
     [data: rng, basis: basis]
   end
 
-  @spec optimize_units(number(), keyword()) :: %{basis: float(), rank: integer(), val: number()}
-  def optimize_units(xdiff, opts \\ []) do
-    count = Keyword.get(opts, :ticks, 10)
-
-    # Logger.warn("xdiff: #{inspect xdiff}")
-    r = rank(xdiff, count)
-    # Logger.warn("rank: #{inspect r}")
-    b = find_basis(xdiff, r, count)
-    # Logger.warn("basis: #{inspect b}")
-    %{val: xdiff, rank: r, basis: :math.pow(10, r) * b}
-  end
-
-  def find_basis(x, rank, count) do
-    @number_basis
-    |> Enum.map(&{&1, x / (&1 * :math.pow(count, 1 * rank))})
-    |> Enum.min_by(fn {_base, val} -> abs(count - val) end)
-    |> elem(0)
-  end
-
-  @doc """
-  Calculate the base-10 rank of a number.
-  """
-  def rank(0, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
-  # def rank(0.1, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
-  def rank(x, b), do: trunc(:math.log10( (x+1.0e-8) / b) - 1)
 end

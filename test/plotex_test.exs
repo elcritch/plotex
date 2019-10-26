@@ -174,6 +174,50 @@ defmodule PlotexTest do
     File.write!("output-dt.html", html_str)
   end
 
+  test "svg cldr-datetime (short) plot" do
+    xdata = [
+      DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:04:17.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:04:23.836Z") |> elem(1),
+      DateTime.from_iso8601("2019-05-20T05:04:25.836Z") |> elem(1),
+    ]
+    ydata = [0.1, 0.25, 0.15, 0.1]
+
+    plt = Plotex.plot(
+      [{xdata, ydata}],
+      xaxis: [kind: :cldr_default,
+              ticks: 5,
+              padding: 0.05]
+    )
+    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
+
+    svg_str =
+      Plotex.Output.Svg.generate(
+        plt,
+        %Options{
+          # xaxis: [rotate: 35, offset: '2.5em' ],
+          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 } },
+          yaxis: %Options.Axis{ label: %Options.Item{ } },
+        }
+      ) |> Phoenix.HTML.safe_to_string()
+
+    # Logger.warn("SVG: \n#{svg_str}")
+
+    html_str = """
+    <html>
+    <head>
+      <style>
+        #{Plotex.Output.Svg.default_css()}
+      </style>
+    </head>
+    <body>
+      #{svg_str}
+    </body>
+    </html>
+    """
+    File.write!("output-dt-cldr.html", html_str)
+  end
+
   test "svg datetime (hours) plot" do
     xdata = [
       DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),

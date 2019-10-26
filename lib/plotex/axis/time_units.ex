@@ -1,5 +1,8 @@
-defmodule Plotex.TimeUnits do
+defmodule Plotex.Axis.Units.Time do
   require Logger
+  alias Plotex.Axis.Units
+  alias Plotex.ViewRange
+  alias Plotex.Axis
 
   @time_basis [
     # Decades
@@ -45,7 +48,7 @@ defmodule Plotex.TimeUnits do
 
   defstruct [:basis_name, :val, :order, :diff]
 
-  @type t :: %Plotex.TimeUnits{basis_name: atom, val: number, order: number, diff: number }
+  @type t :: %__MODULE__{basis_name: atom, val: number, order: number, diff: number }
   @doc """
   Get units for a given date range, using the number of ticks.
 
@@ -74,7 +77,7 @@ defmodule Plotex.TimeUnits do
     end
   end
 
-  @spec optimize_units(number, keyword) :: Plotex.TimeUnits.t()
+  @spec optimize_units(number, keyword) :: __MODULE__.t()
   def optimize_units(diff_seconds, opts \\ []) do
     count = Keyword.get(opts, :ticks, 10)
     delta = diff_seconds / count
@@ -88,7 +91,7 @@ defmodule Plotex.TimeUnits do
     {basis_name, {basis_val, basis_order}} =
       @time_basis |> Enum.at(idx |> max(0) |> min(Enum.count(@time_basis) - 1))
 
-    %Plotex.TimeUnits{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
+    %__MODULE__{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
   end
 
   def time_units() do
@@ -99,32 +102,6 @@ defmodule Plotex.TimeUnits do
     optimize_units(amount - 1.0).basis_name
   end
 
-  def time_scale(data, opts \\ []) do
-    {dt_a, dt_b} = date_range_from(data)
-    time_scale(dt_a, dt_b, opts)
-  end
-
-  def time_scale(dt_a, dt_b, opts) do
-    %{diff: diff_seconds, val: unit_val} = basis = units_for(dt_a, dt_b, opts)
-    dt_start = clone(dt_a, basis)
-
-    basis_count = diff_seconds / unit_val
-    stride = round(basis_count / Keyword.get(opts, :ticks, 10))
-
-    # Logger.warn("time_stride: #{inspect(stride)}")
-
-    rng =
-      0..1_000_000_000
-      |> Stream.map(fn i ->
-        # Logger.warn("#{inspect(dt_start)}")
-        # Logger.warn("#{inspect({i, unit_val, i * unit_val})}")
-        dt_add(dt_start, round(i * unit_val), :second)
-      end)
-      |> Stream.take_every(stride)
-      |> Stream.take_while(fn dt -> dt_compare(dt, dt_b) == :lt end)
-
-    %{data: rng, basis: basis}
-  end
 
   defp gets(dt, %{basis_name: _base_unit, val: _base_number, order: base_order}, field) do
     {_fn, {_fval, field_order}} = Enum.find(@time_basis, fn xf -> field == elem(xf, 0) end)
@@ -185,5 +162,39 @@ defmodule Plotex.TimeUnits do
       calendar: dt.calendar,
       year: dt.year,
     }
+  end
+end
+
+defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Time do
+  alias Plotex.Output.Options
+  alias Plotex.ViewRange
+  alias Plotex.Axis
+  alias Plotex.Axis.Units
+
+  # def time_scale(data, opts \\ []) do
+  #   {dt_a, dt_b} = date_range_from(data)
+  #   time_scale(dt_a, dt_b, opts)
+  # end
+
+  def scale(%ViewRange{start: dt_a, stop: dt_b}, opts) do
+    %{diff: diff_seconds, val: unit_val} = basis = Units.Time.units_for(dt_a, dt_b, opts)
+    dt_start = Units.Time.clone(dt_a, basis)
+
+    basis_count = diff_seconds / unit_val
+    stride = round(basis_count / Keyword.get(opts, :ticks, 10))
+
+    # Logger.warn("time_stride: #{inspect(stride)}")
+
+    rng =
+      0..1_000_000_000
+      |> Stream.map(fn i ->
+        # Logger.warn("#{inspect(dt_start)}")
+        # Logger.warn("#{inspect({i, unit_val, i * unit_val})}")
+        Units.Time.dt_add(dt_start, round(i * unit_val), :second)
+      end)
+      |> Stream.take_every(stride)
+      |> Stream.take_while(fn dt -> Units.Time.dt_compare(dt, dt_b) == :lt end)
+
+    %{data: rng, basis: basis}
   end
 end

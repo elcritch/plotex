@@ -8,7 +8,7 @@ defmodule Plotex.Axis do
             name: "",
             basis: %{},
             ticks: 10,
-            kind: :numeric
+            units: %{}
 
   @type t :: %Plotex.Axis{
     limits: ViewRange.t(),
@@ -16,7 +16,7 @@ defmodule Plotex.Axis do
     name: String.t(),
     basis: map(),
     ticks: non_neg_integer(),
-    kind: :numeric | :datetime,
+    units: Plotex.Axis.Units,
   }
 
 end
