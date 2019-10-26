@@ -18,30 +18,13 @@ defmodule Plotex do
   @doc """
   Generates a stream of the data points (ticks) for a given axis.
   """
-  def generate_axis(%Axis{kind: :numeric} = axis) do
+  def generate_axis(%Axis{units: units} = axis) do
     a = axis.limits.start
     b = axis.limits.stop
     n = axis.ticks
 
     unless a == nil || b == nil do
-      [data: data, basis: basis] = Plotex.NumberUnits.number_scale(a, b, ticks: n)
-      xrng = scale_data(data, axis)
-
-      [data: Stream.zip(data, xrng), basis: basis]
-    else
-      [data: [], basis: nil]
-    end
-  end
-
-  def generate_axis(%Axis{kind: :datetime} = axis) do
-    a = axis.limits.start
-    b = axis.limits.stop
-    n = axis.ticks
-
-    # Logger.warn("AXIS: a, b: #{inspect {a,b}}")
-    unless a == nil || b == nil do
-      %{data: data, basis: basis} = Plotex.TimeUnits.time_scale(a, b, ticks: n)
-      # Logger.warn("AXIS DATA: #{inspect data |> Enum.to_list()}")
+      [data: data, basis: basis] = Plotex.Axis.Units.scale(units, a, b)
       xrng = scale_data(data, axis)
 
       [data: Stream.zip(data, xrng), basis: basis]
@@ -131,13 +114,13 @@ defmodule Plotex do
 
     xaxis = %Axis{
       limits: xlim,
-      kind: opts[:xaxis][:kind] || :numeric,
+      kind: opts[:xaxis][:kind] || %Axis.Units.Numeric{},
       ticks: opts[:xaxis][:ticks] || 10,
       view: %ViewRange{start: 10, stop: (opts[:xaxis][:width] || 100) - 10}
     }
     yaxis = %Axis{
       limits: ylim,
-      kind: opts[:yaxis][:kind] || :numeric,
+      kind: opts[:yaxis][:kind] || %Axis.Units.Numeric{},
       ticks: opts[:yaxis][:ticks] || 10,
       view: %ViewRange{start: 10, stop: (opts[:yaxis][:width] || 100) - 10}
     }

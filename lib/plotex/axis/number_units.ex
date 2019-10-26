@@ -3,13 +3,15 @@ defmodule Plotex.NumberUnits do
   alias Plotex.ViewRange
   alias Plotex.Axis
 
-  @number_basis [1, 2, 5, 10, 20, 50, 100]
+  @default_number_basis [1, 2, 5, 10, 20, 50, 100]
+
+  defstruct basis: @default_number_basis, ticks: 10
 
   @doc """
   Get units for a given date range, using the number of ticks.
 
   """
-  def units_for(x_a, x_b, opts \\ []) do
+  def units_for(x_a, x_b, config) do
     xmax = max(x_a, x_b)
 
     xdiff = abs(x_a - x_b)
@@ -24,7 +26,7 @@ defmodule Plotex.NumberUnits do
         xdiff
       end
 
-    xdiff! |> optimize_units(opts)
+    xdiff! |> optimize_units(config)
   end
 
   @spec range_from(Enumerable.t()) :: {Number.t(), Number.t()}
@@ -33,11 +35,11 @@ defmodule Plotex.NumberUnits do
     b = Enum.max(data)
 
     {a, b}
-  end
+  d
 
   @spec optimize_units(number(), keyword()) :: %{basis: float(), rank: integer(), val: number()}
-  def optimize_units(xdiff, opts \\ []) do
-    count = Keyword.get(opts, :ticks, 10)
+  def optimize_units(xdiff, config) do
+    count = Keyword.get(config, :ticks, 10)
 
     # Logger.warn("xdiff: #{inspect xdiff}")
     r = rank(xdiff, count)
@@ -69,11 +71,11 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Numeric do
   alias Plotex.Axis.Units
 
 
-  def scale(%ViewRange{start: x_a, stop: x_b}, opts) do
-    %{basis: basis} = _units = Units.Numeric.units_for(x_a, x_b, opts)
+  def scale(%ViewRange{start: x_a, stop: x_b}, config) do
+    %{basis: basis} = _units = Units.Numeric.units_for(x_a, x_b, config)
     # Logger.warn("x_basis: #{inspect units}")
 
-    # stride = round(basis_count / Keyword.get(opts, :ticks, 10))
+    # stride = round(basis_count / Keyword.get(config, :ticks, 10))
     # Logger.warn("x_stride: #{inspect(stride)}")
     # Logger.warn("x_a: #{x_a}")
     # Logger.warn("x_fmod: #{inspect :math.fmod(x_a, basis)}")

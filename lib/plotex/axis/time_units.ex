@@ -4,7 +4,7 @@ defmodule Plotex.Axis.Units.Time do
   alias Plotex.ViewRange
   alias Plotex.Axis
 
-  @time_basis [
+  @default_time_basis [
     # Decades
     decade: {315_360_000, 1},
     # Years
@@ -34,6 +34,8 @@ defmodule Plotex.Axis.Units.Time do
     microsecond: {1.0e-6, 10}
   ]
 
+  defstruct time_basis: @default_time_basis
+
   def display_epoch(order) do
       case order do
         ord when ord <= 2 -> :year
@@ -46,22 +48,22 @@ defmodule Plotex.Axis.Units.Time do
       end
   end
 
-  defstruct [:basis_name, :val, :order, :diff]
+  # defstruct [:basis_name, :val, :order, :diff]
 
   @type t :: %__MODULE__{basis_name: atom, val: number, order: number, diff: number }
   @doc """
   Get units for a given date range, using the number of ticks.
 
   """
-  def units_for(%DateTime{} = dt_a, %DateTime{} = dt_b, opts) do
+  def units_for(%DateTime{} = dt_a, %DateTime{} = dt_b, config) do
     DateTime.diff(dt_a, dt_b)
     |> abs()
-    |> optimize_units(opts)
+    |> optimize_units(config)
   end
-  def units_for(%NaiveDateTime{} = dt_a, %NaiveDateTime{} = dt_b, opts) do
+  def units_for(%NaiveDateTime{} = dt_a, %NaiveDateTime{} = dt_b, config) do
     NaiveDateTime.diff(dt_a, dt_b)
     |> abs()
-    |> optimize_units(opts)
+    |> optimize_units(config)
   end
 
 
@@ -78,8 +80,8 @@ defmodule Plotex.Axis.Units.Time do
   end
 
   @spec optimize_units(number, keyword) :: __MODULE__.t()
-  def optimize_units(diff_seconds, opts \\ []) do
-    count = Keyword.get(opts, :ticks, 10)
+  def optimize_units(diff_seconds, config \\ []) do
+    count = Keyword.get(config, :ticks, 10)
     delta = diff_seconds / count
 
     idx =
@@ -171,17 +173,17 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Time do
   alias Plotex.Axis
   alias Plotex.Axis.Units
 
-  # def time_scale(data, opts \\ []) do
+  # def time_scale(data, config \\ []) do
   #   {dt_a, dt_b} = date_range_from(data)
-  #   time_scale(dt_a, dt_b, opts)
+  #   time_scale(dt_a, dt_b, config)
   # end
 
-  def scale(%ViewRange{start: dt_a, stop: dt_b}, opts) do
-    %{diff: diff_seconds, val: unit_val} = basis = Units.Time.units_for(dt_a, dt_b, opts)
+  def scale(%ViewRange{start: dt_a, stop: dt_b}, config) do
+    %{diff: diff_seconds, val: unit_val} = basis = Units.Time.units_for(dt_a, dt_b, config)
     dt_start = Units.Time.clone(dt_a, basis)
 
     basis_count = diff_seconds / unit_val
-    stride = round(basis_count / Keyword.get(opts, :ticks, 10))
+    stride = round(basis_count / Keyword.get(config, :ticks, 10))
 
     # Logger.warn("time_stride: #{inspect(stride)}")
 
