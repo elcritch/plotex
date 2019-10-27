@@ -1,11 +1,17 @@
 
+defmodule Plotex.Cldr do
+  use Cldr,
+    locales: ["en", "fr", "ja"],
+    providers: [Cldr.Number, Cldr.Calendar, Cldr.DateTime]
+
+end
+
 defmodule Plotex.Output.Formatter.DateTime.Cldr do
   defstruct [ :basis, :year, :month, :day, :hour, :minute, :second, :millisecond ]
 end
 
 defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.DateTime.Cldr do
   alias Plotex.Axis.Units
-  alias Plotex.TimeUnits
   alias Plotex.ViewRange
 
   def output(opts, axis, v) do
@@ -16,17 +22,17 @@ defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.DateTime.Cldr do
       {:ok, result} =
         case epoch do
           :year ->
-            v |> Cldr.DateTime.to_string(format: "Y/m/d")
+            v |> Cldr.DateTime.to_string(format: "Y/M")
           :month ->
-            v |> Cldr.DateTime.to_string(format: "y/m/d")
+            v |> Cldr.DateTime.to_string(format: "Y/M/d")
           :day ->
-            v |> Cldr.DateTime.to_string(format: "m/d H")
+            v |> Cldr.DateTime.to_string(format: "M/d HH")
           :hour ->
-            v |> Cldr.DateTime.to_string(format: "d H:M")
+            v |> Cldr.DateTime.to_string(format: "d H:mm")
           :minute ->
-            v |> Cldr.DateTime.to_string(format: "H:M:S")
+            v |> Cldr.DateTime.to_string(format: "H:mm:ss")
           :second ->
-            v |> Cldr.DateTime.to_string(format: "H:M:S")
+            v |> Cldr.DateTime.to_string(format: "H:mm:ss")
           :millisecond ->
             if opts.millisecond do
               v |> Cldr.DateTime.to_string(format: "A+")

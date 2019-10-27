@@ -148,7 +148,7 @@ defmodule PlotexTest do
       [{xdata, ydata}],
       xaxis: [
               units: %Axis.Units.Time{},
-              formatter: Formatter.DateTime.Calendar,
+              formatter: Formatter.DateTime.Cldr,
               ticks: 5,
               padding: 0.05]
     )
