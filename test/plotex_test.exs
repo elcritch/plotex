@@ -1,3 +1,8 @@
+
+defmodule Plotex.Cldr do
+  use Cldr, locales: ["en"], providers: [Cldr.Number, Cldr.Calendar, Cldr.DateTime]
+end
+
 defmodule PlotexTest do
   require Logger
   use ExUnit.Case

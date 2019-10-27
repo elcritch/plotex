@@ -1,11 +1,4 @@
 
-defmodule Plotex.Cldr do
-  use Cldr,
-    locales: ["en", "fr", "ja"],
-    providers: [Cldr.Number, Cldr.Calendar, Cldr.DateTime]
-
-end
-
 defmodule Plotex.Output.Formatter.DateTime.Cldr do
   defstruct [ :basis, :year, :month, :day, :hour, :minute, :second, :millisecond ]
 end
