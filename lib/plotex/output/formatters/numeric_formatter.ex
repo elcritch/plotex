@@ -5,9 +5,7 @@ end
 
 defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.NumericDefault do
 
-  def output(formatter, axis, val) do
-    # fn v ->
+  def output(formatter, _axis, val) do
       :io_lib.format("~#{formatter.precision}.#{formatter.decimals}f", [val])
-    # end
   end
 end

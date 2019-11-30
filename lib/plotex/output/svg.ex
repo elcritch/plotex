@@ -1,7 +1,5 @@
 defmodule Plotex.Output.Svg do
   require Logger
-  alias Plotex.TimeUnits
-  alias Plotex.ViewRange
   alias Plotex.Output.Options
   alias Plotex.Output.Formatter
 

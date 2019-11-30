@@ -170,9 +170,7 @@ defmodule Plotex.Axis.Units.Time do
 end
 
 defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Time do
-  alias Plotex.Output.Options
   alias Plotex.ViewRange
-  alias Plotex.Axis
   alias Plotex.Axis.Units
 
   # def time_scale(data, config \\ []) do
