@@ -2,10 +2,8 @@ defmodule AxisTest do
   require Logger
   use ExUnit.Case
   alias Plotex.Axis
-  alias Plotex.ViewRange
-  alias Plotex.Output.Options
 
-  @default_css
+  # @default_css
 
   doctest Plotex
 
@@ -39,16 +37,16 @@ defmodule AxisTest do
     xdata = 1..4 |> Enum.map(& &1 )
     ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
 
-    xlims = Plotex.Axis.Units.Numeric.range_from(xdata) |> Plotex.ViewRange.new()
-    xaxis = %Axis{limits: xlims}
+    # xlims = Plotex.Axis.Units.Numeric.range_from(xdata) |> Plotex.ViewRange.new()
+    # xaxis = %Axis{limits: xlims}
 
-    ylims = Plotex.Axis.Units.Numeric.range_from(ydata) |> Plotex.ViewRange.new()
-    yaxis = %Axis{limits: ylims}
+    # _ylims = Plotex.Axis.Units.Numeric.range_from(ydata) |> Plotex.ViewRange.new()
+    # yaxis = %Axis{limits: ylims}
 
     {xrng, yrng} = Plotex.limits([{xdata, ydata}])
 
-    assert xrng = %Plotex.ViewRange{projection: :cartesian, start: 0.85, stop: 4.15}
-    assert yrng = %Plotex.ViewRange{projection: :cartesian, start: 0.08535417036373703, stop: 0.40389758859174163}
+    assert xrng == %Plotex.ViewRange{projection: :cartesian, start: 0.85, stop: 4.15}
+    assert yrng == %Plotex.ViewRange{projection: :cartesian, start: 0.08535417036373703, stop: 0.40389758859174163}
   end
 
 

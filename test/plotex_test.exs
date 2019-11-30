@@ -4,11 +4,10 @@ defmodule PlotexTest do
   use ExUnit.Case
   alias Plotex.Axis
   alias Plotex.Axis.Units
-  alias Plotex.ViewRange
   alias Plotex.Output.Options
   alias Plotex.Output.Formatter
 
-  @default_css
+  # @default_css
 
   doctest Plotex
 
@@ -18,6 +17,7 @@ defmodule PlotexTest do
     ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
 
     plt = Plotex.plot([{xdata, ydata}])
+    assert plt != nil
     # Logger.warn("plotex cfg: #{inspect plt }")
   end
 
@@ -26,23 +26,16 @@ defmodule PlotexTest do
     ydata = []
 
     plt = Plotex.plot([{xdata, ydata}])
+    assert plt != nil
     # Logger.warn("plotex cfg: #{inspect plt }")
   end
-
-  # test "nil date plot" do
-  #   xdata = []
-  #   ydata = []
-
-  #   plt = Plotex.plot([{xdata, ydata}], xkind: :datetime)
-  #   Logger.warn("plotex cfg: #{inspect plt }")
-  # end
 
   test "date plot" do
     xdata = [0.0, 2.0, 3.0, 4.0]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
     plt = Plotex.plot([{xdata, ydata}], xkind: :numeric)
-    # Logger.warn("plotex cfg: #{inspect plt }")
+    Logger.warn("plotex cfg: #{inspect plt }")
 
     # for xt <- plt.xticks do
     #   Logger.info("xtick: #{inspect xt}")
@@ -70,7 +63,6 @@ defmodule PlotexTest do
     svg_str = Plotex.Output.Svg.generate(
                 plt,
                 %Options{
-                  xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 }},
                   xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 }},
                 }
             ) |> Phoenix.HTML.safe_to_string()
@@ -255,11 +247,11 @@ defmodule PlotexTest do
 
     # Logger.warn("SVG: \n#{svg_str}")
 
-    File.write!("output-naive-dt-hours.html", svg_str)
+    File.write!("output-naive-dt-hours.html", svg_wrap(svg_str))
   end
 
   defp svg_wrap(html_str, css_str \\ Plotex.Output.Svg.default_css()) do
-    html_str = """
+    """
     <html>
     <head>
       <style>
