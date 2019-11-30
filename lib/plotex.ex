@@ -82,10 +82,7 @@ defmodule Plotex do
           {xlims!, ylims!}
       end
 
-    xpad = (opts[:xaxis][:padding] || 0.05)
     xl = ViewRange.pad(xl, opts[:xaxis] || [])
-
-    ypad = (opts[:yaxis][:padding] || 0.05)
     yl = ViewRange.pad(yl, opts[:yaxis] || [])
 
     # Logger.warn("lims reduced: limits!: post!: #{inspect {xl, yl}}")
