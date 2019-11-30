@@ -13,6 +13,23 @@ defmodule Plotex.ViewRange do
     %ViewRange{start: a, stop: b, projection: proj}
   end
 
+  def empty(proj \\ :cartesian) do
+    %ViewRange{start: nil, stop: nil, projection: proj}
+  end
+
+  @doc """
+  Find the maximum and minumun points for a given line of data.
+  """
+  def from(data, proj \\ :cartesian) do
+    unless Enum.count(data) == 0 do
+      {a, b} = Enum.min_max_by(data, &Plotex.ViewRange.convert/1)
+      %ViewRange{start: a, stop: b, projection: proj}
+    else
+      %ViewRange{start: nil, stop: nil, projection: proj}
+      nil
+    end
+  end
+
   def min_max(nil, b), do: b
   def min_max(a, nil), do: a
   def min_max(va, vb) do
@@ -22,6 +39,7 @@ defmodule Plotex.ViewRange do
     %ViewRange{start: start!, stop: stop!, projection: va.projection}
   end
 
+  def convert(nil), do: nil
   def convert(%Time{} = val), do: Time.to_erl(val)
   def convert(%Date{} = val), do: Date.to_erl(val)
   def convert(%DateTime{} = val), do: DateTime.to_unix(val, :nanosecond)
@@ -48,12 +66,13 @@ defmodule Plotex.ViewRange do
      stop |> NaiveDateTime.add(round(amount), :nanosecond)}
   end
 
-  def pad({start, stop}, _amount)  when is_nil(start) or is_nil(stop) do
-    {nil, nil}
+  def pad(%ViewRange{start: start, stop: stop, projection: proj}, _amount)
+              when is_nil(start) or is_nil(stop) do
+    %ViewRange{start: nil, stop: nil, projection: proj}
   end
 
-  def pad({start, stop}, amount) do
-    {start - amount, stop + amount}
+  def pad(%ViewRange{start: start, stop: stop, projection: proj}, amount) do
+    %ViewRange{start: start - amount, stop: stop + amount, projection: proj}
   end
 
   def dist({start, stop}) when is_nil(start) or is_nil(stop) do

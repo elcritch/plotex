@@ -62,46 +62,44 @@ defmodule Plotex do
   end
 
   @doc """
-  Find the maximum and minumun points for a given line of data.
-  """
-  def range_from(data) do
-    unless Enum.count(data) == 0 do
-      Enum.min_max_by(data, &Plotex.ViewRange.convert/1)
-    else
-      {nil, nil}
-    end
-  end
-
-  @doc """
   Find the appropriate limits given an enumerable of datasets.
 
   For example, given {[1,2,3,4], [0.4,0.3,0.2,0.1]} will find the X limits 1..4
   and the Y limits of 0.1..0.4.
   """
   def limits(datasets, opts \\ []) do
-    # Logger.warn("plot: limits: opts: #{inspect opts}")
+    Logger.warn("plot: limits: opts: #{inspect opts}")
     proj = Keyword.get(opts, :projection, :cartesian)
 
-    {{xa, xb}, {ya, yb}} =
-      datasets
-      |> Enum.reduce({nil, nil}, fn {xdata, ydata}, {xlims, ylims} ->
-        xlims! = xdata |> Plotex.range_from()
-        ylims! = ydata |> Plotex.range_from()
+    {xl = %ViewRange{}, yl = %ViewRange{}} =
+      for {xdata, ydata} <- datasets, reduce: {nil, nil} do
+        {xlims, ylims} ->
+          Logger.warn("limits ")
+          xlims! = xdata |> ViewRange.from(proj)
+          ylims! = ydata |> ViewRange.from(proj)
+          Logger.warn("xdata: limits: data: #{inspect xdata}")
+          Logger.warn("ydata: limits: data: #{inspect ydata}")
+          Logger.warn("xlims: limits: : #{inspect xlims}")
+          Logger.warn("ylims: limits: : #{inspect ylims}")
+          Logger.warn("xlims!: limits: : #{inspect xlims!}")
+          Logger.warn("ylims!: limits: : #{inspect ylims!}")
 
-        xlims! = ViewRange.min_max(xlims, xlims!)
-        ylims! = ViewRange.min_max(ylims, ylims!)
+          xlims! = ViewRange.min_max(xlims, xlims!)
+          ylims! = ViewRange.min_max(ylims, ylims!)
+          Logger.warn("xlims!!: limits: post: #{inspect xlims!}")
+          Logger.warn("ylims!!: limits: post: #{inspect ylims!}")
 
-        {xlims!, ylims!}
-      end)
+          {xlims!, ylims!}
+      end
 
-    xpad = (opts[:xaxis][:padding] || 0.05) * ViewRange.dist({xa, xb})
-    {xa, xb} = ViewRange.pad({xa, xb}, xpad)
+    Logger.warn("lims reduced: limits: post: #{inspect {xl, yl}}")
+    xpad = (opts[:xaxis][:padding] || 0.05) * ViewRange.dist(xl)
+    xl = ViewRange.pad(xl, xpad)
 
-    ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist({ya, yb})
-    {ya, yb} = ViewRange.pad({ya, yb}, ypad)
+    ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist(yl)
+    yl = ViewRange.pad(yl, ypad)
 
-    {%ViewRange{start: xa, stop: xb, projection: proj},
-     %ViewRange{start: ya, stop: yb, projection: proj}}
+    {xl, yl}
   end
 
   def std_units(opts) do

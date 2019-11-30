@@ -89,6 +89,39 @@ defmodule PlotexTest do
     File.write!("output.html", html_str)
   end
 
+  test "svg dual plot" do
+    xdata1 = [0.0, 2.0, 3.0, 4.0]
+    ydata1 = [0.1, 0.25, 0.15, 0.1]
+    xdata2 = [0.0, 1.5, 3.5, 4.5]
+    ydata2 = [0.2, 0.25, 0.10, 0.05]
+
+    plt = Plotex.plot([{xdata1, ydata1}, {xdata2, ydata2}], xkind: :numeric, xaxis: [padding: 0.05])
+    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
+
+    svg_str = Plotex.Output.Svg.generate(
+                plt,
+                %Options{
+                  xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 }},
+                }
+            ) |> Phoenix.HTML.safe_to_string()
+
+    # Logger.warn("SVG: \n#{svg_str}")
+
+    html_str = """
+    <html>
+    <head>
+      <style>
+        #{Plotex.Output.Svg.default_css()}
+      </style>
+    </head>
+    <body>
+      #{svg_str}
+    </body>
+    </html>
+    """
+    File.write!("output.html", html_str)
+  end
+
   test "svg datetime (short) plot" do
     xdata = [
       DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
