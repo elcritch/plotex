@@ -30,8 +30,8 @@ defmodule Plotex.ViewRange do
     end
   end
 
-  def min_max(nil, b), do: b
-  def min_max(a, nil), do: a
+  def min_max(%{start: nil, stop: nil}, b), do: b
+  def min_max(a, %{start: nil, stop: nil}), do: a
   def min_max(va, vb) do
     start! = Enum.min_by([va.start, vb.start], &convert/1)
     stop! = Enum.max_by([va.stop, vb.stop], &convert/1)
