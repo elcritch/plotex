@@ -68,10 +68,8 @@ defmodule Plotex do
   and the Y limits of 0.1..0.4.
   """
   def limits(datasets, opts \\ []) do
-    Logger.warn("plot: limits: opts: #{inspect opts}")
     proj = Keyword.get(opts, :projection, :cartesian)
 
-    # {xl = %ViewRange{}, yl = %ViewRange{}} =
     {xl, yl} =
       for {xdata, ydata} <- datasets, reduce: {ViewRange.empty, ViewRange.empty} do
         {xlims, ylims} ->
@@ -84,15 +82,13 @@ defmodule Plotex do
           {xlims!, ylims!}
       end
 
-    Logger.warn("lims reduced: limits: post: #{inspect {xl, yl}}")
     xpad = (opts[:xaxis][:padding] || 0.05)
     xl = ViewRange.pad(xl, opts[:xaxis] || [])
 
-    # ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist(yl)
     ypad = (opts[:yaxis][:padding] || 0.05)
     yl = ViewRange.pad(yl, opts[:yaxis] || [])
 
-    Logger.warn("lims reduced: limits!: post!: #{inspect {xl, yl}}")
+    # Logger.warn("lims reduced: limits!: post!: #{inspect {xl, yl}}")
     {xl, yl}
   end
 
