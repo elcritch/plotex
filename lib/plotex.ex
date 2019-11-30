@@ -43,11 +43,11 @@ defmodule Plotex do
     # Logger.warn("SCALE_DATA: #{inspect axis}")
     m = ViewRange.diff( axis.view.stop, axis.view.start )
           / ViewRange.diff( axis.limits.stop, axis.limits.start )
-    b = axis.view.start |> ViewRange.val()
-    x! = axis.limits.start |> ViewRange.val()
+    b = axis.view.start |> ViewRange.to_val()
+    x! = axis.limits.start |> ViewRange.to_val()
 
     data
-    |> Stream.map(fn x -> m*(ViewRange.val(x)-x!) + b  end)
+    |> Stream.map(fn x -> m*(ViewRange.to_val(x)-x!) + b  end)
   end
 
   @doc """
@@ -95,12 +95,13 @@ defmodule Plotex do
 
     Logger.warn("lims reduced: limits: post: #{inspect {xl, yl}}")
     xpad = (opts[:xaxis][:padding] || 0.05)
-    xl = ViewRange.pad(xl, opts[:xaxis])
+    xl = ViewRange.pad(xl, opts[:xaxis] || [])
 
     # ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist(yl)
     ypad = (opts[:yaxis][:padding] || 0.05)
-    yl = ViewRange.pad(xl, opts[:yaxis])
+    yl = ViewRange.pad(yl, opts[:yaxis] || [])
 
+    Logger.warn("lims reduced: limits!: post!: #{inspect {xl, yl}}")
     {xl, yl}
   end
 
