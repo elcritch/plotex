@@ -75,20 +75,11 @@ defmodule Plotex do
     {xl, yl} =
       for {xdata, ydata} <- datasets, reduce: {ViewRange.empty, ViewRange.empty} do
         {xlims, ylims} ->
-          Logger.warn("limits ")
           xlims! = xdata |> ViewRange.from(proj)
           ylims! = ydata |> ViewRange.from(proj)
-          Logger.warn("xdata: limits: data: #{inspect xdata}")
-          Logger.warn("ydata: limits: data: #{inspect ydata}")
-          Logger.warn("xlims: limits: : #{inspect xlims}")
-          Logger.warn("ylims: limits: : #{inspect ylims}")
-          Logger.warn("xlims!: limits: : #{inspect xlims!}")
-          Logger.warn("ylims!: limits: : #{inspect ylims!}")
 
           xlims! = ViewRange.min_max(xlims, xlims!)
           ylims! = ViewRange.min_max(ylims, ylims!)
-          Logger.warn("xlims!!: limits: post: #{inspect xlims!}")
-          Logger.warn("ylims!!: limits: post: #{inspect ylims!}")
 
           {xlims!, ylims!}
       end
