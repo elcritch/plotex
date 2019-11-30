@@ -119,7 +119,7 @@ defmodule PlotexTest do
     </body>
     </html>
     """
-    File.write!("output.html", html_str)
+    File.write!("output-dual.html", html_str)
   end
 
   test "svg datetime (short) plot" do
