@@ -1,8 +1,4 @@
 
-defmodule Plotex.Cldr do
-  use Cldr, locales: ["en"], providers: [Cldr.Number, Cldr.Calendar, Cldr.DateTime]
-end
-
 defmodule PlotexTest do
   require Logger
   use ExUnit.Case
@@ -259,19 +255,21 @@ defmodule PlotexTest do
 
     # Logger.warn("SVG: \n#{svg_str}")
 
+    File.write!("output-naive-dt-hours.html", svg_str)
+  end
+
+  defp svg_wrap(html_str, css_str \\ Plotex.Output.Svg.default_css()) do
     html_str = """
     <html>
     <head>
       <style>
-        #{Plotex.Output.Svg.default_css()}
+        #{css_str}
       </style>
     </head>
     <body>
-      #{svg_str}
+      #{html_str}
     </body>
     </html>
     """
-    File.write!("output-naive-dt-hours.html", html_str)
   end
-
 end

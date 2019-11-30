@@ -38,3 +38,7 @@ defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.DateTime.Cldr do
     # end
   end
 end
+
+defmodule Plotex.Cldr do
+  use Cldr, locales: ["en"], providers: [Cldr.Number, Cldr.Calendar, Cldr.DateTime]
+end
