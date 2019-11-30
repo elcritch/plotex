@@ -59,17 +59,17 @@ defmodule Plotex.ViewRange do
     %ViewRange{start: nil, stop: nil, projection: proj}
   end
   def pad(%ViewRange{start: %DateTime{} = start, stop: %DateTime{} = stop} = vr, opts) do
-    amount = Keywords.get(opts, :padding, 0.05) * ViewRange.dist(vr)
+    amount = Keyword.get(opts, :padding, 0.05) * ViewRange.dist(vr)
     %ViewRange{start: start |> DateTime.add(-round(amount), :nanosecond),
                stop: stop |> DateTime.add(round(amount), :nanosecond)}
   end
   def pad(%ViewRange{start: %NaiveDateTime{} = start, stop: %NaiveDateTime{} = stop} = vr, opts) do
-    amount = Keywords.get(opts, :padding, 0.05) * ViewRange.dist(vr)
+    amount = Keyword.get(opts, :padding, 0.05) * ViewRange.dist(vr)
     %ViewRange{start: start |> NaiveDateTime.add(-round(amount), :nanosecond),
                stop: stop |> NaiveDateTime.add(round(amount), :nanosecond)}
   end
   def pad(%ViewRange{start: start, stop: stop, projection: proj} = vr, opts) do
-    amount = Keywords.get(opts, :padding, 0.05) * ViewRange.dist(vr)
+    amount = Keyword.get(opts, :padding, 0.05) * ViewRange.dist(vr)
     %ViewRange{start: start - amount, stop: stop + amount, projection: proj}
   end
 
