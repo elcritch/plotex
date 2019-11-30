@@ -35,7 +35,12 @@ defmodule PlotexTest do
     ydata = [0.1, 0.25, 0.15, 0.1]
 
     plt = Plotex.plot([{xdata, ydata}], xkind: :numeric)
-    Logger.warn("plotex cfg: #{inspect plt }")
+    # Logger.warn("plotex cfg: #{inspect plt }")
+
+    # Logger.info("xticks: #{inspect plt.xticks}")
+    # Logger.info("yticks: #{inspect plt.yticks |> Enum.to_list()}")
+    assert plt.xticks == [{0.0, 13.636363636363637}, {0.5, 22.727272727272727}, {1.0, 31.818181818181817}, {1.5, 40.90909090909091}, {2.0, 50.0}, {2.5, 59.090909090909086}, {3.0, 68.18181818181819}, {3.5, 77.27272727272727}, {4.0, 86.36363636363636}]
+    assert Enum.to_list(plt.yticks) == [{0.1, 13.63636363636364}, {0.12, 23.33333333333333}, {0.14, 33.03030303030303}, {0.16, 42.72727272727273}, {0.18, 52.42424242424242}, {0.2, 62.121212121212125}, {0.22000000000000003, 71.81818181818183}, {0.24, 81.5151515151515}]
 
     # for xt <- plt.xticks do
     #   Logger.info("xtick: #{inspect xt}")
