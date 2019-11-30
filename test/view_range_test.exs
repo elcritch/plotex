@@ -1,7 +1,6 @@
 defmodule ViewRangeTest do
   require Logger
   use ExUnit.Case
-  alias Plotex.Axis
 
   # @default_css
 
