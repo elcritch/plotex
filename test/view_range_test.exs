@@ -1,4 +1,4 @@
-defmodule AxisTest do
+defmodule ViewRangeTest do
   require Logger
   use ExUnit.Case
   alias Plotex.Axis

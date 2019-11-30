@@ -55,23 +55,23 @@ defmodule Plotex.ViewRange do
   def diff(%NaiveDateTime{} = b, %NaiveDateTime{} = a), do: NaiveDateTime.diff(b, a, :nanosecond)
   def diff(b, a), do: b - a
 
-  @spec pad({DateTime.t(), DateTime.t()}, number) :: {DateTime.t(), DateTime.t()}
-  def pad({%DateTime{} = start, %DateTime{} = stop}, amount) do
-    {start |> DateTime.add(-round(amount), :nanosecond),
-     stop |> DateTime.add(round(amount), :nanosecond)}
-  end
-  @spec pad({NaiveDateTime.t(), NaiveDateTime.t()}, number) :: {NaiveDateTime.t(), NaiveDateTime.t()}
-  def pad({%NaiveDateTime{} = start, %NaiveDateTime{} = stop}, amount) do
-    {start |> NaiveDateTime.add(-round(amount), :nanosecond),
-     stop |> NaiveDateTime.add(round(amount), :nanosecond)}
-  end
-
-  def pad(%ViewRange{start: start, stop: stop, projection: proj}, _amount)
+  def pad(%ViewRange{start: start, stop: stop, projection: proj}, padding)
               when is_nil(start) or is_nil(stop) do
     %ViewRange{start: nil, stop: nil, projection: proj}
   end
+  # @spec pad({DateTime.t(), DateTime.t()}, number) :: {DateTime.t(), DateTime.t()}
+  def pad(%ViewRange{start: %DateTime{} = start, stop: %DateTime{} = stop}, amount) do
+    %ViewRange{start: start |> DateTime.add(-round(amount), :nanosecond),
+               stop: stop |> DateTime.add(round(amount), :nanosecond)}
+  end
+  # @spec pad({NaiveDateTime.t(), NaiveDateTime.t()}, number) :: {NaiveDateTime.t(), NaiveDateTime.t()}
+  def pad(%ViewRange{start: %NaiveDateTime{} = start, stop: %NaiveDateTime{} = stop}, amount) do
+    %ViewRange{start: start |> NaiveDateTime.add(-round(amount), :nanosecond),
+               stop: stop |> NaiveDateTime.add(round(amount), :nanosecond)}
+  end
 
-  def pad(%ViewRange{start: start, stop: stop, projection: proj}, amount) do
+  def pad(%ViewRange{start: start, stop: stop, projection: proj} = vr, padding) do
+    amount = padding * dist(vr)
     %ViewRange{start: start - amount, stop: stop + amount, projection: proj}
   end
 

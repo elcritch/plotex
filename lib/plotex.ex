@@ -72,7 +72,7 @@ defmodule Plotex do
     proj = Keyword.get(opts, :projection, :cartesian)
 
     {xl = %ViewRange{}, yl = %ViewRange{}} =
-      for {xdata, ydata} <- datasets, reduce: {nil, nil} do
+      for {xdata, ydata} <- datasets, reduce: {ViewRange.empty, ViewRange.empty} do
         {xlims, ylims} ->
           Logger.warn("limits ")
           xlims! = xdata |> ViewRange.from(proj)
@@ -93,10 +93,11 @@ defmodule Plotex do
       end
 
     Logger.warn("lims reduced: limits: post: #{inspect {xl, yl}}")
-    xpad = (opts[:xaxis][:padding] || 0.05) * ViewRange.dist(xl)
+    xpad = (opts[:xaxis][:padding] || 0.05)
     xl = ViewRange.pad(xl, xpad)
 
-    ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist(yl)
+    # ypad = (opts[:yaxis][:padding] || 0.05) * ViewRange.dist(yl)
+    ypad = (opts[:yaxis][:padding] || 0.05)
     yl = ViewRange.pad(yl, ypad)
 
     {xl, yl}
