@@ -84,6 +84,11 @@ defmodule Plotex.Output.LiveSvg do
   """
   def generate(%Plotex{} = plot, %Options{} = opts) do
 
+    xaxis = plot.config.xaxis
+    yaxis = plot.config.yaxis
+    xfmt = plot.config.xaxis.formatter
+    yfmt = plot.config.yaxis.formatter
+
     assigns =
       plot
       |> Map.from_struct()
