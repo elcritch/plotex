@@ -208,11 +208,7 @@ defmodule Plotex.Output.Svg do
         <%= for {dataset, idx} <- @datasets do %>
           <g class="plx-dataset-<%= idx %>" data-setname="plx-data-<%= idx %>">
             <polyline class="plx-data-line"
-                      points="
-                        <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %>
-                          <%= xp %>,-<%= yp %>
-                        <% end %>
-                        "/>
+                      points=" <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %> <%= xp %>,-<%= yp %><% end %> "/>
 
             <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
               <%= case Options.data(@opts,idx).shape do %>
@@ -239,8 +235,6 @@ defmodule Plotex.Output.Svg do
         <% end %>
         </g>
       </svg>
-
-
       """
   end
 end
