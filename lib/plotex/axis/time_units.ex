@@ -40,7 +40,7 @@ defmodule Plotex.Axis.Units.Time do
     microsecond: {1.0e-6, 10}
   ]
 
-  defstruct time_basis: @default_time_basis, ticks: 10
+  defstruct time_basis: @default_time_basis, ticks: 10, min_basis: :microsecond
 
   def display_epoch(order) do
       case order do
@@ -86,11 +86,12 @@ defmodule Plotex.Axis.Units.Time do
   def optimize_units(diff_seconds, config) do
     count = config.ticks
     delta = diff_seconds / count
+    {min_time_delta, _} = Keyword.get(config.time_basis, config.min_basis)
 
     idx =
       config.time_basis
       |> Enum.find_index(fn {_time_unit, {diff_val, _time_ord}} ->
-        delta >= diff_val
+        delta >= diff_val && diff_val >= min_time_delta
       end)
 
     bcount = Enum.count(config.time_basis)

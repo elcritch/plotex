@@ -55,8 +55,8 @@ defmodule Plotex.TimeUnitsTest do
   end
 
   test "hour time scale" do
-    dt_a = DateTime.from_iso8601("2019-05-20T05:04:10.836Z") |> elem(1)
-    dt_b = DateTime.from_iso8601("2019-05-20T08:15:00.836Z") |> elem(1)
+    dt_a = ~U[2019-05-20T05:04:10.836Z]
+    dt_b = ~U[2019-05-20T08:15:00.836Z]
 
     scale = Plotex.Axis.Units.scale(@config, %ViewRange{start: dt_a, stop: dt_b})
 
