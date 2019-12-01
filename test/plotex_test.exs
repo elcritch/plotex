@@ -78,7 +78,7 @@ defmodule PlotexTest do
     <html>
     <head>
       <style>
-        #{Plotex.Output.Svg.default_css()}
+        #{Plotex.Output.LiveSvg.default_css()}
       </style>
     </head>
     <body>
