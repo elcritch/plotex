@@ -69,9 +69,11 @@ defmodule Plotex do
   """
   def limits(datasets, opts \\ []) do
     proj = Keyword.get(opts, :projection, :cartesian)
+    def_xrange = get_in(opts, [:xaxis, :view_min]) || ViewRange.empty
+    def_yrange = get_in(opts, [:yaxis, :view_min]) || ViewRange.empty
 
     {xl, yl} =
-      for {xdata, ydata} <- datasets, reduce: {ViewRange.empty, ViewRange.empty} do
+      for {xdata, ydata} <- datasets, reduce: {def_xrange,def_yrange} do
         {xlims, ylims} ->
           xlims! = xdata |> ViewRange.from(proj)
           ylims! = ydata |> ViewRange.from(proj)
