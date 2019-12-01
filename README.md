@@ -91,7 +91,7 @@ end
 [Example DateTime Output](./test/output-dt-hours.html)
 
 ![Example DateTime Output](./examples/output-naive-dt-hours.png "Example DateTime Plot")
-![Example DateTime Output](./test/output-dual-dt-hours.png "Example DateTime Plot")
+![Example Dual DateTime Output](./test/output-dual-dt-hours.png "Example Dual DateTime Plot")
 
 Note, SVG uses a "graphics" coordinate system where the X-Y origin are centered on the top-left. Most graphing configurations assume the X-Y origin is in the bottom left. The SVG output adjusts this by setting the Y origin to range from `-100..0` and adds a negative sign to the Y-data axis. This turns out to be the simplest general way to adjust the SVG origin. 
 
