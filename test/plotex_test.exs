@@ -1,3 +1,6 @@
+defmodule Plotex.Cldr do
+  use Cldr, locales: ["en"], providers: [Cldr.Number, Cldr.Calendar, Cldr.DateTime]
+end
 
 defmodule PlotexTest do
   require Logger
@@ -78,7 +81,7 @@ defmodule PlotexTest do
     <html>
     <head>
       <style>
-        #{Plotex.Output.LiveSvg.default_css()}
+        #{Plotex.Output.Svg.default_css()}
       </style>
     </head>
     <body>
