@@ -6,23 +6,26 @@ See units tests for more examples of producing SVG graphs. The SVG can be styled
 
 ## Changes
 
-- v0.1.0 has basic plotting functionality included 
-- v0.1.1 has support for NaiveDateTime (easier to convert to user local time on the fly)
-- v0.1.1 added hex package 
-- v0.2.0 refactored some of the options 
-- v0.2.1 added optional support for :cldr_datetime in addition to :calendar for datetime
 - v0.2.2 fixed multi-graph support, added test `output-dual.html`
+- v0.2.1 added optional support for :cldr_datetime in addition to :calendar for datetime
+- v0.2.0 refactored some of the options 
+- v0.1.1 added hex package 
+- v0.1.1 has support for NaiveDateTime (easier to convert to user local time on the fly)
+- v0.1.0 has basic plotting functionality included 
 
-## Next Features 
+# Features 
+
+Supports creating axis and scaling for both numeric and DateTime/NaiveDateTime series from Elixir Streams or Enums. Scaling and sizing can be modified with CSS used for styling everything else including font sizes. 
+
+Graph generation is designed to be modular. 
+
+## Future Features 
 
 - The API and handline of the plot gutters need to be polished
 - Better better support for changing aspect ratios 
 - Legends
 - Add introspective abilities
 
-### Features 
-
-Supports creating axis and scaling for both numeric and DateTime/NaiveDateTime series from Elixir Streams or Enums. Scaling and sizing can be modified with CSS used for styling everything else including font sizes. Graph generation is designed to be modular. 
 
 ## Installation
 
@@ -38,86 +41,51 @@ end
 
 ```elixir
 
+defmodule ExampleSVG.Graph
 
-def render(socket) do
+  @doc " Create Plotex Graph "
+  def plot() do
+      xdata = [
+        ~U[2019-05-20T05:04:12.836Z],
+        ~U[2019-05-20T05:13:17.836Z],
+        ~U[2019-05-20T05:21:23.836Z],
+        ~U[2019-05-20T05:33:25.836Z]
+      ]
+      ydata = [0.1, 0.25, 0.15, 0.1]
+      graph_data = {xdata, ydata}
 
-    xdata = [
-      DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:13:17.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:21:23.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:33:25.836Z") |> elem(1),
-    ]
-    ydata = [0.1, 0.25, 0.15, 0.1]
+      plt = Plotex.plot(
+        [ graph_data ],
+        xaxis: [kind: :datetime, ticks: 5, padding: 0.05] 
+      )
+      Logger.warn("svg plotex cfg: #{inspect plt, pretty: true}")
+      
+      plt
+  end
 
-    plt = Plotex.plot(
-      [{xdata, ydata}],
-      xaxis: [kind: :datetime,
-              ticks: 5,
-              padding: 0.05]
-    )
-    Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
+  def render(socket) do
+      plt = plot()
+      
+      svg_str =
+        Plotex.Output.Svg.generate(plt, xaxis: [rotate: 35, dy: '2.5em'], yaxis: [])
+        |> Phoenix.HTML.safe_to_string()
 
-    svg_str =
-      Plotex.Output.Svg.generate(
-        plt,
-        xaxis: [rotate: 35, dy: '2.5em' ],
-        yaxis: [],
-      ) |> Phoenix.HTML.safe_to_string()
+      assigns = [svg_str: svg_str]
 
-    Logger.warn("SVG: \n#{svg_str}")
-    assigns = [svg_str: svg_str]
-
-    ~L"""
-    <html>
-    <head>
-      <style>
-        .graph .labels .x-labels {
-          text-anchor: middle;
-        }
-        .graph .labels, .graph .y-labels {
-          text-anchor: middle;
-        }
-        .graph {
-          height: 500px;
-          width: 800px;
-        }
-        .graph .grid {
-          stroke: #ccc;
-          stroke-dasharray: 0;
-          stroke-width: 1.0;
-        }
-        .labels {
-          font-size: 3px;
-        }
-        .labels .x-labels {
-          font-size: 1px;
-        }
-        .label-title {
-          font-size: 8px;
-          font-weight: bold;
-          text-transform: uppercase;
-          fill: black;
-        }
-        .data .data-point {
-          fill: darkblue;
-          stroke-width: 1.0;
-        }
-        .data .data-line {
-          stroke: #0074d9;
-          stroke-width: 0.1em;
-          stroke-width: 0.1em;
-          stroke-linecap: round;
-          fill: none;
-        }
-      </style>
-    </head>
-    <body>
-      <%= @svg_str %>
-    </body>
-    </html>
-    """
+      ~L"""
+      <html>
+        <head>
+          <style>
+            #{Plotex.Output.Svg.default_css()}
+          </style>
+        </head>
+        <body>
+          <%= @svg_str %>
+        </body>
+      </html>
+      """
+  end
 end
-
 ```
 
 [Example DateTime Output](./test/output-dt-hours.html)
