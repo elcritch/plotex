@@ -86,7 +86,7 @@ defmodule PlotexTest do
     </body>
     </html>
     """
-    File.write!("output.html", html_str)
+    File.write!("examples/output.html", html_str)
   end
 
   test "svg dual plot" do
@@ -119,15 +119,15 @@ defmodule PlotexTest do
     </body>
     </html>
     """
-    File.write!("output-dual.html", html_str)
+    File.write!("examples/output-dual.html", html_str)
   end
 
   test "svg datetime (short) plot" do
     xdata = [
-      DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:04:17.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:04:23.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:04:25.836Z") |> elem(1),
+      ~U[2019-05-20T05:04:12.836Z],
+      ~U[2019-05-20T05:04:17.836Z],
+      ~U[2019-05-20T05:04:23.836Z],
+      ~U[2019-05-20T05:04:25.836Z],
     ]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
@@ -163,15 +163,15 @@ defmodule PlotexTest do
     </body>
     </html>
     """
-    File.write!("output-dt.html", html_str)
+    File.write!("examples/output-dt.html", html_str)
   end
 
   test "svg cldr-datetime (short) plot" do
     xdata = [
-      DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:04:17.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:04:23.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:04:25.836Z") |> elem(1),
+      ~U[2019-05-20T05:04:12.836Z],
+      ~U[2019-05-20T05:04:17.836Z],
+      ~U[2019-05-20T05:04:23.836Z],
+      ~U[2019-05-20T05:04:25.836Z],
     ]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
@@ -209,15 +209,15 @@ defmodule PlotexTest do
     </body>
     </html>
     """
-    File.write!("output-dt-cldr.html", html_str)
+    File.write!("examples/output-dt-cldr.html", html_str)
   end
 
   test "svg datetime (hours) plot" do
     xdata = [
-      DateTime.from_iso8601("2019-05-20T05:04:12.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:13:17.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:21:23.836Z") |> elem(1),
-      DateTime.from_iso8601("2019-05-20T05:33:25.836Z") |> elem(1),
+      ~U[2019-05-20T05:04:12.836Z],
+      ~U[2019-05-20T05:04:17.836Z],
+      ~U[2019-05-20T05:04:23.836Z],
+      ~U[2019-05-20T05:04:25.836Z],
     ]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
@@ -254,15 +254,15 @@ defmodule PlotexTest do
     </body>
     </html>
     """
-    File.write!("output-dt-hours.html", html_str)
+    File.write!("examples/output-dt-hours.html", html_str)
   end
 
   test "svg naivedatetime (hours) plot" do
     xdata = [
-      NaiveDateTime.from_iso8601("2019-05-20T05:04:12.836") |> elem(1),
-      NaiveDateTime.from_iso8601("2019-05-20T05:13:17.836") |> elem(1),
-      NaiveDateTime.from_iso8601("2019-05-20T05:21:23.836") |> elem(1),
-      NaiveDateTime.from_iso8601("2019-05-20T05:33:25.836") |> elem(1),
+      ~U[2019-05-20T05:04:12.836Z],
+      ~U[2019-05-20T05:04:17.836Z],
+      ~U[2019-05-20T05:04:23.836Z],
+      ~U[2019-05-20T05:04:25.836Z],
     ]
     ydata = [0.1, 0.25, 0.15, 0.1]
 
@@ -285,7 +285,7 @@ defmodule PlotexTest do
 
     # Logger.warn("SVG: \n#{svg_str}")
 
-    File.write!("output-naive-dt-hours.html", svg_wrap(svg_str))
+    File.write!("examples/output-naive-dt-hours.html", svg_wrap(svg_str))
   end
 
   defp svg_wrap(html_str, css_str \\ Plotex.Output.Svg.default_css()) do
