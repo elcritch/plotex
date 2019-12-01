@@ -1,7 +1,6 @@
 defmodule Plotex.Axis.Units.Numeric do
   require Logger
   alias Plotex.ViewRange
-  alias __MODULE__
 
   @default_number_basis [1, 2, 5, 10, 20, 50, 100]
 

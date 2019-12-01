@@ -9,7 +9,6 @@ defmodule Plotex.Axis.Units.Time do
   require Logger
   alias Plotex.Axis.Units
   alias Plotex.ViewRange
-  alias Plotex.Axis
 
   @default_time_basis [
     # Decades

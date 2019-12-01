@@ -54,7 +54,7 @@ defmodule Plotex.ViewRange do
   def diff(%NaiveDateTime{} = b, %NaiveDateTime{} = a), do: NaiveDateTime.diff(b, a, :nanosecond)
   def diff(b, a), do: b - a
 
-  def pad(%ViewRange{start: start, stop: stop, projection: proj}, opts)
+  def pad(%ViewRange{start: start, stop: stop, projection: proj}, _opts)
               when is_nil(start) or is_nil(stop) do
     %ViewRange{start: nil, stop: nil, projection: proj}
   end
