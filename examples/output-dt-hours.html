@@ -1,0 +1,477 @@
+<html>
+<head>
+  <style>
+        .plx-labels {
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    .plx-graph {
+      height: 500px;
+      width: 800px;
+    }
+    .plx-graph .plx-grid {
+      stroke: #ccc;
+      stroke-dasharray: 0;
+      stroke-width: 1.0;
+    }
+    .plx-grid-lines {
+      stroke-width: 0.1;
+    }
+    .plx-ticks {
+      stroke: #ccc;
+      stroke-dasharray: 0;
+      stroke-width: 0.5;
+    }
+    .plx-labels {
+      font-size: 3px;
+    }
+    .plx-labels .plx-x-labels {
+      font-size: 1px;
+    }
+    .plx-label-title {
+      font-size: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+      fill: black;
+    }
+    .plx-data .plx-data-point {
+      fill: darkblue;
+      stroke-width: 1.0;
+    }
+    .plx-data .plx-data-line {
+      stroke: #0074d9;
+      stroke-width: 0.05em;
+      stroke-width: 0.05em;
+      stroke-linecap: round;
+      fill: none;
+    }
+
+  </style>
+</head>
+<body>
+    <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+       viewbox="0 -100 100 100"
+       class="plx-graph"  preserveAspectRatio="none"  >
+    <title class="plx-title">Plot</title>
+
+    
+
+  <!-- X Axis -->
+  <g class="plx-grid plx-x-axis ">
+    <g class="plx-border">
+      <line x1="10"
+            x2="90"
+            y1="-10"
+            y2="-10" >
+      </line>
+    </g>
+
+    <g class="plx-ticks">
+      
+        <line
+              x1="23.060789296271327"
+              y1="-10"
+              x2="23.060789296271327"
+              y2="-12.0"
+              >
+        </line>
+      
+        <line
+              x1="37.99622465384017"
+              y1="-10"
+              x2="37.99622465384017"
+              y2="-12.0"
+              >
+        </line>
+      
+        <line
+              x1="52.93166001140901"
+              y1="-10"
+              x2="52.93166001140901"
+              y2="-12.0"
+              >
+        </line>
+      
+        <line
+              x1="67.86709536897786"
+              y1="-10"
+              x2="67.86709536897786"
+              y2="-12.0"
+              >
+        </line>
+      
+        <line
+              x1="82.80253072654669"
+              y1="-10"
+              x2="82.80253072654669"
+              y2="-12.0"
+              >
+        </line>
+      
+    </g>
+    <g class="plx-grid-lines">
+      
+        <line
+              x1="23.060789296271327"
+              y1="-10"
+              x2="23.060789296271327"
+              y2="-90"
+              >
+        </line>
+      
+        <line
+              x1="37.99622465384017"
+              y1="-10"
+              x2="37.99622465384017"
+              y2="-90"
+              >
+        </line>
+      
+        <line
+              x1="52.93166001140901"
+              y1="-10"
+              x2="52.93166001140901"
+              y2="-90"
+              >
+        </line>
+      
+        <line
+              x1="67.86709536897786"
+              y1="-10"
+              x2="67.86709536897786"
+              y2="-90"
+              >
+        </line>
+      
+        <line
+              x1="82.80253072654669"
+              y1="-10"
+              x2="82.80253072654669"
+              y2="-90"
+              >
+        </line>
+      
+    </g>
+  </g>
+
+  <g class="plx-labels plx-x-labels">
+    
+      <text x="23.060789296271327"
+            y="-10"
+            transform="rotate(35, 23.060789296271327, -5.0)"
+            dy="5.0">
+          05:08:00
+      </text>
+    
+      <text x="37.99622465384017"
+            y="-10"
+            transform="rotate(35, 37.99622465384017, -5.0)"
+            dy="5.0">
+          05:14:00
+      </text>
+    
+      <text x="52.93166001140901"
+            y="-10"
+            transform="rotate(35, 52.93166001140901, -5.0)"
+            dy="5.0">
+          05:20:00
+      </text>
+    
+      <text x="67.86709536897786"
+            y="-10"
+            transform="rotate(35, 67.86709536897786, -5.0)"
+            dy="5.0">
+          05:26:00
+      </text>
+    
+      <text x="82.80253072654669"
+            y="-10"
+            transform="rotate(35, 82.80253072654669, -5.0)"
+            dy="5.0">
+          05:32:00
+      </text>
+    
+    <text x="40.0"
+          y="-5.0"
+          class="label-title">
+      
+    </text>
+  </g>
+
+  <!-- Y Axis -->
+  <g class="plx-grid plx-y-axis">
+    <g class="plx-border">
+      <line x1="10"
+            x2="10"
+            y1="-10"
+            y2="-90" >
+      </line>
+    </g>
+
+    <g class="plx-ticks">
+      
+        <line
+              x1="10"
+              y1="-13.63636363636364"
+              x2="12.0"
+              y2="-13.63636363636364"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-23.33333333333333"
+              x2="12.0"
+              y2="-23.33333333333333"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-33.03030303030303"
+              x2="12.0"
+              y2="-33.03030303030303"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-42.72727272727273"
+              x2="12.0"
+              y2="-42.72727272727273"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-52.42424242424242"
+              x2="12.0"
+              y2="-52.42424242424242"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-62.121212121212125"
+              x2="12.0"
+              y2="-62.121212121212125"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-71.81818181818183"
+              x2="12.0"
+              y2="-71.81818181818183"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-81.5151515151515"
+              x2="12.0"
+              y2="-81.5151515151515"
+              >
+        </line>
+      
+    </g>
+    <g class="plx-grid-lines">
+      
+        <line
+              x1="10"
+              y1="-13.63636363636364"
+              x2="90"
+              y2="-13.63636363636364"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-23.33333333333333"
+              x2="90"
+              y2="-23.33333333333333"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-33.03030303030303"
+              x2="90"
+              y2="-33.03030303030303"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-42.72727272727273"
+              x2="90"
+              y2="-42.72727272727273"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-52.42424242424242"
+              x2="90"
+              y2="-52.42424242424242"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-62.121212121212125"
+              x2="90"
+              y2="-62.121212121212125"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-71.81818181818183"
+              x2="90"
+              y2="-71.81818181818183"
+              >
+        </line>
+      
+        <line
+              x1="10"
+              y1="-81.5151515151515"
+              x2="90"
+              y2="-81.5151515151515"
+              >
+        </line>
+      
+    </g>
+  </g>
+  <g class="plx-labels plx-y-labels">
+    
+      <text y="-13.63636363636364"
+            x="10"
+            transform="rotate(0.0, 5.0, -13.63636363636364)"
+            dx="-5.0">
+              0.10
+        </text>
+    
+      <text y="-23.33333333333333"
+            x="10"
+            transform="rotate(0.0, 5.0, -23.33333333333333)"
+            dx="-5.0">
+              0.12
+        </text>
+    
+      <text y="-33.03030303030303"
+            x="10"
+            transform="rotate(0.0, 5.0, -33.03030303030303)"
+            dx="-5.0">
+              0.14
+        </text>
+    
+      <text y="-42.72727272727273"
+            x="10"
+            transform="rotate(0.0, 5.0, -42.72727272727273)"
+            dx="-5.0">
+              0.16
+        </text>
+    
+      <text y="-52.42424242424242"
+            x="10"
+            transform="rotate(0.0, 5.0, -52.42424242424242)"
+            dx="-5.0">
+              0.18
+        </text>
+    
+      <text y="-62.121212121212125"
+            x="10"
+            transform="rotate(0.0, 5.0, -62.121212121212125)"
+            dx="-5.0">
+              0.20
+        </text>
+    
+      <text y="-71.81818181818183"
+            x="10"
+            transform="rotate(0.0, 5.0, -71.81818181818183)"
+            dx="-5.0">
+              0.22
+        </text>
+    
+      <text y="-81.5151515151515"
+            x="10"
+            transform="rotate(0.0, 5.0, -81.5151515151515)"
+            dx="-5.0">
+              0.24
+        </text>
+    
+    <text y="-40.0"
+          x="5.0"
+          class="label-title">
+      
+    </text>
+  </g>
+
+  <!-- Data -->
+  <g class="plx-data">
+  
+    <g class="plx-dataset-0" data-setname="plx-data-0">
+      <polyline class="plx-data-line"
+                points="
+                  
+                    13.636363636363637,-13.63636363636364
+                  
+                    36.24695327490535,-86.36363636363636
+                  
+                    56.40979100762329,-37.878787878787875
+                  
+                    86.36363636363636,-13.63636363636364
+                  
+                  "/>
+
+      
+        
+          <circle class="plx-data-point "
+                  cx="13.636363636363637"
+                  cy="-13.63636363636364"
+                  r="0.75"
+                  data-x-value="2019-05-20 05:04:12.836Z"
+                  data-y-value="0.1"
+                  ></circle>
+        
+      
+        
+          <circle class="plx-data-point "
+                  cx="36.24695327490535"
+                  cy="-86.36363636363636"
+                  r="0.75"
+                  data-x-value="2019-05-20 05:13:17.836Z"
+                  data-y-value="0.25"
+                  ></circle>
+        
+      
+        
+          <circle class="plx-data-point "
+                  cx="56.40979100762329"
+                  cy="-37.878787878787875"
+                  r="0.75"
+                  data-x-value="2019-05-20 05:21:23.836Z"
+                  data-y-value="0.15"
+                  ></circle>
+        
+      
+        
+          <circle class="plx-data-point "
+                  cx="86.36363636363636"
+                  cy="-13.63636363636364"
+                  r="0.75"
+                  data-x-value="2019-05-20 05:33:25.836Z"
+                  data-y-value="0.1"
+                  ></circle>
+        
+      
+    </g>
+  
+  </g>
+</svg>
+
+
+
+</body>
+</html>
