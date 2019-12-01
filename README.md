@@ -1,27 +1,28 @@
 # Plotex
 
-Pure Elixir library for producing simple plots. It's useful for producing streaming SVG graphs with the new Phoenix LiveView library. It could readily be used for other frameworks like Scenic. 
+Pure Elixir library for producing simple plots time-series plots. Currently it only supports SVG which can be used Phoenix static or LiveView pages. 
 
-Warning, alpha status! It works, but is still very rough in many areas. However, it implements the fundamentals for plotting data. 
-
-See units tests for examples of producing SVG graphs. 
+See units tests for more examples of producing SVG graphs. The SVG can be styled using CSS. 
 
 ## Changes
 
 - v0.1.0 has basic plotting functionality included 
 - v0.1.1 has support for NaiveDateTime (easier to convert to user local time on the fly)
 - v0.1.1 added hex package 
+- v0.2.0 refactored some of the options 
+- v0.2.1 added optional support for :cldr_datetime in addition to :calendar for datetime
+- v0.2.2 fixed multi-graph support, added test `output-dual.html`
 
 ## Next Features 
 
-- The API and handline of the plot gutters need to be polished, including better support for changing aspect ratios 
+- The API and handline of the plot gutters need to be polished
+- Better better support for changing aspect ratios 
+- Legends
 - Add introspective abilities
-- Add tests and verify multiple plots can be handled
-- Make hex package 
 
 ### Features 
 
-Supports creating axis and scaling for both numeric (floats) and DateTime series from Elixir Streams. All scaling and sizing can be modified, though the config API is still a work in progress. The graph generation is designed to be modular. There's a simple SVG output module in only about ~150 lines of code which is intended to be fully customizable with CSS. 
+Supports creating axis and scaling for both numeric and DateTime/NaiveDateTime series from Elixir Streams or Enums. Scaling and sizing can be modified with CSS used for styling everything else including font sizes. Graph generation is designed to be modular. 
 
 ## Installation
 
