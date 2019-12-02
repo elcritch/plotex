@@ -20,14 +20,25 @@ defmodule Plotex do
   Generates a stream of the data points (ticks) for a given axis.
   """
   def generate_axis(%Axis{units: units} = axis) do
-    a = axis.limits.start
-    b = axis.limits.stop
 
-    unless a == nil || b == nil do
+    unless axis.limits.start == nil || axis.limits.stop == nil do
       %{data: data, basis: basis} = Plotex.Axis.Units.scale(units, axis.limits)
-      xrng = scale_data(data, axis)
+      # Logger.warn("TIME generate_axis: #{inspect(data |> Enum.to_list)}")
+      # Logger.warn("TIME generate_axis: limits: #{inspect(axis.limits)}")
+      # Logger.warn("TIME generate_axis: view: #{inspect(axis.view)}")
+      trng = scale_data(data, axis)
 
-      [data: Stream.zip(data, xrng), basis: basis]
+      # Logger.warn("TIME generate_axis: trng: #{inspect(trng |> Enum.to_list)}")
+      # Logger.warn("TIME generate_axis: range: #{inspect(axis.view)}")
+
+      ticks =
+        Stream.zip(data, trng)
+        # |> Stream.each(& Logger.warn("dt gen view: #{inspect &1}"))
+        |> Stream.filter(& elem(&1, 1) >= axis.view.start)
+        |> Stream.filter(& elem(&1, 1) <= axis.view.stop)
+        |> Enum.to_list
+
+      [data: ticks, basis: basis]
     else
       [data: [], basis: nil]
     end
@@ -36,9 +47,8 @@ defmodule Plotex do
   @doc """
   Returns a stream of scaled data points zipped with the original points.
   """
-  def scale_data(_data, %Axis{limits: %{start: start, stop: stop} } = _axis ) when is_nil(start) or is_nil(stop) do
-    []
-  end
+  def scale_data(_data, %Axis{limits: %{start: start, stop: stop} } = _axis )
+        when is_nil(start) or is_nil(stop), do: []
   def scale_data(data, %Axis{} = axis ) do
     # Logger.warn("SCALE_DATA: #{inspect axis}")
     m = ViewRange.diff( axis.view.stop, axis.view.start )
@@ -68,6 +78,7 @@ defmodule Plotex do
   and the Y limits of 0.1..0.4.
   """
   def limits(datasets, opts \\ []) do
+    # Logger.warn("LIMITS: #{inspect opts} ")
     proj = Keyword.get(opts, :projection, :cartesian)
     min_xrange = get_in(opts, [:xaxis, :view_min]) || ViewRange.empty
     min_yrange = get_in(opts, [:yaxis, :view_min]) || ViewRange.empty
@@ -132,17 +143,7 @@ defmodule Plotex do
 
     [data: xticks, basis: xbasis] = generate_axis(xaxis)
 
-    xticks =
-      xticks
-      |> Stream.filter(& elem(&1, 1) >= xaxis.view.start)
-      |> Stream.filter(& elem(&1, 1) <= xaxis.view.stop)
-      |> Enum.to_list
-
     [data: yticks, basis: ybasis] = generate_axis(yaxis)
-    yticks =
-      yticks
-      |> Stream.filter(& elem(&1, 1) >= yaxis.view.start )
-      |> Stream.filter(& elem(&1, 1) <= yaxis.view.stop )
 
     xaxis = xaxis |> Map.put(:basis, xbasis)
     yaxis = yaxis |> Map.put(:basis, ybasis)

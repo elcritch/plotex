@@ -35,6 +35,8 @@ defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.DateTime.Calendar 
             else
               {:ok, ViewRange.vals(v, :microsecond)}
             end
+          :microsecond ->
+              {:ok, ViewRange.vals(v, :microsecond)}
         end
 
       result

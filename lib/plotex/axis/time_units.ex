@@ -51,6 +51,7 @@ defmodule Plotex.Axis.Units.Time do
         ord when ord <= 7 -> :minute
         ord when ord <= 8 -> :second
         ord when ord <= 9 -> :millisecond
+        ord when ord <= 10 -> :microsecond
       end
   end
 
@@ -91,7 +92,8 @@ defmodule Plotex.Axis.Units.Time do
     idx =
       config.time_basis
       |> Enum.find_index(fn {_time_unit, {diff_val, _time_ord}} ->
-        delta >= diff_val && diff_val >= min_time_delta
+        # Logger.warn("OPT UNITS: #{inspect %{delta: delta, diff_val: diff_val, min_time_delta: min_time_delta}}")
+        delta >= diff_val || min_time_delta >= diff_val
       end)
 
     bcount = Enum.count(config.time_basis)
@@ -106,13 +108,15 @@ defmodule Plotex.Axis.Units.Time do
     optimize_units(amount - 1.0, config).basis_name
   end
 
-
   defp gets(dt, %{basis_name: _base_unit, val: _base_number, order: base_order}, config, field) do
     {_fn, {_fval, field_order}} = Enum.find(config.time_basis, fn xf -> field == elem(xf, 0) end)
 
     cond do
       base_order >= field_order ->
         dt[field]
+
+      field == :microsecond ->
+        {0, 0}
 
       true ->
         0
@@ -143,7 +147,7 @@ defmodule Plotex.Axis.Units.Time do
       minute: gets(dt, unit, config, :minute),
       month: gets(dt, unit, config, :month),
       second: gets(dt, unit, config, :second),
-      microsecond: {gets(dt, unit, config, :microsecond), 6},
+      microsecond: gets(dt, unit, config, :microsecond),
       calendar: dt.calendar,
       std_offset: dt.std_offset,
       time_zone: dt.time_zone,
@@ -162,7 +166,7 @@ defmodule Plotex.Axis.Units.Time do
       minute: gets(dt, unit, config, :minute),
       month: gets(dt, unit, config, :month),
       second: gets(dt, unit, config, :second),
-      microsecond: {gets(dt, unit, config, :microsecond), 6},
+      microsecond: gets(dt, unit, config, :microsecond),
       calendar: dt.calendar,
       year: dt.year,
     }
@@ -173,6 +177,7 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Time do
   alias Plotex.ViewRange
   alias Plotex.Axis.Units
 
+  require Logger
   # def time_scale(data, config \\ []) do
   #   {dt_a, dt_b} = date_range_from(data)
   #   time_scale(dt_a, dt_b, config)
@@ -183,19 +188,24 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Time do
     dt_start = Units.Time.clone(dt_a, basis, config)
 
     basis_count = diff_seconds / unit_val
-    stride = round(basis_count / config.ticks )
+    stride = case round(basis_count / config.ticks ) do 0 -> 1; v -> v end
 
+    # Logger.warn("config: #{inspect(config, pretty: true)}")
     # Logger.warn("time_stride: #{inspect(stride)}")
+    # Logger.warn("dt_a: #{inspect(dt_a)}")
+    # Logger.warn("dt_b: #{inspect(dt_b)}")
+    # Logger.warn("dt_start: #{inspect(dt_start)}")
 
     rng =
       0..1_000_000_000
       |> Stream.map(fn i ->
-        # Logger.warn("#{inspect(dt_start)}")
-        # Logger.warn("#{inspect({i, unit_val, i * unit_val})}")
+        # Logger.warn("TIME SCALE: #{inspect %{dt_start: dt_start, i: i, unit_val: unit_val, sec: round(i * unit_val)}} ")
         Units.Time.dt_add(dt_start, round(i * unit_val), :second)
       end)
       |> Stream.take_every(stride)
+      # |> Stream.each(& Logger.warn("dt gen: #{inspect &1}"))
       |> Stream.take_while(fn dt -> Units.Time.dt_compare(dt, dt_b) == :lt end)
+      |> Enum.to_list()
 
     %{data: rng, basis: basis}
   end
