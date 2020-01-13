@@ -9,12 +9,17 @@ defmodule Plotex do
 
   TODO
   """
-  defstruct [:config, :xticks, :yticks, :datasets, :datasets]
+  defstruct [:config, :xticks, :yticks, :datasets]
+
+  @type data_types :: number | DateTime.t() | NaiveDateTime.t()
+  @type data_item :: Stream.t( data_types ) | Enum.t( data_types )
+  @type data_pair :: { data_item, data_item }
+  @type data :: Stream.t( data_pair ) | Enum.t( data_pair )
 
   @type t :: %Plotex{config: Plotex.Config.t(),
-                      xticks: Enumerable.t(),
-                      yticks: Enumerable.t(),
-                      datasets: Enumerable.t()}
+                     xticks: Enumerable.t(),
+                     yticks: Enumerable.t(),
+                     datasets: Enumerable.t()}
 
   @doc """
   Generates a stream of the data points (ticks) for a given axis.
@@ -121,7 +126,7 @@ defmodule Plotex do
   Create a Plotex struct for given datasets and configuration. Will load and scan data
   for all input datasets.
   """
-  @spec plot([ [{number, number}] ], nil | keyword | map) :: Plotex.t()
+  @spec plot( Plotex.data(), Keyword.t() ) :: Plotex.t()
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets, opts)
 
