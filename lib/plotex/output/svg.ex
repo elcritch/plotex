@@ -258,7 +258,7 @@ defmodule Plotex.Output.Svg do
         <%= for {dataset, idx} <- @datasets do %>
           <g class="plx-dataset-<%= idx %>" data-setname="plx-data-<%= idx %>">
             <polyline class="plx-data-line"
-                      points=" <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %> <%= xp %>,-<%= yp %><% end %> "
+                      points=" <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %> <%= float(xp) %>,-<%= float(yp) %><% end %> "
                       marker-start="url(#marker-<%= idx %>)"
                       marker-mid="url(#marker-<%= idx %>)"
                       marker-end="url(#marker-<%= idx %>)" />
@@ -268,4 +268,6 @@ defmodule Plotex.Output.Svg do
       </svg>
     """
   end
+
+  defp float(f), do: :erlang.float_to_binary(f, [decimals: 4])
 end
