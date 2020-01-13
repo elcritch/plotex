@@ -269,5 +269,5 @@ defmodule Plotex.Output.Svg do
     """
   end
 
-  defp float(f), do: :erlang.float_to_binary(f, [decimals: 4])
+  defp float(f), do: :erlang.float_to_binary(f, [decimals: 3])
 end
