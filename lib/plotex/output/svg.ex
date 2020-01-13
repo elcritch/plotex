@@ -93,16 +93,66 @@ defmodule Plotex.Output.Svg do
       |> Map.from_struct()
       |> Map.put(:opts, opts)
       |> Map.put(:ds, 1.5)
+      |> Map.put(:ds, 1.5)
 
     ~E"""
-        <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewbox="0 -100 <%= @opts.width %> <%= @opts.height %>"
-            <%= for {attr, val} <- @opts.svg_attrs do %> <%= raw ~s{#{attr}="#{val}"} %> <% end %> >
-          <title class="plx-title"><%= @config.title %></title>
+        <%= for {attr, val} <- @opts.svg_attrs do %> <%= raw ~s{#{attr}="#{val}"} %> <% end %> >
+        <title class="plx-title"><%= @config.title %></title>
 
-          <%= for item <- @opts.custom_svg do %>
-            <%= item %>
-          <% end %>
+        <%= for item <- @opts.custom_svg do %>
+          <%= item %>
+        <% end %>
+
+        <defs>
+          <%= for {dataset, idx} <- @datasets do %>
+
+            <%= case Options.data(@opts,idx).shape do %>
+
+              <% :circle -> %>
+                <!-- simple dot marker definition -->
+                <marker id="marker-<%= idx %>" viewBox="0 0 <%= 2 * Options.data(@opts, idx).width %> <%= 2 * Options.data(@opts, idx).width %>"
+                        refX="<%= Options.data(@opts, idx).width %>" refY="<%= Options.data(@opts, idx).width %>"
+                        markerWidth="<%= Options.data(@opts, idx).width %>" markerHeight="<%= Options.data(@opts, idx).width %>">
+                  <circle class="plx-data-point "
+                          cx="<%= Options.data(@opts, idx).width %>"
+                          cy="<%= Options.data(@opts, idx).width %>"
+                          r="<%= Options.data(@opts, idx).width %>"
+                          />
+                </marker>
+
+              <% :arrow -> %>
+                <!-- arrowhead marker definition -->
+                <marker id="marker-<%= idx %>" viewBox="0 0 <%= 2 * Options.data(@opts, idx).width %> <%= 2 * Options.data(@opts, idx).height %>"
+                        refX="<%= Options.data(@opts, idx).width %>" refY="<%= Options.data(@opts, idx).height %>"
+                        markerWidth="<%= Options.data(@opts, idx).width %>" markerHeight="<%= Options.data(@opts, idx).height %>"
+                        orient="auto-start-reverse">
+                  <path d="M 0 0 L <%= Options.data(@opts, idx).width %> <%= Options.data(@opts, idx).width/2 %> L 0 <%= Options.data(@opts, idx).width %> z" />
+                  <rect class="plx-data-point "
+                          x="<%= Options.data(@opts, idx).width %>"
+                          y="<%= Options.data(@opts, idx).height %>"
+                          width="<%= Options.data(@opts, idx).width %>"
+                          height="<%= Options.data(@opts, idx).height %>"
+                          />
+                </marker>
+
+              <% _rect_default -> %>
+                <!-- simple dot marker definition -->
+                <marker id="marker-<%= idx %>" viewBox="0 0 <%= 2 * Options.data(@opts, idx).width %> <%= 2 * Options.data(@opts, idx).height %>"
+                        refX="<%= Options.data(@opts, idx).width %>" refY="<%= Options.data(@opts, idx).height %>"
+                        markerWidth="<%= Options.data(@opts, idx).width %>" markerHeight="<%= Options.data(@opts, idx).height %>">
+                  <rect class="plx-data-point "
+                          x="<%= Options.data(@opts, idx).width/2 %>"
+                          y="<%= Options.data(@opts, idx).height/2 %>"
+                          width="<%= Options.data(@opts, idx).width %>"
+                          height="<%= Options.data(@opts, idx).height %>"
+                          />
+                </marker>
+              <% end %>
+
+            <% end %>
+        </defs>
 
         <!-- X Axis -->
         <g class="plx-grid plx-x-axis ">
@@ -208,33 +258,14 @@ defmodule Plotex.Output.Svg do
         <%= for {dataset, idx} <- @datasets do %>
           <g class="plx-dataset-<%= idx %>" data-setname="plx-data-<%= idx %>">
             <polyline class="plx-data-line"
-                      points=" <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %> <%= xp %>,-<%= yp %><% end %> "/>
-
-            <%= for {{xl, xp}, {yl, yp}} <- dataset do %>
-              <%= case Options.data(@opts,idx).shape do %>
-              <% :circle -> %>
-                <circle class="plx-data-point "
-                        cx="<%= xp %>"
-                        cy="-<%= yp %>"
-                        r="<%= Options.data(@opts, idx).width / 2.0 %>"
-                        data-x-value="<%= xl %>"
-                        data-y-value="<%= yl %>"
-                        ></circle>
-              <% _rect_default -> %>
-                <rect class="plx-data-point "
-                      x="<%= xp - Options.data(@opts, idx).width / 2  %>"
-                      y="<%= yp - Options.data(@opts, idx).height / 2  %>"
-                      data-x-value="<%= xl %>"
-                      data-y-value="<%= yl %>"
-                      width="<%= Options.data(@opts, idx).width %>"
-                      height="<%= Options.data(@opts, idx).height %>"
-                      ></rect>
-              <% end %>
-            <% end %>
+                      points=" <%= for {{_xl, xp}, {_yl, yp}} <- dataset do %> <%= xp %>,-<%= yp %><% end %> "
+                      marker-start="url(#marker-<%= idx %>)"
+                      marker-mid="url(#marker-<%= idx %>)"
+                      marker-end="url(#marker-<%= idx %>)" />
           </g>
         <% end %>
         </g>
       </svg>
-      """
+    """
   end
 end
