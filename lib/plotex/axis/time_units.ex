@@ -42,6 +42,8 @@ defmodule Plotex.Axis.Units.Time do
 
   defstruct time_basis: @default_time_basis, ticks: 10, min_basis: :microsecond
 
+  @type t :: %__MODULE__{ time_basis: atom(), ticks: number(), min_basis: atom() }
+
   def display_epoch(order) do
       case order do
         ord when ord <= 2 -> :year
