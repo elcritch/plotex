@@ -6,6 +6,7 @@ See units tests for more examples of producing SVG graphs. The SVG can be styled
 
 ## Changes
 
+- v0.3.0 switch SVG generation to use markers -- should significantly reduce bandwith and svg elements
 - v0.2.2 fixed multi-graph support, added test `output-dual.html`
 - v0.2.1 added optional support for :cldr_datetime in addition to :calendar for datetime
 - v0.2.0 refactored some of the options 

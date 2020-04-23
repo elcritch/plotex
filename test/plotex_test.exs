@@ -105,6 +105,18 @@ defmodule PlotexTest do
                 plt,
                 %Options{
                   xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 }},
+                  default_data: %Options.Data{
+                    shape: :rect,
+                    width: 3.0,
+                    height: 3.0,
+                  },
+                  data: %{
+                    0 => %Options.Data{
+                      shape: :circle,
+                      width: 1.5,
+                      height: 1.5
+                    }
+                  },
                 }
             ) |> Phoenix.HTML.safe_to_string()
 
