@@ -17,6 +17,7 @@ defmodule Plotex.Output.Svg do
         .plx-graph {
           height: 500px;
           width: 800px;
+          stroke-width: 1.0;
         }
         .plx-graph .plx-grid {
           stroke: #ccc;
