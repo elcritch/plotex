@@ -1,8 +1,8 @@
-defmodule Plotex.Output.Formatter.DateTime.Calendar do
+defmodule Plotex.Output.Formatter.Calendar do
   defstruct [:year, :month, :day, :hour, :minute, :second, :millisecond]
 end
 
-defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.DateTime.Calendar do
+defimpl Plotex.Output.Formatter, for: Plotex.Output.Formatter.Calendar do
   alias Plotex.Axis.Units
   alias Plotex.ViewRange
   require Logger

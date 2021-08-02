@@ -123,7 +123,7 @@ defmodule Plotex do
     case opts[:kind] do
       nil -> %Plotex.Output.Formatter.NumericDefault{}
       :numeric -> %Plotex.Output.Formatter.NumericDefault{}
-      :datetime -> %Plotex.Output.Formatter.DateTime.Calendar{}
+      :datetime -> %Plotex.Output.Formatter.Calendar{}
     end
   end
 
@@ -151,7 +151,7 @@ defmodule Plotex do
       units: struct(opts[:yaxis][:units] || std_units(opts[:yaxis]) || %Axis.Units.Numeric{}),
       formatter:
         struct(
-          opts[:yaxis][:formatter] || std_fmt(opts[:yaxis]) || %Formatter.DateTime.Calendar{}
+          opts[:yaxis][:formatter] || std_fmt(opts[:yaxis]) || %Formatter.Calendar{}
         ),
       view: %ViewRange{start: 10, stop: (opts[:yaxis][:width] || 100) - 10}
     }
