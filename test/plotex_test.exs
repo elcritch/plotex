@@ -297,7 +297,7 @@ defmodule PlotexTest do
       ~U[2019-05-20T05:04:12.200Z],
     ]
 
-    ydata = [0.1, 0.25]
+    ydata = [0.1, 0.25, 0.33]
 
     plt =
       Plotex.plot(
@@ -324,7 +324,8 @@ defmodule PlotexTest do
   test "svg naivedatetime micros min_basis plot" do
     xdata = [
       ~U[2019-05-20T05:04:12.000Z],
-      ~U[2019-05-20T05:04:12.100Z]
+      ~U[2019-05-20T05:04:12.100Z],
+      ~U[2019-05-20T05:04:12.200Z]
     ]
 
     ydata = [0.1, 0.25, 0.15, 0.1]
