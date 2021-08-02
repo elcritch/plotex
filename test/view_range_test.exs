@@ -15,6 +15,4 @@ defmodule ViewRangeTest do
     assert xrng == %Plotex.ViewRange{projection: :cartesian, start: 0.85, stop: 4.15}
     assert yrng == %Plotex.ViewRange{projection: :cartesian, start: 0.083, stop: 0.457}
   end
-
-
 end

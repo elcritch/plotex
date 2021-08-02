@@ -11,7 +11,7 @@ defmodule Plotex.TimeUnitsTest do
     dt_b = DateTime.from_iso8601("2019-05-20T05:05:00.836Z") |> elem(1)
 
     %{basis_name: unit_name, val: unit_val, order: _unit_ord, diff: delta} =
-      Plotex.Axis.Units.Time.units_for(dt_a, dt_b, %{ @config | ticks: 3})
+      Plotex.Axis.Units.Time.units_for(dt_a, dt_b, %{@config | ticks: 3})
 
     assert delta == 300
     assert unit_name == :minute
@@ -23,7 +23,8 @@ defmodule Plotex.TimeUnitsTest do
     dt_b = DateTime.from_iso8601("2019-05-20T05:00:00.836Z") |> elem(1)
 
     %{basis_name: unit_name, val: unit_val, order: _unit_ord, diff: delta} =
-        Plotex.Axis.Units.Time.units_for(dt_a, dt_b, %{ @config | ticks: 3})
+      Plotex.Axis.Units.Time.units_for(dt_a, dt_b, %{@config | ticks: 3})
+
     assert delta == 300
     assert unit_name == :minute
     assert unit_val == 60
@@ -46,7 +47,7 @@ defmodule Plotex.TimeUnitsTest do
     dt_a = DateTime.from_iso8601("2019-05-20T05:04:10.836Z") |> elem(1)
     dt_b = DateTime.from_iso8601("2019-05-20T05:15:00.836Z") |> elem(1)
 
-    scale = Plotex.Axis.Units.scale(%{ @config | ticks: 4}, %ViewRange{start: dt_a, stop: dt_b})
+    scale = Plotex.Axis.Units.scale(%{@config | ticks: 4}, %ViewRange{start: dt_a, stop: dt_b})
     scale! = scale[:data] |> Enum.take(30)
 
     # for i <- scale! do Logger.warn("#{inspect(i)}") end
@@ -63,7 +64,7 @@ defmodule Plotex.TimeUnitsTest do
     scale! = scale[:data] |> Enum.take(30)
 
     # for i <- scale! do
-      # Logger.warn("#{inspect(i)}")
+    # Logger.warn("#{inspect(i)}")
     # end
 
     assert length(scale!) == 14

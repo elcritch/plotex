@@ -12,20 +12,21 @@ defmodule Plotex do
   defstruct [:config, :xticks, :yticks, :datasets]
 
   @type data_types :: number | DateTime.t() | NaiveDateTime.t()
-  @type data_item :: Stream.t( data_types ) | Enum.t( data_types )
-  @type data_pair :: { data_item, data_item }
-  @type data :: Stream.t( data_pair ) | Enum.t( data_pair )
+  @type data_item :: Stream.t(data_types) | Enum.t(data_types)
+  @type data_pair :: {data_item, data_item}
+  @type data :: Stream.t(data_pair) | Enum.t(data_pair)
 
-  @type t :: %Plotex{config: Plotex.Config.t(),
-                     xticks: Enumerable.t(),
-                     yticks: Enumerable.t(),
-                     datasets: Enumerable.t()}
+  @type t :: %Plotex{
+          config: Plotex.Config.t(),
+          xticks: Enumerable.t(),
+          yticks: Enumerable.t(),
+          datasets: Enumerable.t()
+        }
 
   @doc """
   Generates a stream of the data points (ticks) for a given axis.
   """
   def generate_axis(%Axis{units: units} = axis) do
-
     unless axis.limits.start == nil || axis.limits.stop == nil do
       %{data: data, basis: basis} = Plotex.Axis.Units.scale(units, axis.limits)
       # Logger.warn("TIME generate_axis: #{inspect(data |> Enum.to_list)}")
@@ -39,9 +40,9 @@ defmodule Plotex do
       ticks =
         Stream.zip(data, trng)
         # |> Stream.each(& Logger.warn("dt gen view: #{inspect &1}"))
-        |> Stream.filter(& elem(&1, 1) >= axis.view.start)
-        |> Stream.filter(& elem(&1, 1) <= axis.view.stop)
-        |> Enum.to_list
+        |> Stream.filter(&(elem(&1, 1) >= axis.view.start))
+        |> Stream.filter(&(elem(&1, 1) <= axis.view.stop))
+        |> Enum.to_list()
 
       [data: ticks, basis: basis]
     else
@@ -52,24 +53,27 @@ defmodule Plotex do
   @doc """
   Returns a stream of scaled data points zipped with the original points.
   """
-  def scale_data(_data, %Axis{limits: %{start: start, stop: stop} } = _axis )
-        when is_nil(start) or is_nil(stop), do: []
-  def scale_data(data, %Axis{} = axis ) do
+  def scale_data(_data, %Axis{limits: %{start: start, stop: stop}} = _axis)
+      when is_nil(start) or is_nil(stop),
+      do: []
+
+  def scale_data(data, %Axis{} = axis) do
     # Logger.warn("SCALE_DATA: #{inspect axis}")
-    m = ViewRange.diff( axis.view.stop, axis.view.start )
-          / ViewRange.diff( axis.limits.stop, axis.limits.start )
+    m =
+      ViewRange.diff(axis.view.stop, axis.view.start) /
+        ViewRange.diff(axis.limits.stop, axis.limits.start)
+
     b = axis.view.start |> ViewRange.to_val()
     x! = axis.limits.start |> ViewRange.to_val()
 
     data
-    |> Stream.map(fn x -> m*(ViewRange.to_val(x)-x!) + b  end)
+    |> Stream.map(fn x -> m * (ViewRange.to_val(x) - x!) + b end)
   end
 
   @doc """
   Returns of scaled data for both X & Y coordinates for a given {X,Y} dataset.
   """
-  def plot_data({xdata, ydata}, %Axis{} = xaxis, %Axis{} = yaxis ) do
-
+  def plot_data({xdata, ydata}, %Axis{} = xaxis, %Axis{} = yaxis) do
     xrng = scale_data(xdata, xaxis)
     yrng = scale_data(ydata, yaxis)
 
@@ -85,8 +89,8 @@ defmodule Plotex do
   def limits(datasets, opts \\ []) do
     # Logger.warn("LIMITS: #{inspect opts} ")
     proj = Keyword.get(opts, :projection, :cartesian)
-    min_xrange = get_in(opts, [:xaxis, :view_min]) || ViewRange.empty
-    min_yrange = get_in(opts, [:yaxis, :view_min]) || ViewRange.empty
+    min_xrange = get_in(opts, [:xaxis, :view_min]) || ViewRange.empty()
+    min_yrange = get_in(opts, [:yaxis, :view_min]) || ViewRange.empty()
 
     {xl, yl} =
       for {xdata, ydata} <- datasets, reduce: {min_xrange, min_yrange} do
@@ -114,6 +118,7 @@ defmodule Plotex do
       :datetime -> %Axis.Units.Time{}
     end
   end
+
   def std_fmt(opts) do
     case opts[:kind] do
       nil -> %Plotex.Output.Formatter.NumericDefault{}
@@ -126,7 +131,7 @@ defmodule Plotex do
   Create a Plotex struct for given datasets and configuration. Will load and scan data
   for all input datasets.
   """
-  @spec plot( Plotex.data(), Keyword.t() ) :: Plotex.t()
+  @spec plot(Plotex.data(), Keyword.t()) :: Plotex.t()
   def plot(datasets, opts \\ []) do
     {xlim, ylim} = limits(datasets, opts)
 
@@ -136,13 +141,18 @@ defmodule Plotex do
     xaxis = %Axis{
       limits: xlim,
       units: struct(opts[:xaxis][:units] || std_units(opts[:xaxis]) || %Axis.Units.Numeric{}),
-      formatter: struct(opts[:xaxis][:formatter] || std_fmt(opts[:xaxis]) || %Formatter.NumericDefault{}),
+      formatter:
+        struct(opts[:xaxis][:formatter] || std_fmt(opts[:xaxis]) || %Formatter.NumericDefault{}),
       view: %ViewRange{start: 10, stop: (opts[:xaxis][:width] || 100) - 10}
     }
+
     yaxis = %Axis{
       limits: ylim,
       units: struct(opts[:yaxis][:units] || std_units(opts[:yaxis]) || %Axis.Units.Numeric{}),
-      formatter: struct(opts[:yaxis][:formatter] || std_fmt(opts[:yaxis]) || %Formatter.DateTime.Calendar{}),
+      formatter:
+        struct(
+          opts[:yaxis][:formatter] || std_fmt(opts[:yaxis]) || %Formatter.DateTime.Calendar{}
+        ),
       view: %ViewRange{start: 10, stop: (opts[:yaxis][:width] || 100) - 10}
     }
 
@@ -158,7 +168,7 @@ defmodule Plotex do
 
     config = %Plotex.Config{
       xaxis: xaxis,
-      yaxis: yaxis,
+      yaxis: yaxis
     }
 
     # Logger.warn("xticks: #{inspect xticks  |> Enum.to_list()}")
@@ -172,10 +182,6 @@ defmodule Plotex do
 
     # Logger.warn  "datasets! => #{inspect datasets! |> Enum.at(0) |> elem(0) |> Enum.to_list()}"
 
-    %Plotex{config: config,
-      xticks: xticks,
-      yticks: yticks,
-      datasets: datasets!}
+    %Plotex{config: config, xticks: xticks, yticks: yticks, datasets: datasets!}
   end
-
 end

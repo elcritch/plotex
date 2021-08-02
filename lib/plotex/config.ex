@@ -9,5 +9,5 @@ defmodule Plotex.Config do
             yaxis: %Axis{},
             title: "Plot"
 
-  @type t :: %Plotex.Config{xaxis: map, yaxis: map, title: String.t() }
+  @type t :: %Plotex.Config{xaxis: map, yaxis: map, title: String.t()}
 end

@@ -2,9 +2,9 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :tzdata, :autoupdate, :disabled
+# config :tzdata, :autoupdate, :disabled
 
-config :ex_cldr, default_locale: "en", json_library: Jason, default_backend: Plotex.Cldr
+# config :ex_cldr, default_locale: "en", json_library: Jason, default_backend: Plotex.Cldr
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this

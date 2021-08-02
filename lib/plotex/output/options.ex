@@ -1,5 +1,4 @@
 defmodule Plotex.Output.Options.Item do
-
   defstruct size: 2.0,
             offset: 5.0,
             rotate: 0.0
@@ -28,11 +27,11 @@ defmodule Plotex.Output.Options do
 
   @default_svg_attrs %{
     :preserveAspectRatio => "none",
-    :class => "plx-graph",
+    :class => "plx-graph"
   }
 
-  defstruct xaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
-            yaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
+  defstruct xaxis: %Options.Axis{label: %Options.Item{offset: 5.0}},
+            yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}},
             width: 100,
             height: 100,
             svg_attrs: @default_svg_attrs,
@@ -52,12 +51,10 @@ defmodule Plotex.Output.Options do
       case axis.kind do
         :numeric ->
           %Formatter.NumericDefault{}
+
         :datetime ->
           %Formatter.DateTime.Calendar{}
-        :cldr_default ->
-          %Formatter.DateTime.Cldr{}
       end
     end
   end
-
 end

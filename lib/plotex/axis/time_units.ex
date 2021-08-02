@@ -1,9 +1,7 @@
-
 defmodule Plotex.Axis.Units.Time.Item do
   defstruct [:basis_name, :val, :order, :diff]
-  @type t :: %__MODULE__{basis_name: atom, val: number, order: number, diff: number }
+  @type t :: %__MODULE__{basis_name: atom, val: number, order: number, diff: number}
 end
-
 
 defmodule Plotex.Axis.Units.Time do
   require Logger
@@ -42,19 +40,19 @@ defmodule Plotex.Axis.Units.Time do
 
   defstruct time_basis: @default_time_basis, ticks: 10, min_basis: :microsecond
 
-  @type t :: %__MODULE__{ time_basis: atom(), ticks: number(), min_basis: atom() }
+  @type t :: %__MODULE__{time_basis: atom(), ticks: number(), min_basis: atom()}
 
   def display_epoch(order) do
-      case order do
-        ord when ord <= 2 -> :year
-        ord when ord <= 4 -> :month
-        ord when ord <= 5 -> :day
-        ord when ord <= 6 -> :hour
-        ord when ord <= 7 -> :minute
-        ord when ord <= 8 -> :second
-        ord when ord <= 9 -> :millisecond
-        ord when ord <= 10 -> :microsecond
-      end
+    case order do
+      ord when ord <= 2 -> :year
+      ord when ord <= 4 -> :month
+      ord when ord <= 5 -> :day
+      ord when ord <= 6 -> :hour
+      ord when ord <= 7 -> :minute
+      ord when ord <= 8 -> :second
+      ord when ord <= 9 -> :millisecond
+      ord when ord <= 10 -> :microsecond
+    end
   end
 
   @doc """
@@ -66,12 +64,12 @@ defmodule Plotex.Axis.Units.Time do
     |> abs()
     |> optimize_units(config)
   end
+
   def units_for(%NaiveDateTime{} = dt_a, %NaiveDateTime{} = dt_b, config) do
     NaiveDateTime.diff(dt_a, dt_b)
     |> abs()
     |> optimize_units(config)
   end
-
 
   @spec date_range_from(Enumerable.t()) :: {DateTime.t(), DateTime.t()}
   def date_range_from(data) do
@@ -103,7 +101,12 @@ defmodule Plotex.Axis.Units.Time do
     {basis_name, {basis_val, basis_order}} =
       config.time_basis |> Enum.at(idx |> max(0) |> min(bcount - 1))
 
-    %__MODULE__.Item{basis_name: basis_name, val: basis_val, order: basis_order, diff: diff_seconds}
+    %__MODULE__.Item{
+      basis_name: basis_name,
+      val: basis_val,
+      order: basis_order,
+      diff: diff_seconds
+    }
   end
 
   def next_smaller_unit({_name, amount}, config) do
@@ -126,19 +129,20 @@ defmodule Plotex.Axis.Units.Time do
   end
 
   def dt_add(%DateTime{} = dt_start, val, units) do
-      DateTime.add(dt_start, val, units)
+    DateTime.add(dt_start, val, units)
   end
+
   def dt_add(%NaiveDateTime{} = dt_start, val, units) do
-      NaiveDateTime.add(dt_start, val, units)
+    NaiveDateTime.add(dt_start, val, units)
   end
 
   def dt_compare(%DateTime{} = dt_a, %DateTime{} = dt_b) do
-      DateTime.compare(dt_a, dt_b)
-  end
-  def dt_compare(%NaiveDateTime{} = dt_a, %NaiveDateTime{} = dt_b) do
-      NaiveDateTime.compare(dt_a, dt_b)
+    DateTime.compare(dt_a, dt_b)
   end
 
+  def dt_compare(%NaiveDateTime{} = dt_a, %NaiveDateTime{} = dt_b) do
+    NaiveDateTime.compare(dt_a, dt_b)
+  end
 
   def clone(%DateTime{} = dt, unit, config) do
     dt = dt |> Map.from_struct()
@@ -170,7 +174,7 @@ defmodule Plotex.Axis.Units.Time do
       second: gets(dt, unit, config, :second),
       microsecond: gets(dt, unit, config, :microsecond),
       calendar: dt.calendar,
-      year: dt.year,
+      year: dt.year
     }
   end
 end
@@ -190,7 +194,12 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Time do
     dt_start = Units.Time.clone(dt_a, basis, config)
 
     basis_count = diff_seconds / unit_val
-    stride = case round(basis_count / config.ticks ) do 0 -> 1; v -> v end
+
+    stride =
+      case round(basis_count / config.ticks) do
+        0 -> 1
+        v -> v
+      end
 
     # Logger.warn("config: #{inspect(config, pretty: true)}")
     # Logger.warn("time_stride: #{inspect(stride)}")

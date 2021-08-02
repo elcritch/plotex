@@ -7,9 +7,9 @@ defmodule Plotex.ViewRange do
             stop: 90,
             projection: :cartesian
 
-  @type t :: %Plotex.ViewRange{start: number(), stop: number(), projection: :cartesian | :polar }
+  @type t :: %Plotex.ViewRange{start: number(), stop: number(), projection: :cartesian | :polar}
 
-  def new({a,b}, proj \\ :cartesian) do
+  def new({a, b}, proj \\ :cartesian) do
     %ViewRange{start: a, stop: b, projection: proj}
   end
 
@@ -31,6 +31,7 @@ defmodule Plotex.ViewRange do
 
   def min_max(%{start: nil, stop: nil}, b), do: b
   def min_max(a, %{start: nil, stop: nil}), do: a
+
   def min_max(va, vb) do
     start! = Enum.min_by([va.start, vb.start], &convert/1)
     stop! = Enum.max_by([va.stop, vb.stop], &convert/1)
@@ -55,19 +56,28 @@ defmodule Plotex.ViewRange do
   def diff(b, a), do: b - a
 
   def pad(%ViewRange{start: start, stop: stop, projection: proj}, _opts)
-              when is_nil(start) or is_nil(stop) do
+      when is_nil(start) or is_nil(stop) do
     %ViewRange{start: nil, stop: nil, projection: proj}
   end
+
   def pad(%ViewRange{start: %DateTime{} = start, stop: %DateTime{} = stop} = vr, opts) do
     amount = Keyword.get(opts, :padding, 0.05) * ViewRange.dist(vr)
-    %ViewRange{start: start |> DateTime.add(-round(amount), :nanosecond),
-               stop: stop |> DateTime.add(round(amount), :nanosecond)}
+
+    %ViewRange{
+      start: start |> DateTime.add(-round(amount), :nanosecond),
+      stop: stop |> DateTime.add(round(amount), :nanosecond)
+    }
   end
+
   def pad(%ViewRange{start: %NaiveDateTime{} = start, stop: %NaiveDateTime{} = stop} = vr, opts) do
     amount = Keyword.get(opts, :padding, 0.05) * ViewRange.dist(vr)
-    %ViewRange{start: start |> NaiveDateTime.add(-round(amount), :nanosecond),
-               stop: stop |> NaiveDateTime.add(round(amount), :nanosecond)}
+
+    %ViewRange{
+      start: start |> NaiveDateTime.add(-round(amount), :nanosecond),
+      stop: stop |> NaiveDateTime.add(round(amount), :nanosecond)
+    }
   end
+
   def pad(%ViewRange{start: start, stop: stop, projection: proj} = vr, opts) do
     amount = Keyword.get(opts, :padding, 0.05) * ViewRange.dist(vr)
     %ViewRange{start: start - amount, stop: stop + amount, projection: proj}
@@ -79,9 +89,10 @@ defmodule Plotex.ViewRange do
 
   @type datetime :: DateTime.t() | NaiveDateTime.t()
 
-  @spec dist( { datetime(), datetime() } | {nil, nil} | ViewRange.t() ) :: number
+  @spec dist({datetime(), datetime()} | {nil, nil} | ViewRange.t()) :: number
   def dist({%{} = start, %{} = stop}) do
     diff = to_val(stop) - to_val(start)
+
     if diff != 0 do
       diff
     else
@@ -100,5 +111,4 @@ defmodule Plotex.ViewRange do
   def dist(%ViewRange{} = range) do
     dist({range.start, range.stop})
   end
-
 end

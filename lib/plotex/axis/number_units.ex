@@ -16,7 +16,13 @@ defmodule Plotex.Axis.Units.Numeric do
     xdiff = abs(x_a - x_b)
 
     xmin = 1.0e-9
-    xmin = if xmax/1.0e3 < xmin do xmax/1.0e3 else xmin end
+
+    xmin =
+      if xmax / 1.0e3 < xmin do
+        xmax / 1.0e3
+      else
+        xmin
+      end
 
     xdiff! =
       if xdiff < xmin do
@@ -57,9 +63,9 @@ defmodule Plotex.Axis.Units.Numeric do
   @doc """
   Calculate the base-10 rank of a number.
   """
-  def rank(0, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
+  def rank(0, _b), do: raise(%ArgumentError{message: "scale must needs to be non-zero"})
   # def rank(0.1, _b), do: raise %ArgumentError{message: "scale must needs to be non-zero"}
-  def rank(x, b), do: trunc(:math.log10( (x+1.0e-8) / b) - 1)
+  def rank(x, b), do: trunc(:math.log10((x + 1.0e-8) / b) - 1)
 end
 
 defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Numeric do
@@ -77,9 +83,9 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Numeric do
 
     x_start =
       unless x_a < 0.0 do
-        trunc( x_a / basis ) * basis
+        trunc(x_a / basis) * basis
       else
-        trunc( x_a / basis ) * basis - basis
+        trunc(x_a / basis) * basis - basis
       end
 
     # x_start = x_a - :math.fmod(x_a, basis)
@@ -93,5 +99,4 @@ defimpl Plotex.Axis.Units, for: Plotex.Axis.Units.Numeric do
 
     %{data: rng, basis: basis}
   end
-
 end

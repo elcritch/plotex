@@ -1,7 +1,3 @@
-defmodule Plotex.Cldr do
-  use Cldr, locales: ["en"], providers: [Cldr.Number, Cldr.Calendar, Cldr.DateTime]
-end
-
 defmodule PlotexTest do
   require Logger
   use ExUnit.Case
@@ -14,10 +10,9 @@ defmodule PlotexTest do
 
   doctest Plotex
 
-
   test "simple plot" do
-    xdata = 1..4 |> Enum.map(& &1 )
-    ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
+    xdata = 1..4 |> Enum.map(& &1)
+    ydata = xdata |> Enum.map(&:math.sin(&1 / 10.0))
 
     plt = Plotex.plot([{xdata, ydata}])
     assert plt != nil
@@ -42,8 +37,28 @@ defmodule PlotexTest do
 
     # Logger.info("xticks: #{inspect plt.xticks}")
     # Logger.info("yticks: #{inspect plt.yticks |> Enum.to_list()}")
-    assert plt.xticks == [{0.0, 13.636363636363637}, {0.5, 22.727272727272727}, {1.0, 31.818181818181817}, {1.5, 40.90909090909091}, {2.0, 50.0}, {2.5, 59.090909090909086}, {3.0, 68.18181818181819}, {3.5, 77.27272727272727}, {4.0, 86.36363636363636}]
-    assert Enum.to_list(plt.yticks) == [{0.1, 13.63636363636364}, {0.12, 23.33333333333333}, {0.14, 33.03030303030303}, {0.16, 42.72727272727273}, {0.18, 52.42424242424242}, {0.2, 62.121212121212125}, {0.22000000000000003, 71.81818181818183}, {0.24, 81.5151515151515}]
+    assert plt.xticks == [
+             {0.0, 13.636363636363637},
+             {0.5, 22.727272727272727},
+             {1.0, 31.818181818181817},
+             {1.5, 40.90909090909091},
+             {2.0, 50.0},
+             {2.5, 59.090909090909086},
+             {3.0, 68.18181818181819},
+             {3.5, 77.27272727272727},
+             {4.0, 86.36363636363636}
+           ]
+
+    assert Enum.to_list(plt.yticks) == [
+             {0.1, 13.63636363636364},
+             {0.12, 23.33333333333333},
+             {0.14, 33.03030303030303},
+             {0.16, 42.72727272727273},
+             {0.18, 52.42424242424242},
+             {0.2, 62.121212121212125},
+             {0.22000000000000003, 71.81818181818183},
+             {0.24, 81.5151515151515}
+           ]
 
     # for xt <- plt.xticks do
     #   Logger.info("xtick: #{inspect xt}")
@@ -58,7 +73,6 @@ defmodule PlotexTest do
     #     Logger.info("data: #{inspect {x,y}}")
     #   end
     # end
-
   end
 
   test "svg plot" do
@@ -68,12 +82,14 @@ defmodule PlotexTest do
     plt = Plotex.plot([{xdata, ydata}], xkind: :numeric, xaxis: [padding: 0.05])
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
-    svg_str = Plotex.Output.Svg.generate(
-                plt,
-                %Options{
-                  xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 }},
-                }
-            ) |> Phoenix.HTML.safe_to_string()
+    svg_str =
+      Plotex.Output.Svg.generate(
+        plt,
+        %Options{
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35}}
+        }
+      )
+      |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 
@@ -89,6 +105,7 @@ defmodule PlotexTest do
     </body>
     </html>
     """
+
     File.write!("examples/output.html", html_str)
   end
 
@@ -98,27 +115,31 @@ defmodule PlotexTest do
     xdata2 = [0.0, 1.5, 3.5, 4.5]
     ydata2 = [0.2, 0.25, 0.10, 0.05]
 
-    plt = Plotex.plot([{xdata1, ydata1}, {xdata2, ydata2}], xkind: :numeric, xaxis: [padding: 0.05])
+    plt =
+      Plotex.plot([{xdata1, ydata1}, {xdata2, ydata2}], xkind: :numeric, xaxis: [padding: 0.05])
+
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
-    svg_str = Plotex.Output.Svg.generate(
-                plt,
-                %Options{
-                  xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 }},
-                  default_data: %Options.Data{
-                    shape: :rect,
-                    width: 3.0,
-                    height: 3.0,
-                  },
-                  data: %{
-                    0 => %Options.Data{
-                      shape: :circle,
-                      width: 1.5,
-                      height: 1.5
-                    }
-                  },
-                }
-            ) |> Phoenix.HTML.safe_to_string()
+    svg_str =
+      Plotex.Output.Svg.generate(
+        plt,
+        %Options{
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35}},
+          default_data: %Options.Data{
+            shape: :rect,
+            width: 3.0,
+            height: 3.0
+          },
+          data: %{
+            0 => %Options.Data{
+              shape: :circle,
+              width: 1.5,
+              height: 1.5
+            }
+          }
+        }
+      )
+      |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 
@@ -134,6 +155,7 @@ defmodule PlotexTest do
     </body>
     </html>
     """
+
     File.write!("examples/output-dual.html", html_str)
   end
 
@@ -142,16 +164,17 @@ defmodule PlotexTest do
       ~U[2019-05-20T05:04:12.836Z],
       ~U[2019-05-20T05:04:17.836Z],
       ~U[2019-05-20T05:04:23.836Z],
-      ~U[2019-05-20T05:04:25.836Z],
+      ~U[2019-05-20T05:04:25.836Z]
     ]
+
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotex.plot(
-      [{xdata, ydata}],
-      xaxis: [kind: :datetime,
-              ticks: 5,
-              padding: 0.05]
-    )
+    plt =
+      Plotex.plot(
+        [{xdata, ydata}],
+        xaxis: [kind: :datetime, ticks: 5, padding: 0.05]
+      )
+
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
@@ -159,10 +182,11 @@ defmodule PlotexTest do
         plt,
         %Options{
           # xaxis: [rotate: 35, offset: '2.5em' ],
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 } },
-          yaxis: %Options.Axis{ label: %Options.Item{ } },
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35}},
+          yaxis: %Options.Axis{label: %Options.Item{}}
         }
-      ) |> Phoenix.HTML.safe_to_string()
+      )
+      |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 
@@ -178,6 +202,7 @@ defmodule PlotexTest do
     </body>
     </html>
     """
+
     File.write!("examples/output-dt.html", html_str)
   end
 
@@ -186,18 +211,22 @@ defmodule PlotexTest do
       ~U[2019-05-20T05:04:12.836Z],
       ~U[2019-05-20T05:04:17.836Z],
       ~U[2019-05-20T05:04:23.836Z],
-      ~U[2019-05-20T05:04:25.836Z],
+      ~U[2019-05-20T05:04:25.836Z]
     ]
+
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotex.plot(
-      [{xdata, ydata}],
-      xaxis: [
-              units: %Axis.Units.Time{},
-              formatter: Formatter.DateTime.Cldr,
-              ticks: 5,
-              padding: 0.05]
-    )
+    plt =
+      Plotex.plot(
+        [{xdata, ydata}],
+        xaxis: [
+          units: %Axis.Units.Time{},
+          formatter: Plotex.Output.Formatter.DateTime.Calendar,
+          ticks: 5,
+          padding: 0.05
+        ]
+      )
+
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
@@ -205,10 +234,11 @@ defmodule PlotexTest do
         plt,
         %Options{
           # xaxis: [rotate: 35, offset: '2.5em' ],
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 } },
-          yaxis: %Options.Axis{ label: %Options.Item{ } },
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35}},
+          yaxis: %Options.Axis{label: %Options.Item{}}
         }
-      ) |> Phoenix.HTML.safe_to_string()
+      )
+      |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 
@@ -224,6 +254,7 @@ defmodule PlotexTest do
     </body>
     </html>
     """
+
     File.write!("examples/output-dt-cldr.html", html_str)
   end
 
@@ -232,17 +263,21 @@ defmodule PlotexTest do
       ~U[2019-05-20T05:04:12.836Z],
       ~U[2019-05-20T05:04:17.836Z],
       ~U[2019-05-20T05:04:23.836Z],
-      ~U[2019-05-20T05:04:25.836Z],
+      ~U[2019-05-20T05:04:25.836Z]
     ]
+
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotex.plot(
-      [{xdata, ydata}],
-      xaxis: [
-              kind: :datetime,
-              units: %Units.Time{ticks: 5},
-              padding: 0.05]
-    )
+    plt =
+      Plotex.plot(
+        [{xdata, ydata}],
+        xaxis: [
+          kind: :datetime,
+          units: %Units.Time{ticks: 5},
+          padding: 0.05
+        ]
+      )
+
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
@@ -250,10 +285,11 @@ defmodule PlotexTest do
         plt,
         %Options{
           # xaxis: [rotate: 35, offset: '2.5em' ],
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35 } },
-          yaxis: %Options.Axis{ },
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35}},
+          yaxis: %Options.Axis{}
         }
-      ) |> Phoenix.HTML.safe_to_string()
+      )
+      |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 
@@ -269,6 +305,7 @@ defmodule PlotexTest do
     </body>
     </html>
     """
+
     File.write!("examples/output-dt-hours.html", html_str)
   end
 
@@ -277,26 +314,28 @@ defmodule PlotexTest do
       ~U[2019-05-20T05:04:12.836Z],
       ~U[2019-05-20T05:04:17.836Z],
       ~U[2019-05-20T05:04:23.836Z],
-      ~U[2019-05-20T05:04:25.836Z],
+      ~U[2019-05-20T05:04:25.836Z]
     ]
+
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotex.plot(
-      [{xdata, ydata}],
-      xaxis: [kind: :datetime,
-              ticks: 5,
-              padding: 0.05]
-    )
+    plt =
+      Plotex.plot(
+        [{xdata, ydata}],
+        xaxis: [kind: :datetime, ticks: 5, padding: 0.05]
+      )
+
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
       Plotex.Output.Svg.generate(
         plt,
         %Options{
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: 5.0 } },
-          yaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35, offset: 5.0}},
+          yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}}
         }
-      ) |> Phoenix.HTML.safe_to_string()
+      )
+      |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 
@@ -306,26 +345,28 @@ defmodule PlotexTest do
   test "svg naivedatetime micros plot" do
     xdata = [
       ~U[2019-05-20T05:04:12.000Z],
-      ~U[2019-05-20T05:04:12.100Z],
+      ~U[2019-05-20T05:04:12.100Z]
     ]
+
     ydata = [0.1, 0.25]
 
-    plt = Plotex.plot(
-      [{xdata, ydata}],
-      xaxis: [kind: :datetime,
-              ticks: 5,
-              padding: 0.05]
-    )
+    plt =
+      Plotex.plot(
+        [{xdata, ydata}],
+        xaxis: [kind: :datetime, ticks: 5, padding: 0.05]
+      )
+
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
       Plotex.Output.Svg.generate(
         plt,
         %Options{
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: 5.0 } },
-          yaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35, offset: 5.0}},
+          yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}}
         }
-      ) |> Phoenix.HTML.safe_to_string()
+      )
+      |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
     File.write!("examples/output-naive-dt-micros.html", svg_wrap(svg_str))
@@ -334,27 +375,33 @@ defmodule PlotexTest do
   test "svg naivedatetime micros min_basis plot" do
     xdata = [
       ~U[2019-05-20T05:04:12.000Z],
-      ~U[2019-05-20T05:04:12.100Z],
+      ~U[2019-05-20T05:04:12.100Z]
     ]
+
     ydata = [0.1, 0.25, 0.15, 0.1]
 
-    plt = Plotex.plot(
-      [{xdata, ydata}],
-      xaxis: [kind: :datetime,
-              units: %Axis.Units.Time{ticks: 4, min_basis: :minute},
-              ticks: 5,
-              padding: 0.05]
-    )
+    plt =
+      Plotex.plot(
+        [{xdata, ydata}],
+        xaxis: [
+          kind: :datetime,
+          units: %Axis.Units.Time{ticks: 4, min_basis: :minute},
+          ticks: 5,
+          padding: 0.05
+        ]
+      )
+
     # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
     svg_str =
       Plotex.Output.Svg.generate(
         plt,
         %Options{
-          xaxis: %Options.Axis{ label: %Options.Item{ rotate: 35, offset: 5.0 } },
-          yaxis: %Options.Axis{ label: %Options.Item{ offset: 5.0 } },
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35, offset: 5.0}},
+          yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}}
         }
-      ) |> Phoenix.HTML.safe_to_string()
+      )
+      |> Phoenix.HTML.safe_to_string()
 
     # Logger.warn("SVG: \n#{svg_str}")
 

@@ -8,9 +8,8 @@ defmodule AxisTest do
   doctest Plotex
 
   test "data plots" do
-
-    xdata = 1..4 |> Enum.map(& &1 )
-    ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
+    xdata = 1..4 |> Enum.map(& &1)
+    ydata = xdata |> Enum.map(&:math.sin(&1 / 10.0))
 
     xlims = Plotex.Axis.Units.Numeric.range_from(xdata) |> Plotex.ViewRange.new(:horiz)
     xaxis = %Axis{limits: xlims}
@@ -28,14 +27,20 @@ defmodule AxisTest do
 
     xs = [{1, 10.0}, {2, 36.66666666666667}, {3, 63.333333333333336}, {4, 90.0}]
     assert xs == Enum.to_list(xrng)
-    ys = [{0.09983341664682815, 10.0}, {0.19866933079506122, 37.30415995856187}, {0.29552020666133955, 64.05993825604988}, {0.3894183423086505, 90.0}]
+
+    ys = [
+      {0.09983341664682815, 10.0},
+      {0.19866933079506122, 37.30415995856187},
+      {0.29552020666133955, 64.05993825604988},
+      {0.3894183423086505, 90.0}
+    ]
+
     assert ys == Enum.to_list(yrng)
   end
 
   test "plot limits" do
-
-    xdata = 1..4 |> Enum.map(& &1 )
-    ydata = xdata |> Enum.map(& :math.sin(&1/10.0) )
+    xdata = 1..4 |> Enum.map(& &1)
+    ydata = xdata |> Enum.map(&:math.sin(&1 / 10.0))
 
     # xlims = Plotex.Axis.Units.Numeric.range_from(xdata) |> Plotex.ViewRange.new()
     # xaxis = %Axis{limits: xlims}
@@ -46,8 +51,11 @@ defmodule AxisTest do
     {xrng, yrng} = Plotex.limits([{xdata, ydata}])
 
     assert xrng == %Plotex.ViewRange{projection: :cartesian, start: 0.85, stop: 4.15}
-    assert yrng == %Plotex.ViewRange{projection: :cartesian, start: 0.08535417036373703, stop: 0.40389758859174163}
+
+    assert yrng == %Plotex.ViewRange{
+             projection: :cartesian,
+             start: 0.08535417036373703,
+             stop: 0.40389758859174163
+           }
   end
-
-
 end
