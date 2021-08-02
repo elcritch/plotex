@@ -206,58 +206,6 @@ defmodule PlotexTest do
     File.write!("examples/output-dt.html", html_str)
   end
 
-  test "svg cldr-datetime (short) plot" do
-    xdata = [
-      ~U[2019-05-20T05:04:12.836Z],
-      ~U[2019-05-20T05:04:17.836Z],
-      ~U[2019-05-20T05:04:23.836Z],
-      ~U[2019-05-20T05:04:25.836Z]
-    ]
-
-    ydata = [0.1, 0.25, 0.15, 0.1]
-
-    plt =
-      Plotex.plot(
-        [{xdata, ydata}],
-        xaxis: [
-          units: %Axis.Units.Time{},
-          formatter: Plotex.Output.Formatter.DateTime.Calendar,
-          ticks: 5,
-          padding: 0.05
-        ]
-      )
-
-    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
-
-    svg_str =
-      Plotex.Output.Svg.generate(
-        plt,
-        %Options{
-          # xaxis: [rotate: 35, offset: '2.5em' ],
-          xaxis: %Options.Axis{label: %Options.Item{rotate: 35}},
-          yaxis: %Options.Axis{label: %Options.Item{}}
-        }
-      )
-      |> Phoenix.HTML.safe_to_string()
-
-    # Logger.warn("SVG: \n#{svg_str}")
-
-    html_str = """
-    <html>
-    <head>
-      <style>
-        #{Plotex.Output.Svg.default_css()}
-      </style>
-    </head>
-    <body>
-      #{svg_str}
-    </body>
-    </html>
-    """
-
-    File.write!("examples/output-dt-cldr.html", html_str)
-  end
-
   test "svg datetime (hours) plot" do
     xdata = [
       ~U[2019-05-20T05:04:12.836Z],
@@ -337,7 +285,7 @@ defmodule PlotexTest do
       )
       |> Phoenix.HTML.safe_to_string()
 
-    # Logger.warn("SVG: \n#{svg_str}")
+    Logger.warn("SVG: examples/output-naive-dt-hours.html => \n#{svg_str}")
 
     File.write!("examples/output-naive-dt-hours.html", svg_wrap(svg_str))
   end
@@ -345,7 +293,8 @@ defmodule PlotexTest do
   test "svg naivedatetime micros plot" do
     xdata = [
       ~U[2019-05-20T05:04:12.000Z],
-      ~U[2019-05-20T05:04:12.100Z]
+      ~U[2019-05-20T05:04:12.100Z],
+      ~U[2019-05-20T05:04:12.200Z],
     ]
 
     ydata = [0.1, 0.25]
