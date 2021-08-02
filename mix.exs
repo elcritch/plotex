@@ -40,7 +40,7 @@ defmodule Plotex.MixProject do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:phoenix_html, "~> 2.13", optional: true},
-      {:calendar, "~> 1.0", optional: true},
+      {:calendar, "~> 1.0"},
       {:phoenix_live_view, "~> 0.4", optional: true}
     ]
   end
