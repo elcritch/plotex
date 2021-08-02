@@ -44,6 +44,8 @@ end
 
 defmodule ExampleSVG.Graph
 
+  alias Plotex.Output.Options
+
   @doc " Create Plotex Graph "
   def plot() do
       xdata = [
@@ -59,6 +61,7 @@ defmodule ExampleSVG.Graph
         [ graph_data ],
         xaxis: [kind: :datetime, ticks: 5, padding: 0.05] 
       )
+      
       Logger.warn("svg plotex cfg: #{inspect plt, pretty: true}")
       
       plt
@@ -67,8 +70,18 @@ defmodule ExampleSVG.Graph
   def render(socket) do
       plt = plot()
       
+      # These options aren't really documented, but 
+      # the plotex_test.ex contains most of the basic
+      # usages. 
       svg_str =
-        Plotex.Output.Svg.generate(plt, xaxis: [rotate: 35, dy: '2.5em'], yaxis: [])
+        plt |>
+        Plotex.Output.Svg.generate(
+          %Options{
+            xaxis: %Options.Axis{
+            label: %Options.Item{rotate: 35, dy: '2.5em'}},
+          width: 140,
+          height: 105
+        })
         |> Phoenix.HTML.safe_to_string()
 
       assigns = [svg_str: svg_str]
