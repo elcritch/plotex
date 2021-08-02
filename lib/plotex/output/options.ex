@@ -53,7 +53,7 @@ defmodule Plotex.Output.Options do
           %Formatter.NumericDefault{}
 
         :datetime ->
-          %Formatter.DateTime.Calendar{}
+          %Formatter.Calendar{}
       end
     end
   end
