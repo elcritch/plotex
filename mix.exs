@@ -4,7 +4,7 @@ defmodule Plotex.MixProject do
   def project do
     [
       app: :plotex,
-      version: "0.4.0",
+      version: "0.5.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -39,9 +39,10 @@ defmodule Plotex.MixProject do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:phoenix_html, "~> 2.13", optional: true},
+      {:phoenix_html, ">= 2.13.0"},
       {:calendar, "~> 1.0"},
-      {:phoenix_live_view, "~> 0.4", optional: true}
+      {:phoenix_html_helpers, "~> 1.0"},
+      {:phoenix_live_view, ">= 0.20.17"}
     ]
   end
 end
