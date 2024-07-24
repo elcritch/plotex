@@ -254,38 +254,37 @@ defmodule PlotexTest do
     File.write!("examples/output-dt-hours.html", html_str)
   end
 
-  # test "svg naivedatetime (hours) plot" do
-  #   xdata = [
-  #     ~U[2019-05-20T05:04:12.836Z],
-  #     ~U[2019-05-20T05:04:17.836Z],
-  #     ~U[2019-05-20T05:04:23.836Z],
-  #     ~U[2019-05-20T05:04:25.836Z]
-  #   ]
+  test "svg naivedatetime (hours) plot" do
+    xdata = [
+      ~U[2019-05-20T05:04:12.836Z],
+      ~U[2019-05-20T05:04:17.836Z],
+      ~U[2019-05-20T05:04:23.836Z],
+      ~U[2019-05-20T05:04:25.836Z]
+    ]
 
-  #   ydata = [0.1, 0.25, 0.15, 0.1]
+    ydata = [0.1, 0.25, 0.15, 0.1]
 
-  #   plt =
-  #     Plotex.plot(
-  #       [{xdata, ydata}],
-  #       xaxis: [kind: :datetime, ticks: 5, padding: 0.05]
-  #     )
+    plt =
+      Plotex.plot(
+        [{xdata, ydata}],
+        xaxis: [kind: :datetime, ticks: 5, padding: 0.05]
+      )
 
-  #   # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
+    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
-  #   svg_str =
-  #     Plotex.Output.Svg.generate(
-  #       plt,
-  #       %Options{
-  #         xaxis: %Options.Axis{label: %Options.Item{rotate: 35, offset: 5.0}},
-  #         yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}}
-  #       }
-  #     )
-  #     |> Phoenix.HTML.safe_to_string()
+    svg_str =
+      render_component(&Plotex.Output.Svg.generate/1,
+        plot: plt,
+        opts: %Options{
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35, offset: 5.0}},
+          yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}}
+        }
+      )
 
-  #   Logger.warn("SVG: examples/output-naive-dt-hours.html => \n#{svg_str}")
+    Logger.warn("SVG: examples/output-naive-dt-hours.html => \n#{svg_str}")
 
-  #   File.write!("examples/output-naive-dt-hours.html", svg_wrap(svg_str))
-  # end
+    File.write!("examples/output-naive-dt-hours.html", svg_wrap(svg_str))
+  end
 
   # test "svg naivedatetime micros plot" do
   #   xdata = [
