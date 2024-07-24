@@ -177,7 +177,7 @@ defmodule Plotex.Output.Svg do
                     x1={xp}
                     y1={-1 * @config.yaxis.view.start}
                     x2={xp}
-                    y2={-1 * @config.yaxis.view.start + @opts.xaxis.ticks.size}
+                    y2={-1 * (@config.yaxis.view.start + @opts.xaxis.ticks.size)}
                     >
               </line>
             <% end %>
