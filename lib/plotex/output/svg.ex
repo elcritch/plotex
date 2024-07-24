@@ -82,6 +82,9 @@ defmodule Plotex.Output.Svg do
   datapoints as either `rect` or `circle` type via `opts.data.type = :rect | :circle`.
 
   """
+  attr :opts, :map, required: true
+  attr :plot, Plotex, required: true
+
   attr :xaxis, :map, default: %Options.Axis{label: %Options.Item{offset: 5.0}}
   attr :yaxis, :map, default: %Options.Axis{label: %Options.Item{offset: 5.0}}
   attr :width, :float, default: 100.0
@@ -95,14 +98,14 @@ defmodule Plotex.Output.Svg do
 
 
   def generate(assigns) do
-  # def generate(%Plotex{} = plot, %Options{} = opts) do
 
     assigns =
       assigns
       |> assign(:xaxis, assigns.plot.config.xaxis)
       |> assign(:yaxis, assigns.plot.config.yaxis)
+      |> assign(:config, assigns.plot.config)
       |> assign(:xfmt, assigns.plot.config.xaxis.formatter)
-      |> assign(:yfmt, assigns.plo.config.yaxis.formatter)
+      |> assign(:yfmt, assigns.plot.config.yaxis.formatter)
 
     ~H"""
       <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -114,7 +117,7 @@ defmodule Plotex.Output.Svg do
         <%= render_slot(@custom_svg) %>
 
         <defs>
-          <%= for {_dataset, idx} <- @datasets do %>
+          <%= for {_dataset, idx} <- @plot.datasets do %>
 
             <%= case Options.data(@opts,idx).shape do %>
 
@@ -173,7 +176,7 @@ defmodule Plotex.Output.Svg do
           </g>
 
           <g class="plx-ticks">
-            <%= for {_xl, xp} <- @xticks do %>
+            <%= for {_xl, xp} <- @plot.xticks do %>
               <line
                     x1={xp}
                     y1={-1 * @config.yaxis.view.start}
@@ -184,7 +187,7 @@ defmodule Plotex.Output.Svg do
             <% end %>
           </g>
           <g class="plx-grid-lines">
-            <%= for {_xl, xp} <- @xticks do %>
+            <%= for {_xl, xp} <- @plot.xticks do %>
               <line
                     x1={xp}
                     y1={-1 * @config.yaxis.view.start}
@@ -197,7 +200,7 @@ defmodule Plotex.Output.Svg do
         </g>
 
         <g class="plx-labels plx-x-labels">
-          <%= for {xl, xp} <- @xticks do %>
+          <%= for {xl, xp} <- @plot.xticks do %>
             <text x={xp}
                   y={-1 * @config.yaxis.view.start}
                   transform={"rotate(#{ @opts.xaxis.label.rotate }, #{ xp }, -#{ @config.yaxis.view.start - @opts.xaxis.label.offset })"}
@@ -223,7 +226,7 @@ defmodule Plotex.Output.Svg do
           </g>
 
           <g class="plx-ticks">
-            <%= for {_yl, yp} <- @yticks do %>
+            <%= for {_yl, yp} <- @plot.yticks do %>
               <line
                     x1={@config.xaxis.view.start}
                     y1={-1 * yp}
@@ -234,7 +237,7 @@ defmodule Plotex.Output.Svg do
             <% end %>
           </g>
           <g class="plx-grid-lines">
-            <%= for {_yl, yp} <- @yticks do %>
+            <%= for {_yl, yp} <- @plot.yticks do %>
               <line
                     x1={@config.xaxis.view.start}
                     y1={-1 * yp}
@@ -246,7 +249,7 @@ defmodule Plotex.Output.Svg do
           </g>
         </g>
         <g class="plx-labels plx-y-labels">
-          <%= for {yl, yp} <- @yticks do %>
+          <%= for {yl, yp} <- @plot.yticks do %>
             <text y={-1 * yp}
                   x={@config.xaxis.view.start}
                   transform={"rotate(#{ @opts.yaxis.label.rotate }, #{ @config.xaxis.view.start - @opts.yaxis.label.offset }, -#{ yp })"}
@@ -263,7 +266,7 @@ defmodule Plotex.Output.Svg do
 
         <!-- Data -->
         <g class="plx-data">
-        <%= for {dataset, idx} <- @datasets do %>
+        <%= for {dataset, idx} <- @plot.datasets do %>
           <g class={"plx-dataset-#{ idx }"} data-setname={"plx-data-#{ idx }"}>
             <polyline class="plx-data-line"
                       points={ for {{_xl, xp}, {_yl, yp}} <- dataset, into: "", do: "#{float(xp)},-#{float(yp)}" }
