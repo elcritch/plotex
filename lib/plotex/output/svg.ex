@@ -85,13 +85,11 @@ defmodule Plotex.Output.Svg do
   attr :opts, :map, required: true
   attr :plot, Plotex, required: true
 
-  attr :xaxis, :map, default: %Options.Axis{label: %Options.Item{offset: 5.0}}
-  attr :yaxis, :map, default: %Options.Axis{label: %Options.Item{offset: 5.0}}
   attr :width, :float, default: 100.0
   attr :height, :float, default: 100.0
   attr :ds, :float, default: 1.5
-  attr :svg_attrs, :global, default: %{ :preserveAspectRatio => "none", :class => "plx-graph"
-  }
+  attr :config, Plotex.Config, default: nil
+  attr :svg_attrs, :global, default: %{ :preserveAspectRatio => "none", :class => "plx-graph" }
   attr :data, :map, default: %{}
   attr :default_data, :map, default: %Options.Data{}
   slot :custom_svg
@@ -101,9 +99,7 @@ defmodule Plotex.Output.Svg do
 
     assigns =
       assigns
-      |> assign(:xaxis, assigns.plot.config.xaxis)
-      |> assign(:yaxis, assigns.plot.config.yaxis)
-      |> assign(:config, assigns.plot.config)
+      |> assign(:config, assigns[:config] || assigns.plot.config)
       |> assign(:xfmt, assigns.plot.config.xaxis.formatter)
       |> assign(:yfmt, assigns.plot.config.yaxis.formatter)
 
@@ -205,7 +201,7 @@ defmodule Plotex.Output.Svg do
                   y={-1 * @config.yaxis.view.start}
                   transform={"rotate(#{ @opts.xaxis.label.rotate }, #{ xp }, -#{ @config.yaxis.view.start - @opts.xaxis.label.offset })"}
                   dy={@opts.xaxis.label.offset}>
-                <%= Formatter.output(@xfmt, @xaxis, xl) %>
+                <%= Formatter.output(@xfmt, @config.xaxis, xl) %>
             </text>
           <% end %>
           <text x={(@config.xaxis.view.stop - @config.xaxis.view.start)/2.0}
@@ -254,7 +250,7 @@ defmodule Plotex.Output.Svg do
                   x={@config.xaxis.view.start}
                   transform={"rotate(#{ @opts.yaxis.label.rotate }, #{ @config.xaxis.view.start - @opts.yaxis.label.offset }, -#{ yp })"}
                   dx={-1 * @opts.yaxis.label.offset}>
-                <%= Formatter.output(@yfmt, @yaxis, yl) %>
+                <%= Formatter.output(@yfmt, @config.yaxis, yl) %>
               </text>
           <% end %>
           <text y={-1 * (@config.yaxis.view.stop - @config.yaxis.view.start)/2.0}

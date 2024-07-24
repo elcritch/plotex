@@ -91,7 +91,7 @@ defmodule PlotexTest do
     svg_str =
       render_component(&Plotex.Output.Svg.generate/1, plot: plt, opts: options)
 
-    Logger.warning("SVG: \n#{svg_str}")
+    # Logger.warning("SVG: \n#{svg_str}")
 
     html_str = """
     <html>
