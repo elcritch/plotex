@@ -119,7 +119,7 @@ defmodule Plotex.Output.Svg do
 
               <% :circle -> %>
                 <!-- simple dot marker definition -->
-                <marker id={"marker-#{idx}"} viewBox={"0 0 {2 * Options.data(@opts, idx).width } {2 * Options.data(@opts, idx).width }"}
+                <marker id={"marker-#{idx}"} viewBox={"0 0 #{2 * Options.data(@opts, idx).width } #{2 * Options.data(@opts, idx).width }"}
                         refX={Options.data(@opts, idx).width} refY={Options.data(@opts, idx).width}
                         markerWidth={Options.data(@opts, idx).width} markerHeight={Options.data(@opts, idx).width}>
                   <circle class="plx-data-point "
@@ -265,7 +265,7 @@ defmodule Plotex.Output.Svg do
         <%= for {dataset, idx} <- @plot.datasets do %>
           <g class={"plx-dataset-#{ idx }"} data-setname={"plx-data-#{ idx }"}>
             <polyline class="plx-data-line"
-                      points={ for {{_xl, xp}, {_yl, yp}} <- dataset, into: "", do: "#{float(xp)},-#{float(yp)}" }
+                      points={ for {{_xl, xp}, {_yl, yp}} <- dataset, into: "", do: "#{float(xp)},-#{float(yp)} " }
                       marker-start={"url(#marker-#{ idx })"}
                       marker-mid={"url(#marker-#{ idx })"}
                       marker-end={"url(#marker-#{ idx })"} />
