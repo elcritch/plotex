@@ -82,28 +82,27 @@ defmodule Plotex.Output.Svg do
   datapoints as either `rect` or `circle` type via `opts.data.type = :rect | :circle`.
 
   """
-  def generate(%Plotex{} = plot, %Options{} = opts) do
-    xaxis = plot.config.xaxis
-    yaxis = plot.config.yaxis
-    xfmt = plot.config.xaxis.formatter
-    yfmt = plot.config.yaxis.formatter
+  attr :xaxis, :map, default: %Options.Axis{label: %Options.Item{offset: 5.0}}
+  attr :yaxis, :map, default: %Options.Axis{label: %Options.Item{offset: 5.0}}
+  attr :width, :float, default: 100.0
+  attr :height, :float, default: 100.0
+  attr :ds, :float, default: 1.5
+  attr :svg_attrs, :global, default: %{ :preserveAspectRatio => "none", :class => "plx-graph"
+  }
+  attr :data, :map, default: %{}
+  attr :default_data, :map, default: %Options.Data{}
+  slot :custom_svg
+
+
+  def generate(assigns) do
+  # def generate(%Plotex{} = plot, %Options{} = opts) do
 
     assigns =
-      plot
-      |> Map.from_struct()
-      |> Map.put(:opts, opts)
-      |> Map.put(:ds, 1.5)
-      |> Map.put(:ds, 1.5)
-
-    attr :xaxis, :map, default: %Options.Axis{label: %Options.Item{offset: 5.0}}
-    attr :yaxis, :map, default: %Options.Axis{label: %Options.Item{offset: 5.0}}
-    attr :width, :float, default: 100
-    attr :height, :float, default: 100
-    attr :svg_attrs, :global, default: %{ :preserveAspectRatio => "none", :class => "plx-graph"
-    }
-    attr :custom_svg, :global
-    attr :data, :map, default: %{}
-    attr :default_data, :map, default: %Options.Data{}
+      assigns
+      |> assign(:xaxis, assigns.plot.config.xaxis)
+      |> assign(:yaxis, assigns.plot.config.yaxis)
+      |> assign(:xfmt, assigns.plot.config.xaxis.formatter)
+      |> assign(:yfmt, assigns.plo.config.yaxis.formatter)
 
     ~H"""
       <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -112,12 +111,10 @@ defmodule Plotex.Output.Svg do
         >
         <title class="plx-title"><%= @config.title %></title>
 
-        <%= for item <- @opts.custom_svg do %>
-          <%= item %>
-        <% end %>
+        <%= render_slot(@custom_svg) %>
 
         <defs>
-          <%= for {dataset, idx} <- @datasets do %>
+          <%= for {_dataset, idx} <- @datasets do %>
 
             <%= case Options.data(@opts,idx).shape do %>
 
@@ -205,7 +202,7 @@ defmodule Plotex.Output.Svg do
                   y={-1 * @config.yaxis.view.start}
                   transform={"rotate(#{ @opts.xaxis.label.rotate }, #{ xp }, -#{ @config.yaxis.view.start - @opts.xaxis.label.offset })"}
                   dy={@opts.xaxis.label.offset}>
-                <%= Formatter.output(xfmt, xaxis, xl) %>
+                <%= Formatter.output(@xfmt, @xaxis, xl) %>
             </text>
           <% end %>
           <text x={(@config.xaxis.view.stop - @config.xaxis.view.start)/2.0}
@@ -254,7 +251,7 @@ defmodule Plotex.Output.Svg do
                   x={@config.xaxis.view.start}
                   transform={"rotate(#{ @opts.yaxis.label.rotate }, #{ @config.xaxis.view.start - @opts.yaxis.label.offset }, -#{ yp })"}
                   dx={-1 * @opts.yaxis.label.offset}>
-                <%= Formatter.output(yfmt, yaxis, yl) %>
+                <%= Formatter.output(@yfmt, @yaxis, yl) %>
               </text>
           <% end %>
           <text y={-1 * (@config.yaxis.view.stop - @config.yaxis.view.start)/2.0}
