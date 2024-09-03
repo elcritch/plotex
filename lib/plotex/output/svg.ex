@@ -109,6 +109,7 @@ defmodule Plotex.Output.Svg do
       |> assign(:config, assigns[:config] || assigns.plot.config)
       |> assign(:xfmt, assigns.plot.config.xaxis.formatter)
       |> assign(:yfmt, assigns.plot.config.yaxis.formatter)
+      |> assign(:datasets, assigns.plot.datasets |> Enum.to_list())
       |> assign_extras(:svg_attrs)
 
     ~H"""
@@ -121,7 +122,7 @@ defmodule Plotex.Output.Svg do
         <%= render_slot(@custom_svg) %>
 
         <defs>
-          <%= for {_dataset, idx} <- @plot.datasets do %>
+          <%= for {_dataset, idx} <- @datasets do %>
 
             <%= case Options.data(@opts,idx).shape do %>
 
@@ -270,7 +271,7 @@ defmodule Plotex.Output.Svg do
 
         <!-- Data -->
         <g class="plx-data">
-        <%= for {dataset, idx} <- @plot.datasets do %>
+        <%= for {dataset, idx} <- @datasets do %>
           <g class={"plx-dataset-#{ idx }"} data-setname={"plx-data-#{ idx }"}>
             <polyline class="plx-data-line"
                       points={ for {{_xl, xp}, {_yl, yp}} <- dataset, into: "", do: "#{float(xp)},-#{float(yp)} " }
