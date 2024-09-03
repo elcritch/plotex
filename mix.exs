@@ -4,7 +4,7 @@ defmodule Plotex.MixProject do
   def project do
     [
       app: :plotex,
-      version: "0.5.4",
+      version: "0.5.5",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
