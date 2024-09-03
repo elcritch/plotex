@@ -35,6 +35,7 @@ defmodule Plotex.Output.Svg do
         }
         .plx-labels {
           font-size: 3px;
+          fill: white;
         }
         .plx-labels .plx-x-labels {
           font-size: 1px;
@@ -43,7 +44,7 @@ defmodule Plotex.Output.Svg do
           font-size: 8px;
           font-weight: bold;
           text-transform: uppercase;
-          fill: black;
+          fill: white;
         }
         .plx-data .plx-data-point {
           fill: darkblue;
