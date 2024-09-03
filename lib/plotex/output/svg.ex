@@ -3,7 +3,8 @@ defmodule Plotex.Output.Svg do
   alias Plotex.Output.Options
   alias Plotex.Output.Formatter
 
-  use Phoenix.Component
+  use Phoenix.LiveComponent
+
 
   @doc """
   Default example CSS Styling.
