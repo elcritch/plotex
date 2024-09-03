@@ -86,17 +86,19 @@ defmodule Plotex.Output.Svg do
   datapoints as either `rect` or `circle` type via `opts.data.type = :rect | :circle`.
 
   """
-  attr :opts, :map, required: true
+  attr :opts, Plotex.Output.Options, required: true
   attr :plot, Plotex, required: true
-
-  attr :width, :float, default: 100.0
-  attr :height, :float, default: 100.0
-  attr :ds, :float, default: 1.5
   attr :config, Plotex.Config, default: nil
   attr :svg_attrs, :global, default: %{ :preserveAspectRatio => "none", :class => "plx-graph" }
-  attr :data, :map, default: %{}
-  attr :default_data, :map, default: %Options.Data{}
   slot :custom_svg
+
+  # TODO:
+  # attr :width, :float, default: 100.0
+  # attr :height, :float, default: 100.0
+  # attr :ds, :float, default: 1.5
+  # attr :data, :map, default: %{}
+  # attr :default_data, :map, default: %Options.Data{}
+
 
   def render(assigns) do
 
