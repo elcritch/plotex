@@ -108,11 +108,12 @@ defmodule Plotex.Output.Svg do
       |> assign(:config, assigns[:config] || assigns.plot.config)
       |> assign(:xfmt, assigns.plot.config.xaxis.formatter)
       |> assign(:yfmt, assigns.plot.config.yaxis.formatter)
+      |> assign_extras(:svg_attrs)
 
     ~H"""
       <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewbox={"0 -100 #{@opts.width} #{@opts.height} "}
-              {@svg_attrs}
+              {@extras}
         >
         <title class="plx-title"><%= @config.title %></title>
 
@@ -280,6 +281,15 @@ defmodule Plotex.Output.Svg do
         </g>
       </svg>
     """
+  end
+
+  defp assign_extras(assigns, name) do
+    extras =
+      assigns[name]
+      |> Map.reject(fn {_,v} -> is_map(v) end)
+      |> Phoenix.Component.assigns_to_attributes([:socket, :myself, :flash])
+
+    assigns |> Phoenix.Component.assign(:extras, extras)
   end
 
   defp float(f), do: :erlang.float_to_binary(f, decimals: 3)
