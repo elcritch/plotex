@@ -46,7 +46,7 @@ defmodule Plotex.Output.Svg do
           text-transform: uppercase;
           fill: white;
         }
-        .plx-data .plx-data-point {
+        .plx-data-point {
           fill: darkblue;
           stroke-width: 1.0;
         }
