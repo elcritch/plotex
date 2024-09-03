@@ -4,9 +4,9 @@ defmodule PlotexTest do
   alias Plotex.Axis
   alias Plotex.Axis.Units
   alias Plotex.Output.Options
-  alias Plotex.Output.Formatter
+  # alias Plotex.Output.Formatter
 
-  import Phoenix.LiveView.Helpers
+  # import Phoenix.LiveView.Helpers
   import Phoenix.LiveViewTest
 
   # @default_css

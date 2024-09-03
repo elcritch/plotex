@@ -58,6 +58,10 @@ defmodule Plotex.Output.Svg do
     """
   end
 
+  def generate(assigns) do
+    render(assigns)
+  end
+
   @doc """
   Primary function to generate SVG plots from a given Plotex structure. The SVG can be
   styled using standard CSS. Options include ability to set the tick rotation and offset.
@@ -94,8 +98,7 @@ defmodule Plotex.Output.Svg do
   attr :default_data, :map, default: %Options.Data{}
   slot :custom_svg
 
-
-  def generate(assigns) do
+  def render(assigns) do
 
     assigns =
       assigns
