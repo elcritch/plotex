@@ -128,7 +128,8 @@ defmodule Plotex.Output.Svg do
 
               <% :circle -> %>
                 <!-- simple dot marker definition -->
-                <marker id={"marker-#{idx}"} viewBox={"0 0 #{2 * Options.data(@opts, idx).width } #{2 * Options.data(@opts, idx).width }"}
+                <marker id={"marker-#{idx}"}
+                        viewBox={"0 0 #{2 * Options.data(@opts, idx).width } #{2 * Options.data(@opts, idx).width }"}
                         refX={Options.data(@opts, idx).width} refY={Options.data(@opts, idx).width}
                         markerWidth={Options.data(@opts, idx).width} markerHeight={Options.data(@opts, idx).width}>
                   <circle class="plx-data-point "
@@ -140,7 +141,8 @@ defmodule Plotex.Output.Svg do
 
               <% :arrow -> %>
                 <!-- arrowhead marker definition -->
-                <marker id={"marker-#{idx}"} viewBox={"0 0 #{2 * Options.data(@opts, idx).width} #{2 * Options.data(@opts, idx).height}"}
+                <marker id={"marker-#{idx}"}
+                        viewBox={"0 0 #{2 * Options.data(@opts, idx).width} #{2 * Options.data(@opts, idx).height}"}
                         refX={Options.data(@opts, idx).width} refY={Options.data(@opts, idx).height}
                         markerWidth={Options.data(@opts, idx).width} markerHeight={Options.data(@opts, idx).height}
                         orient="auto-start-reverse">
@@ -155,7 +157,8 @@ defmodule Plotex.Output.Svg do
 
               <% _rect_default -> %>
                 <!-- simple dot marker definition -->
-                <marker id={"marker-#{idx}"} viewBox={"0 0 #{2 * Options.data(@opts, idx).width} {2 * Options.data(@opts, idx).height}"}
+                <marker id={"marker-#{idx}"}
+                        viewBox={"0 0 #{2 * Options.data(@opts, idx).width} #{2 * Options.data(@opts, idx).height}"}
                         refX={Options.data(@opts, idx).width} refY={Options.data(@opts, idx).height}
                         markerWidth={Options.data(@opts, idx).width} markerHeight={Options.data(@opts, idx).height}>
                   <rect class="plx-data-point "
