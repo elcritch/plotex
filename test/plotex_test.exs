@@ -254,15 +254,15 @@ defmodule PlotexTest do
     File.write!("examples/output-dt-hours.html", html_str)
   end
 
-  test "svg naivedatetime (hours) plot" do
+  test "svg nativedatetime (hours) plot" do
     xdata = [
-      ~U[2019-05-20T05:04:12.836Z],
-      ~U[2019-05-20T05:04:17.836Z],
-      ~U[2019-05-20T05:04:23.836Z],
-      ~U[2019-05-20T05:04:25.836Z]
+      ~N[2019-05-20T05:04:12.836Z],
+      ~N[2019-05-20T05:04:17.836Z],
+      ~N[2019-05-20T05:04:23.836Z],
+      ~N[2019-05-20T05:05:27.836Z]
     ]
 
-    ydata = [0.1, 0.25, 0.15, 0.1]
+    ydata = [0.1, 0.13, 0.15, 0.1]
 
     plt =
       Plotex.plot(
@@ -283,7 +283,7 @@ defmodule PlotexTest do
 
     # Logger.warn("SVG: examples/output-naive-dt-hours.html => \n#{svg_str}")
 
-    File.write!("examples/output-naive-dt-hours.html", svg_wrap(svg_str))
+    File.write!("examples/output-native-dt-hours.html", svg_wrap(svg_str))
   end
 
   test "svg naivedatetime micros plot" do

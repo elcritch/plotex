@@ -1,0 +1,335 @@
+<html>
+<head>
+  <style>
+        .plx-labels {
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    .plx-graph {
+      height: 500px;
+      width: 800px;
+      stroke-width: 1.0;
+    }
+    .plx-graph .plx-grid {
+      stroke: #ccc;
+      stroke-dasharray: 0;
+      stroke-width: 1.0;
+    }
+    .plx-grid-lines {
+      stroke-width: 0.1;
+    }
+    .plx-ticks {
+      stroke: #ccc;
+      stroke-dasharray: 0;
+      stroke-width: 0.5;
+    }
+    .plx-labels {
+      font-size: 3px;
+    }
+    .plx-labels .plx-x-labels {
+      font-size: 1px;
+    }
+    .plx-label-title {
+      font-size: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+      fill: black;
+    }
+    .plx-data .plx-data-point {
+      fill: darkblue;
+      stroke-width: 1.0;
+    }
+    .plx-data .plx-data-line {
+      stroke: #0074d9;
+      stroke-width: 0.05em;
+      stroke-width: 0.05em;
+      stroke-linecap: round;
+      fill: none;
+    }
+
+  </style>
+</head>
+<body>
+  <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 -100 100 100 " class="plx-graph" preserveAspectRatio="none">
+    <title class="plx-title">Plot</title>
+
+    
+
+    <defs>
+      
+
+        
+            <!-- simple dot marker definition -->
+            <marker id="marker-0" viewBox="0 0 3.0 3.0" refX="1.5" refY="1.5" markerWidth="1.5" markerHeight="1.5">
+              <circle class="plx-data-point " cx="1.5" cy="1.5" r="1.5"></circle>
+            </marker>
+
+          
+
+        
+    </defs>
+
+    <!-- X Axis -->
+    <g class="plx-grid plx-x-axis ">
+      <g class="plx-border">
+        <line x1="10" x2="90" y1="-10" y2="-10">
+        </line>
+      </g>
+
+      <g class="plx-ticks">
+        
+          <line x1="17.674181818181818" y1="-10" x2="17.674181818181818" y2="-12.0">
+          </line>
+        
+          <line x1="25.431757575757572" y1="-10" x2="25.431757575757572" y2="-12.0">
+          </line>
+        
+          <line x1="33.18933333333333" y1="-10" x2="33.18933333333333" y2="-12.0">
+          </line>
+        
+          <line x1="40.94690909090909" y1="-10" x2="40.94690909090909" y2="-12.0">
+          </line>
+        
+          <line x1="48.704484848484846" y1="-10" x2="48.704484848484846" y2="-12.0">
+          </line>
+        
+          <line x1="56.462060606060604" y1="-10" x2="56.462060606060604" y2="-12.0">
+          </line>
+        
+          <line x1="64.21963636363637" y1="-10" x2="64.21963636363637" y2="-12.0">
+          </line>
+        
+          <line x1="71.97721212121212" y1="-10" x2="71.97721212121212" y2="-12.0">
+          </line>
+        
+          <line x1="79.73478787878787" y1="-10" x2="79.73478787878787" y2="-12.0">
+          </line>
+        
+          <line x1="87.49236363636363" y1="-10" x2="87.49236363636363" y2="-12.0">
+          </line>
+        
+      </g>
+      <g class="plx-grid-lines">
+        
+          <line x1="17.674181818181818" y1="-10" x2="17.674181818181818" y2="-90">
+          </line>
+        
+          <line x1="25.431757575757572" y1="-10" x2="25.431757575757572" y2="-90">
+          </line>
+        
+          <line x1="33.18933333333333" y1="-10" x2="33.18933333333333" y2="-90">
+          </line>
+        
+          <line x1="40.94690909090909" y1="-10" x2="40.94690909090909" y2="-90">
+          </line>
+        
+          <line x1="48.704484848484846" y1="-10" x2="48.704484848484846" y2="-90">
+          </line>
+        
+          <line x1="56.462060606060604" y1="-10" x2="56.462060606060604" y2="-90">
+          </line>
+        
+          <line x1="64.21963636363637" y1="-10" x2="64.21963636363637" y2="-90">
+          </line>
+        
+          <line x1="71.97721212121212" y1="-10" x2="71.97721212121212" y2="-90">
+          </line>
+        
+          <line x1="79.73478787878787" y1="-10" x2="79.73478787878787" y2="-90">
+          </line>
+        
+          <line x1="87.49236363636363" y1="-10" x2="87.49236363636363" y2="-90">
+          </line>
+        
+      </g>
+    </g>
+
+    <g class="plx-labels plx-x-labels">
+      
+        <text x="17.674181818181818" y="-10" transform="rotate(35, 17.674181818181818, -5.0)" dy="5.0">
+            05:04:17
+        </text>
+      
+        <text x="25.431757575757572" y="-10" transform="rotate(35, 25.431757575757572, -5.0)" dy="5.0">
+            05:04:25
+        </text>
+      
+        <text x="33.18933333333333" y="-10" transform="rotate(35, 33.18933333333333, -5.0)" dy="5.0">
+            05:04:33
+        </text>
+      
+        <text x="40.94690909090909" y="-10" transform="rotate(35, 40.94690909090909, -5.0)" dy="5.0">
+            05:04:41
+        </text>
+      
+        <text x="48.704484848484846" y="-10" transform="rotate(35, 48.704484848484846, -5.0)" dy="5.0">
+            05:04:49
+        </text>
+      
+        <text x="56.462060606060604" y="-10" transform="rotate(35, 56.462060606060604, -5.0)" dy="5.0">
+            05:04:57
+        </text>
+      
+        <text x="64.21963636363637" y="-10" transform="rotate(35, 64.21963636363637, -5.0)" dy="5.0">
+            05:05:05
+        </text>
+      
+        <text x="71.97721212121212" y="-10" transform="rotate(35, 71.97721212121212, -5.0)" dy="5.0">
+            05:05:13
+        </text>
+      
+        <text x="79.73478787878787" y="-10" transform="rotate(35, 79.73478787878787, -5.0)" dy="5.0">
+            05:05:21
+        </text>
+      
+        <text x="87.49236363636363" y="-10" transform="rotate(35, 87.49236363636363, -5.0)" dy="5.0">
+            05:05:29
+        </text>
+      
+      <text x="40.0" y="-5.0" class="label-title">
+        
+      </text>
+    </g>
+
+    <!-- Y Axis -->
+    <g class="plx-grid plx-y-axis">
+      <g class="plx-border">
+        <line x1="10" x2="10" y1="-10" y2="-90">
+        </line>
+      </g>
+
+      <g class="plx-ticks">
+        
+          <line x1="10" y1="-13.63636363636364" x2="12.0" y2="-13.63636363636364">
+          </line>
+        
+          <line x1="10" y1="-20.9090909090909" x2="12.0" y2="-20.9090909090909">
+          </line>
+        
+          <line x1="10" y1="-28.18181818181818" x2="12.0" y2="-28.18181818181818">
+          </line>
+        
+          <line x1="10" y1="-35.45454545454546" x2="12.0" y2="-35.45454545454546">
+          </line>
+        
+          <line x1="10" y1="-42.72727272727272" x2="12.0" y2="-42.72727272727272">
+          </line>
+        
+          <line x1="10" y1="-50.0" x2="12.0" y2="-50.0">
+          </line>
+        
+          <line x1="10" y1="-57.27272727272728" x2="12.0" y2="-57.27272727272728">
+          </line>
+        
+          <line x1="10" y1="-64.54545454545456" x2="12.0" y2="-64.54545454545456">
+          </line>
+        
+          <line x1="10" y1="-71.81818181818184" x2="12.0" y2="-71.81818181818184">
+          </line>
+        
+          <line x1="10" y1="-79.09090909090912" x2="12.0" y2="-79.09090909090912">
+          </line>
+        
+          <line x1="10" y1="-86.36363636363636" x2="12.0" y2="-86.36363636363636">
+          </line>
+        
+      </g>
+      <g class="plx-grid-lines">
+        
+          <line x1="10" y1="-13.63636363636364" x2="90" y2="-13.63636363636364">
+          </line>
+        
+          <line x1="10" y1="-20.9090909090909" x2="90" y2="-20.9090909090909">
+          </line>
+        
+          <line x1="10" y1="-28.18181818181818" x2="90" y2="-28.18181818181818">
+          </line>
+        
+          <line x1="10" y1="-35.45454545454546" x2="90" y2="-35.45454545454546">
+          </line>
+        
+          <line x1="10" y1="-42.72727272727272" x2="90" y2="-42.72727272727272">
+          </line>
+        
+          <line x1="10" y1="-50.0" x2="90" y2="-50.0">
+          </line>
+        
+          <line x1="10" y1="-57.27272727272728" x2="90" y2="-57.27272727272728">
+          </line>
+        
+          <line x1="10" y1="-64.54545454545456" x2="90" y2="-64.54545454545456">
+          </line>
+        
+          <line x1="10" y1="-71.81818181818184" x2="90" y2="-71.81818181818184">
+          </line>
+        
+          <line x1="10" y1="-79.09090909090912" x2="90" y2="-79.09090909090912">
+          </line>
+        
+          <line x1="10" y1="-86.36363636363636" x2="90" y2="-86.36363636363636">
+          </line>
+        
+      </g>
+    </g>
+    <g class="plx-labels plx-y-labels">
+      
+        <text y="-13.63636363636364" x="10" transform="rotate(0.0, 5.0, -13.63636363636364)" dx="-5.0">
+                0.10
+          </text>
+      
+        <text y="-20.9090909090909" x="10" transform="rotate(0.0, 5.0, -20.9090909090909)" dx="-5.0">
+                0.10
+          </text>
+      
+        <text y="-28.18181818181818" x="10" transform="rotate(0.0, 5.0, -28.18181818181818)" dx="-5.0">
+                0.11
+          </text>
+      
+        <text y="-35.45454545454546" x="10" transform="rotate(0.0, 5.0, -35.45454545454546)" dx="-5.0">
+                0.12
+          </text>
+      
+        <text y="-42.72727272727272" x="10" transform="rotate(0.0, 5.0, -42.72727272727272)" dx="-5.0">
+                0.12
+          </text>
+      
+        <text y="-50.0" x="10" transform="rotate(0.0, 5.0, -50.0)" dx="-5.0">
+                0.13
+          </text>
+      
+        <text y="-57.27272727272728" x="10" transform="rotate(0.0, 5.0, -57.27272727272728)" dx="-5.0">
+                0.13
+          </text>
+      
+        <text y="-64.54545454545456" x="10" transform="rotate(0.0, 5.0, -64.54545454545456)" dx="-5.0">
+                0.14
+          </text>
+      
+        <text y="-71.81818181818184" x="10" transform="rotate(0.0, 5.0, -71.81818181818184)" dx="-5.0">
+                0.14
+          </text>
+      
+        <text y="-79.09090909090912" x="10" transform="rotate(0.0, 5.0, -79.09090909090912)" dx="-5.0">
+                0.15
+          </text>
+      
+        <text y="-86.36363636363636" x="10" transform="rotate(0.0, 5.0, -86.36363636363636)" dx="-5.0">
+                0.15
+          </text>
+      
+      <text y="-40.0" x="5.0" class="label-title">
+        
+      </text>
+    </g>
+
+    <!-- Data -->
+    <g class="plx-data">
+    
+      <g class="plx-dataset-0" data-setname="plx-data-0">
+        <polyline class="plx-data-line" points="13.636,-13.636 18.485,-57.273 24.303,-86.364 86.364,-13.636 " marker-start="url(#marker-0)" marker-mid="url(#marker-0)" marker-end="url(#marker-0)"></polyline>
+      </g>
+    
+    </g>
+  </svg>
+</body>
+</html>
