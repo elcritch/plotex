@@ -431,10 +431,8 @@ defmodule PlotexTest do
       a: 1.0,  # No process innovation
       c: 1.0,  # Measurement
       b: 0.0,  # No control input
-      # q: 0.01,  # Process covariance
-      # r: 1.0,  # Measurement covariance
-      q: 0.05,  # Process covariance
-      r: 0.7,  # Measurement covariance
+      q: 0.01,  # Process covariance
+      r: 1.0,  # Measurement covariance
       x: random_data |> Enum.at(0),  # Initial estimate
       p: 1.0  # Initial covariance
     )
