@@ -481,7 +481,7 @@ defmodule PlotexTest do
     <body>
       <style>
         :root {
-          --graph-color0: rgba(217, 203, 0, 0.7);
+          --graph-color0: rgba(217, 0, 0, 0.7);
           --graph-color1: rgba(0, 0, 0, 0.7);
           --graph-color2: rgba(0, 217, 11, 0.7);
           --graph-color3: rgba(217, 94, 0, 0.7);
