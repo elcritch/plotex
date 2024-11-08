@@ -479,7 +479,7 @@ defmodule PlotexTest do
       <style>
         :root {
           --graph-color0: rgba(217, 203, 0, 0.8);
-          --graph-color1: rgba(145, 0, 217, 0.8);
+          --graph-color1: rgba(0, 0, 0, 0.8);
           --graph-color2: rgba(0, 217, 11, 0.8);
           --graph-color3: rgba(217, 94, 0, 0.8);
         }
@@ -487,16 +487,14 @@ defmodule PlotexTest do
         #{Plotex.Output.Svg.default_css()}
 
         // graph 0
-        g.plx-data > g.plx-dataset-0 > polyline { stroke: var(--graph-color0); }
-        .plx-data .plx-dataset-0 .plx-data-line { stroke: var(--graph-color0); }
+        g.plx-data > g.plx-dataset-0 > polyline { display: none; }
+        .plx-data .plx-dataset-0 .plx-data-line { stroke: rgba(0,0,0,0.0); }
         #marker-0 > .plx-data-point { stroke: var(--graph-color0); fill: var(--graph-color0); }
-        .plx-key-0 { fill: var(--graph-color0); }
 
         // graph 1
         g.plx-data > g.plx-dataset-1 > polyline { stroke: var(--graph-color1); }
         g.plx-data > g.plx-dataset-1 > polyline { stroke: var(--graph-color1); }
         #marker-1 > .plx-data-point { stroke: var(--graph-color1); fill: var(--graph-color1); }
-        .plx-key-1 { fill: var(--graph-color1); }
       </style>
       #{svg_str}
     </body>
