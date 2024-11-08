@@ -35,7 +35,7 @@ defmodule Plotex.Output.Svg do
         }
         .plx-labels {
           font-size: 3px;
-          fill: white;
+          fill: black;
         }
         .plx-labels .plx-x-labels {
           font-size: 1px;

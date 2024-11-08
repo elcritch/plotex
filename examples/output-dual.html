@@ -25,6 +25,7 @@
     }
     .plx-labels {
       font-size: 3px;
+      fill: black;
     }
     .plx-labels .plx-x-labels {
       font-size: 1px;
@@ -33,9 +34,9 @@
       font-size: 8px;
       font-weight: bold;
       text-transform: uppercase;
-      fill: black;
+      fill: white;
     }
-    .plx-data .plx-data-point {
+    .plx-data-point {
       fill: darkblue;
       stroke-width: 1.0;
     }
@@ -50,7 +51,7 @@
   </style>
 </head>
 <body>
-  <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 -100 100 100 " class="plx-graph" preserveAspectRatio="none">
+  <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 -100 100 100 " preserveAspectRatio="none" class="plx-graph">
     <title class="plx-title">Plot</title>
 
     
@@ -70,7 +71,7 @@
 
         
             <!-- simple dot marker definition -->
-            <marker id="marker-1" viewBox="0 0 6.0 {2 * Options.data(@opts, idx).height}" refX="3.0" refY="3.0" markerWidth="3.0" markerHeight="3.0">
+            <marker id="marker-1" viewBox="0 0 6.0 6.0" refX="3.0" refY="3.0" markerWidth="3.0" markerHeight="3.0">
               <rect class="plx-data-point " x="1.5" y="1.5" width="3.0" height="3.0"></rect>
             </marker>
           

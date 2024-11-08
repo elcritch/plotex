@@ -39,6 +39,7 @@ defmodule Plotex.MixProject do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
+      {:kalman, ">= 1.0.0", only: :test},
       {:phoenix_html, ">= 2.13.0"},
       {:calendar, "~> 1.0"},
       {:phoenix_html_helpers, "~> 1.0"},

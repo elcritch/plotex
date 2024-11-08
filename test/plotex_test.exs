@@ -96,11 +96,11 @@ defmodule PlotexTest do
     html_str = """
     <html>
     <head>
+    </head>
+    <body>
       <style>
         #{Plotex.Output.Svg.default_css()}
       </style>
-    </head>
-    <body>
       #{svg_str}
     </body>
     </html>
@@ -366,4 +366,57 @@ defmodule PlotexTest do
     </html>
     """
   end
+
+  test "likely RSSI values" do
+
+    xdata = 1..100 |> Enum.map(&(1.0*&1))
+    random_data_init = xdata |> Enum.map(fn x -> :rand.normal(20.0, 0.05) end)
+    random_data_then = xdata |> Enum.map(fn x -> :rand.normal(22.0, 0.05) end)
+
+    random_data = random_data_init ++ random_data_then
+
+    k = Kalman.new(
+      a: 1.0,  # No process innovation
+      c: 1.0,  # Measurement
+      b: 0.0,  # No control input
+      q: 0.005,  # Process covariance
+      r: 1.0,  # Measurement covariance
+      x: 18.0,  # Initial estimate
+      p: 1.0  # Initial covariance
+    )
+
+    {_, kalman_est} =
+      for yy <- random_data, reduce: {k, []} do
+        {k, prev} ->
+          k! = Kalman.step(0.0, yy, k)
+          {k!, [Kalman.estimate(k!) | prev ]}
+      end
+
+      plt =
+        Plotex.plot(
+          [{xdata, random_data}, {xdata, kalman_est}],
+          xaxis: [
+            ticks: 5,
+            padding: 0.05
+          ]
+        )
+
+      # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
+
+      svg_str =
+        render_component(&Plotex.Output.Svg.generate/1,
+          plot: plt,
+          opts: %Options{
+            xaxis: %Options.Axis{label: %Options.Item{rotate: 35, offset: 5.0}},
+            yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}}
+          }
+        )
+
+      # Logger.warn("SVG: \n#{svg_str}")
+
+      File.write!("examples/output-kalman-example.html", svg_wrap(svg_str))
+
+  end
+
+
 end
