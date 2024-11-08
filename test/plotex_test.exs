@@ -431,11 +431,13 @@ defmodule PlotexTest do
       a: 1.0,  # No process innovation
       c: 1.0,  # Measurement
       b: 0.0,  # No control input
-      q: 0.07,  # Process covariance
+      q: 0.05,  # Process covariance
       r: 1.0,  # Measurement covariance
       x: 18.0,  # Initial estimate
       p: 1.0  # Initial covariance
     )
+
+    moving_est = random_data |> box_average(5)
 
     {_, kalman_est} =
       for yy <- random_data, reduce: {k, []} do
@@ -451,7 +453,8 @@ defmodule PlotexTest do
       Plotex.plot(
         [
           {xdata, random_data},
-          {xdata, kalman_est}
+          {xdata, kalman_est},
+          {xdata, moving_est},
         ],
         xaxis: [
           ticks: 5,
@@ -478,10 +481,10 @@ defmodule PlotexTest do
     <body>
       <style>
         :root {
-          --graph-color0: rgba(217, 203, 0, 0.8);
-          --graph-color1: rgba(0, 0, 0, 0.8);
-          --graph-color2: rgba(0, 217, 11, 0.8);
-          --graph-color3: rgba(217, 94, 0, 0.8);
+          --graph-color0: rgba(217, 203, 0, 0.6);
+          --graph-color1: rgba(0, 0, 0, 0.6);
+          --graph-color2: rgba(0, 217, 11, 0.6);
+          --graph-color3: rgba(217, 94, 0, 0.6);
         }
 
         #{Plotex.Output.Svg.default_css()}
@@ -495,6 +498,11 @@ defmodule PlotexTest do
         g.plx-data > g.plx-dataset-1 > polyline { stroke: var(--graph-color1); }
         g.plx-data > g.plx-dataset-1 > polyline { stroke: var(--graph-color1); }
         #marker-1 > .plx-data-point { stroke: var(--graph-color1); fill: var(--graph-color1); }
+
+        // graph 2
+        g.plx-data > g.plx-dataset-2 > polyline { stroke: var(--graph-color2); }
+        g.plx-data > g.plx-dataset-2 > polyline { stroke: var(--graph-color2); }
+        #marker-2 > .plx-data-point { stroke: var(--graph-color2); fill: var(--graph-color2); }
       </style>
       #{svg_str}
     </body>
@@ -503,6 +511,20 @@ defmodule PlotexTest do
 
     File.write!("examples/output-kalman-example.html", html_str)
 
+  end
+
+  ## very dumb box average, but avoids shortening the sample
+  def box_average(data, 0) do
+    data
+  end
+
+  def box_average(data, count) do
+    data
+    |> Enum.map_reduce([], fn x, acc ->
+      group = Enum.take([x | acc], count)
+      {Enum.sum(group) / Enum.count(group), group}
+    end)
+    |> (fn {data, _} -> data end).()
   end
 
 
