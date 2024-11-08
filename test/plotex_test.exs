@@ -433,7 +433,7 @@ defmodule PlotexTest do
       b: 0.0,  # No control input
       q: 0.05,  # Process covariance
       r: 1.0,  # Measurement covariance
-      x: 18.0,  # Initial estimate
+      x: 22.0,  # Initial estimate
       p: 1.0  # Initial covariance
     )
 
@@ -481,13 +481,15 @@ defmodule PlotexTest do
     <body>
       <style>
         :root {
-          --graph-color0: rgba(217, 203, 0, 0.6);
-          --graph-color1: rgba(0, 0, 0, 0.6);
-          --graph-color2: rgba(0, 217, 11, 0.6);
-          --graph-color3: rgba(217, 94, 0, 0.6);
+          --graph-color0: rgba(217, 203, 0, 0.7);
+          --graph-color1: rgba(0, 0, 0, 0.7);
+          --graph-color2: rgba(0, 217, 11, 0.7);
+          --graph-color3: rgba(217, 94, 0, 0.7);
         }
 
         #{Plotex.Output.Svg.default_css()}
+
+        .plx-data .plx-data-line { stroke-width: 0.3; }
 
         // graph 0
         g.plx-data > g.plx-dataset-0 > polyline { display: none; }
@@ -503,6 +505,12 @@ defmodule PlotexTest do
         g.plx-data > g.plx-dataset-2 > polyline { stroke: var(--graph-color2); }
         g.plx-data > g.plx-dataset-2 > polyline { stroke: var(--graph-color2); }
         #marker-2 > .plx-data-point { stroke: var(--graph-color2); fill: var(--graph-color2); }
+
+        .plx-graph {
+          height: 500px;
+          width: 1200px;
+          stroke-width: 0.1;
+        }
       </style>
       #{svg_str}
     </body>
