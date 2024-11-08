@@ -431,7 +431,7 @@ defmodule PlotexTest do
       a: 1.0,  # No process innovation
       c: 1.0,  # Measurement
       b: 0.0,  # No control input
-      q: 0.005,  # Process covariance
+      q: 0.07,  # Process covariance
       r: 1.0,  # Measurement covariance
       x: 18.0,  # Initial estimate
       p: 1.0  # Initial covariance
@@ -445,32 +445,65 @@ defmodule PlotexTest do
           {k!, [Kalman.estimate(k!) | prev ]}
       end
 
-      plt =
-        Plotex.plot(
-          [
-            {xdata, random_data},
-            # {xdata, kalman_est}
-          ],
-          xaxis: [
-            ticks: 5,
-            padding: 0.05
-          ]
-        )
+    kalman_est = kalman_est |> Enum.reverse()
 
-      # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
+    plt =
+      Plotex.plot(
+        [
+          {xdata, random_data},
+          {xdata, kalman_est}
+        ],
+        xaxis: [
+          ticks: 5,
+          padding: 0.05
+        ]
+      )
 
-      svg_str =
-        render_component(&Plotex.Output.Svg.generate/1,
-          plot: plt,
-          opts: %Options{
-            xaxis: %Options.Axis{label: %Options.Item{rotate: 35, offset: 5.0}},
-            yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}}
-          }
-        )
+    # Logger.warn("svg plotex cfg: #{inspect plt, pretty: true }")
 
-      # Logger.warn("SVG: \n#{svg_str}")
+    svg_str =
+      render_component(&Plotex.Output.Svg.generate/1,
+        plot: plt,
+        opts: %Options{
+          xaxis: %Options.Axis{label: %Options.Item{rotate: 35, offset: 5.0}},
+          yaxis: %Options.Axis{label: %Options.Item{offset: 5.0}}
+        }
+      )
 
-      File.write!("examples/output-kalman-example.html", svg_wrap(svg_str))
+    # Logger.warn("SVG: \n#{svg_str}")
+    html_str = """
+    <html>
+    <head>
+    </head>
+    <body>
+      <style>
+        :root {
+          --graph-color0: rgba(217, 203, 0, 0.8);
+          --graph-color1: rgba(145, 0, 217, 0.8);
+          --graph-color2: rgba(0, 217, 11, 0.8);
+          --graph-color3: rgba(217, 94, 0, 0.8);
+        }
+
+        #{Plotex.Output.Svg.default_css()}
+
+        // graph 0
+        g.plx-data > g.plx-dataset-0 > polyline { stroke: var(--graph-color0); }
+        .plx-data .plx-dataset-0 .plx-data-line { stroke: var(--graph-color0); }
+        #marker-0 > .plx-data-point { stroke: var(--graph-color0); fill: var(--graph-color0); }
+        .plx-key-0 { fill: var(--graph-color0); }
+
+        // graph 1
+        g.plx-data > g.plx-dataset-1 > polyline { stroke: var(--graph-color1); }
+        g.plx-data > g.plx-dataset-1 > polyline { stroke: var(--graph-color1); }
+        #marker-1 > .plx-data-point { stroke: var(--graph-color1); fill: var(--graph-color1); }
+        .plx-key-1 { fill: var(--graph-color1); }
+      </style>
+      #{svg_str}
+    </body>
+    </html>
+    """
+
+    File.write!("examples/output-kalman-example.html", html_str)
 
   end
 
